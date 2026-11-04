@@ -120,11 +120,12 @@ export function mount(host, ctx) {
       svg('circle', { cx: x(p), cy: y(preset.F(p)), r: 3.6, fill: c.ink }, s);
     }
     if (preset === PRESETS.mixture) {
-      const t = svg('text', { x: x(0.25), y: y(0.13), class: 'hand' }, s);
-      t.textContent = 'jump = µ({0})';
-      svg('path', { d: `M${x(0.22)},${y(0.12)} q -8,2 -14,6`, stroke: c.ink2, fill: 'none', 'stroke-width': 1 }, s);
-      const t2 = svg('text', { x: x(0.25), y: y(0.42), class: 'hand' }, s);
-      t2.textContent = 'filled dot: F(0) is the upper value';
+      const t = svg('text', { x: x(0.3), y: y(0.13), class: 'hand' }, s);
+      t.textContent = 'jump = µ({0}) = 0.3';
+      svg('path', { d: `M${x(0.27)},${y(0.135)} q -10,0 -16,-4`, stroke: c.ink2, fill: 'none', 'stroke-width': 1 }, s);
+      const t2 = svg('text', { x: x(1.5), y: y(0.36), class: 'hand' }, s);
+      t2.textContent = 'filled dot: F(0) takes the upper value';
+      svg('path', { d: `M${x(1.45)},${y(0.37)} Q${x(0.6)},${y(0.36)} ${x(0.08)},${y(0.31)}`, stroke: c.ink2, fill: 'none', 'stroke-width': 1 }, s);
     }
     // interval on the axis
     const ya = H - B + 30;

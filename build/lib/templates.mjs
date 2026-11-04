@@ -22,7 +22,7 @@ export function impMark(imp, note) {
   return `<span class="est-imp" data-tip="${esc(t)}" aria-label="${esc(t)}">${[1, 2, 3].map((i) => `<i class="h${i}${i <= lvl ? ' on' : ''}"></i>`).join('')}</span>`;
 }
 export const pagesText = (weight) => {
-  const p = weight / 430;
+  const p = weight / 560;
   if (p < 0.75) return 'under a page';
   const r = Math.round(p * 2) / 2;
   return `about ${r} page${r === 1 ? '' : 's'}`;

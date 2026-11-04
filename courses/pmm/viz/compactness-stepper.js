@@ -3,7 +3,7 @@
 // right continuous at 0, where Step 2 cannot be done.
 import { makeSvg, svg, el, clear, handPath } from '/assets/js/viz-kit.js';
 
-const ROWS = [1, 2, 3, 4, 8, 16, 32];
+const ROWS = [1, 2, 3, 4, 8, 16, 64];
 const XMAX = 8;
 const ATOM = 0.3;
 const Fgood = (x) => (x === Infinity ? 1 : x < 0 ? 0 : ATOM + (1 - ATOM) * (1 - Math.exp(-x / 1.5)));
@@ -64,10 +64,11 @@ export function mount(host, ctx) {
       let ok = true;
       const share = eps / Math.max(1, Bn.length);
       const Cn = Bn.map((I) => {
-        const m = I.hi - I.lo;
-        let t = m / 2;
-        for (let k = 0; k < 60 && F(I.lo + t) - F(I.lo) >= share; k++) t /= 2;
-        if (F(I.lo + t) - F(I.lo) >= share) ok = false;
+        // largest admissible shift (binary search), then a little less so the inequality is strict
+        let lo = 0, hi = I.hi - I.lo;
+        for (let k = 0; k < 50; k++) { const mid = (lo + hi) / 2; if (F(I.lo + mid) - F(I.lo) < share) lo = mid; else hi = mid; }
+        const t = Math.max(lo * 0.9, 1e-9);
+        if (lo === 0) ok = false;
         return { lo: I.lo + t, hi: I.hi, lc: false, hc: true, from: I.lo };
       });
       const Cbar = Cn.map((I) => ({ ...I, lc: true }));
@@ -82,6 +83,10 @@ export function mount(host, ctx) {
 
   function drawSet(s, S, y, colour, { closedDots = false, faint = false } = {}) {
     for (const I of S) {
+      if (I.lo >= XMAX) {
+        if (!faint) svg('text', { x: W - R - 2, y: y - 6, 'text-anchor': 'end', 'font-size': 10, fill: colour }, s).textContent = `∪ (${I.lo}, ∞), off the scale`;
+        continue;
+      }
       const x0 = xs(I.lo), x1 = I.hi === Infinity ? W - R + 14 : xs(I.hi);
       svg('path', { d: handPath([[x0, y], [x1, y]], 0.5, Math.round(x0 + x1)), stroke: colour, 'stroke-width': faint ? 2 : 4, opacity: faint ? 0.25 : 1, fill: 'none', 'stroke-linecap': 'butt' }, s);
       if (faint) continue;
@@ -110,7 +115,7 @@ export function mount(host, ctx) {
     svg('line', { x1: xs(0), x2: W - R + 14, y1: ay, y2: ay, stroke: c.ink3 }, s);
     for (const v of [0, 1 / 32, 1 / 8, 0.5, 1, 2, 4, 8]) {
       svg('line', { x1: xs(v), x2: xs(v), y1: ay, y2: ay + 4, stroke: c.ink3 }, s);
-      svg('text', { x: xs(v), y: ay + 15, 'text-anchor': 'middle', 'font-size': 10, fill: c.ink3 }, s).textContent = v < 0.1 && v > 0 ? `1/${Math.round(1 / v)}` : v;
+      svg('text', { x: xs(v), y: ay + 15, 'text-anchor': 'middle', 'font-size': 10, fill: c.ink3 }, s).textContent = v < 0.2 && v > 0 ? `1/${Math.round(1 / v)}` : v;
     }
     svg('text', { x: W - R + 20, y: ay + 4, 'font-size': 10, fill: c.ink3 }, s).textContent = '√-scale';
     if (step >= 1) {

@@ -304,7 +304,8 @@ dfn.term { font-style: italic; font-weight: 600; }
 .margin-note.hot { color: var(--ink); }
 .margin-note .katex { font-size: 1em; }
 .sn-caption { display: block; font-size: 0.92em; color: var(--ink-3); margin-top: 0.2rem; }
-.has-margin .sidenote { display: none !important; }
+.has-margin .sn .sidenote { display: none !important; }
+.margin-note .sidenote { display: block; }
 .has-margin .sn-mark { cursor: default; }
 body.panel-open .margin-notes { opacity: 0; pointer-events: none; }
 
@@ -345,7 +346,7 @@ body.panel-open .margin-notes { opacity: 0; pointer-events: none; }
 .viz figcaption, .static-fig figcaption { font-family: var(--sans); font-size: 0.72rem; line-height: 1.5; color: var(--ink-2); margin-top: 0.55rem; }
 .fig-label { font-weight: 600; color: var(--ink); }
 .viz-margin { display: block; }
-.viz-margin .viz-mount { min-height: 0; padding: 0.4rem; }
+.viz-margin .viz-mount { display: block; min-height: 0; padding: 0.4rem; }
 .viz svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); }
 .viz .controls { display: flex; flex-wrap: wrap; gap: 0.4rem 0.6rem; align-items: center; font-family: var(--sans); font-size: 0.7rem; margin-top: 0.6rem; color: var(--ink-2); }
 .viz button.btn { font-family: var(--sans); font-size: 0.7rem; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 5px; padding: 0.2rem 0.65rem; cursor: pointer; color: var(--ink); }
@@ -386,7 +387,7 @@ body.panel-open .margin-notes { opacity: 0; pointer-events: none; }
 
 /* ------------------------------------------------------------------ side panel */
 .panel {
-  position: fixed; z-index: 40; top: 3.1rem; right: 0; bottom: 0; width: min(25rem, 100vw); overflow-y: auto;
+  position: fixed; z-index: 40; top: 3.1rem; right: 0; bottom: 0; width: min(20.5rem, 100vw); overflow-y: auto;
   background: var(--paper); border-left: 1px solid var(--rule); padding: 0 1rem 2rem; font-size: 0.85rem; line-height: 1.5;
   transform: translateX(100%); transition: transform 0.24s var(--ease); display: block;
 }
@@ -551,3 +552,10 @@ body.panel-open .margin-notes { opacity: 0; pointer-events: none; }
   .item, .exercise, .viz { break-inside: avoid; }
   a { color: inherit; text-decoration: none; }
 }
+.viz .readout { overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
+.page-hub .main, .page-404 .main { grid-column: 1; }
+.q-part { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr); align-items: baseline; }
+.q-part > .q-head { grid-column: 1; }
+.q-part > .q-body, .q-part > .q-uses, .q-part > .q-prompt-back { grid-column: 2; display: block; }
+.q-part .pin-btn, .q-part .q-status { display: none; }
+.q-part > .q-body > p:last-child { margin-bottom: 0.3rem; }

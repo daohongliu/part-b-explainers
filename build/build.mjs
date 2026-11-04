@@ -114,7 +114,7 @@ function labelOf(it) {
   if (!it) return '??';
   if (it.kind === 'term') return it.term;
   if (it.kind === 'section') return `§${it.number}`;
-  if (it.kind === 'question') return `Sheet ${it.sheetNumber}, ${it.number}`;
+  if (it.kind === 'question') return `Sheet ${it.sheetNumber} ${it.number}`;
   if (it.kind === 'figure') return texToPlain(it.title) || 'Figure';
   if (it.number) return `${it.kindLabel} ${it.number}`;
   return it.title ? `${it.kindLabel} (${texToPlain(it.title)})` : it.kindLabel;

@@ -41,7 +41,8 @@ export function initToc() {
     store.set(`progress:${course}:${chapter}`, best);
     // a section counts as read once its end has scrolled above the middle of the screen
     for (const s of secs) {
-      if (!read.has(s.id) && s.getBoundingClientRect().bottom < mid) {
+      const bot = s.getBoundingClientRect().bottom;
+      if (!read.has(s.id) && bot < mid && bot > -window.innerHeight * 0.5) {
         read.add(s.id);
         tocSecs.get(s.id)?.classList.add('read');
         store.set(readKey, [...read]);

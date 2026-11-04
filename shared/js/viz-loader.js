@@ -15,8 +15,8 @@ export function colours() {
 }
 
 async function mountOne(fig) {
-  if (fig._mounted) return;
-  fig._mounted = true;
+  if (fig.dataset.vizState) return;
+  fig.dataset.vizState = 'loading';
   const name = fig.dataset.viz;
   const host = fig.querySelector('.viz-mount');
   try {
@@ -27,9 +27,11 @@ async function mountOne(fig) {
     const ctx = { colours, tex, reducedMotion: reducedMotion(), onTheme: (fn) => window.addEventListener('pbx:theme', () => requestAnimationFrame(fn)) };
     await mod.mount(host, ctx);
     host.removeAttribute('aria-hidden');
+    fig.dataset.vizState = 'mounted';
     window.dispatchEvent(new CustomEvent('pbx:layout'));
   } catch (e) {
     console.error(`[pbx] viz ${name} failed`, e);
+    fig.dataset.vizState = `error: ${e.message}`;
     host.innerHTML = '<div class="viz-loading">This figure could not load. Its description is below for screen readers and in the caption.</div>';
   }
 }
@@ -42,4 +44,8 @@ export function initViz() {
     for (const e of entries) if (e.isIntersecting) { io.unobserve(e.target); mountOne(e.target); }
   }, { rootMargin: '400px 0px' });
   figs.forEach((f) => io.observe(f));
+  // Fallback for throttled or background tabs, where IntersectionObserver may not fire: poll the viewport.
+  const near = (f) => { const r = f.getBoundingClientRect(); return r.bottom > -400 && r.top < window.innerHeight + 400; };
+  setInterval(() => figs.forEach((f) => { if (!f.dataset.vizState && near(f)) mountOne(f); }), 1500);
+  window.addEventListener('beforeprint', () => figs.forEach(mountOne));
 }
