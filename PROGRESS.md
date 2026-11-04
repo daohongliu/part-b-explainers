@@ -30,6 +30,17 @@ Everything ships as ONE artifact (both courses), notes stored in the artifact's 
 - [x] Published as version 6 of https://claude.ai/artifact/8fUSQZVyo5a4ii591VfEvY with capabilities
       {db:{rules:[{path:"notes",read:"owner",write:"owner"}]}, downloads:true}; db checked (empty `notes`).
 
+- [x] Structure pass: sec-block/sub-block indentation, proofs attached and always titled "Proof of X.", thm kinds coloured,
+      every result has a short description (`d=`), shown in the sidebar when there is no name.
+- [x] Roles: `<role r= a=>` gutter labels (intro, motivation, intuition, link, …; ROLE_TIPS in build.py). Annotations are
+      HTML-escaped (an unescaped `<` once broke autolinking for whole chapters).
+- [x] Layout: fluid column up to 50rem at ≥1300px; VS Code-style minimap on the right; chapter mind maps
+      (`courses/<c>/maps/chN.json`, nodes/edges/ext links to other chapters) in the strip left of the minimap.
+- [x] Figures renumbered by order of appearance (FIGID); 7 extra "fun" diagrams.
+- [x] Search (features.js, end): `/` or ⌘K or topbar button; index built from the DOM before MathJax, TeX "detexed"
+      to unicode via TEXMAP; ranks results > sections > figures > exercises/questions > background > text; PMM/CLT filter.
+- [x] Published as version 15 (search + autolink fix).
+
 ## Ideas not done yet
 - PMM Chapters 6–7 (martingales, applications); CLT Chapters 6–9.
 - An independent read-through of the CLT chapters for maths slips (the PMM chapters had one).

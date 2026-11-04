@@ -725,3 +725,94 @@ window.addEventListener('scroll', () => requestAnimationFrame(updateCmap), { pas
 let cmT = 0; window.addEventListener('resize', () => { clearTimeout(cmT); cmT = setTimeout(buildCmap, 220); });
 const _showViewCM = showView;
 showView = function (id) { const r = _showViewCM(id); cmOpen = false; setTimeout(buildCmap, 80); r.then(() => setTimeout(buildCmap, 400)); return r; };
+
+/* ---------- search across both courses ---------- */
+const SRCH = { idx: null };
+const TEXMAP = { le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠', to: '→', infty: '∞', in: '∈', notin: '∉', ni: '∋', subseteq: '⊆', subset: '⊂', supseteq: '⊇', cup: '∪', cap: '∩', bigcup: '⋃', bigcap: '⋂', setminus: '∖', sigma: 'σ', mu: 'μ', nu: 'ν', Omega: 'Ω', omega: 'ω', eps: 'ε', varepsilon: 'ε', delta: 'δ', Delta: 'Δ', lambda: 'λ', Lambda: 'Λ', tau: 'τ', varphi: 'φ', phi: 'φ', Phi: 'Φ', psi: 'ψ', alpha: 'α', beta: 'β', gamma: 'γ', theta: 'θ', Theta: 'Θ', rho: 'ρ', kappa: 'κ', eta: 'η', chi: 'χ', pi: 'π', Pi: 'Π', Sigma: 'Σ', ell: 'ℓ',
+  R: 'ℝ', N: 'ℕ', Z: 'ℤ', Q: 'ℚ', Rbar: 'ℝ̄', PP: 'ℙ', E: '𝔼', EX: 'EX', F: '𝓕', G: '𝒢', C: '𝒞', H: '𝓗', D: '𝒟', X: '𝒳', A: '𝒜', B: 'ℬ', M: '𝓜', T: '𝒯', I: 'ℐ', Lp: 'Lᵖ', Pow: '𝒫', ind: '𝟙', VCD: 'VCD', err: 'err', size: 'size', bit: 'bit', sgn: 'sgn', poly: 'poly',
+  sum: 'Σ', prod: 'Π', int: '∫', times: '×', cdot: '·', circ: '∘', oplus: '⊕', pm: '±', mid: '|', wedge: '∧', vee: '∨', bigwedge: '⋀', neg: '¬', emptyset: '∅', forall: '∀', exists: '∃', sim: '∼', approx: '≈', equiv: '≡', ll: '≪', uparrow: '↑', downarrow: '↓', Uparrow: '⇑', mapsto: '↦', longmapsto: '↦', implies: '⇒', Longrightarrow: '⇒', iff: '⇔', leftarrow: '←', xrightarrow: '→', pto: '→ᵖ', dto: '→ᵈ', langle: '⟨', rangle: '⟩', lfloor: '⌊', rfloor: '⌋', dots: '…', ldots: '…', cdots: '⋯',
+  log: 'log', exp: 'exp', lim: 'lim', limsup: 'lim sup', liminf: 'lim inf', sup: 'sup', inf: 'inf', max: 'max', min: 'min', gcd: 'gcd', bmod: 'mod', pmod: 'mod', Pr: 'Pr' };
+function detex(t) {
+  t = t.replace(/\\[{}]/g, '').replace(/\\[()[\]]/g, ' ').replace(/\\[,;:! ]/g, ' ');
+  for (let k = 0; k < 3; k++) t = t.replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)');
+  return t.replace(/\\([A-Za-z]+)/g, (m, w) => TEXMAP[w] != null ? TEXMAP[w] + ' ' : ' ').replace(/[{}]/g, '').replace(/[\^_]/g, '').replace(/\s+/g, ' ').replace(/ ([,.;:)]) ?/g, '$1 ').trim();
+}
+function bodyText(el) { const c = el.cloneNode(true); c.querySelectorAll('.head, .pg, .role-l').forEach(x => x.remove()); return c.textContent; }
+function buildIndex() {
+  const idx = []; let auto = 0;
+  const label = v => (v.dataset.short || '') + ' · ' + (v.dataset.title || '');
+  $$('.view').forEach(v => {
+    if (v.classList.contains('hub')) return;
+    const vlab = label(v);
+    let head = '';
+    const push = (el, kind, title, text) => {
+      if (!el.id) el.id = 'q' + (auto++).toString(36);
+      idx.push({ id: el.id, view: v.id, course: v.dataset.course || '', kind, title: detex(title), text: detex(text), where: vlab, head, low: (detex(title) + ' ' + detex(text)).toLowerCase() });
+    };
+    $$('h2, h3, .thm, .algo, figure, aside.bg, details.pause, .sq, p, li', v).forEach(el => {
+      if (el.closest('.for-llms, .xcard, .ch-nav, nav, .toc, .rindex, header')) return;
+      if (/^H[23]$/.test(el.tagName)) { head = plainHeading(el); push(el, 'section', head, ''); return; }
+      if (el.matches('.thm')) return push(el, 'result', el.dataset.label + (el.dataset.name ? ' (' + el.dataset.name + ')' : el.dataset.desc ? ' · ' + el.dataset.desc : ''), bodyText(el));
+      if (el.matches('.algo')) return push(el, 'result', el.dataset.label + ' · ' + el.dataset.name, el.textContent);
+      if (el.matches('figure')) { const c = el.querySelector('figcaption'); const t = el.querySelector('.figtag'); return push(el, 'figure', t ? t.textContent : 'Figure', c ? c.textContent.replace(t ? t.textContent : '', '') : ''); }
+      if (el.matches('aside.bg')) { const hh = el.querySelector('.bg-head'); return push(el, 'background', hh ? hh.textContent : 'Background', el.textContent.replace(hh ? hh.textContent : '', '')); }
+      if (el.matches('details.pause')) { const n = el.querySelector('.exname'); const q = el.querySelector('.ex-q'); return push(el, 'exercise', 'Exercise · ' + (n ? n.textContent : ''), q ? q.textContent : ''); }
+      if (el.matches('.sq')) return push(el, 'question', (v.dataset.title || '') + ' Q' + el.querySelector('.sq-n').textContent + (el.dataset.name ? ' · ' + el.dataset.name : ''), el.textContent);
+      if (el.closest('.thm, .algo, figure, aside.bg, details.pause, .sq, .sec-meta, .role-l')) return;
+      if (el.tagName === 'LI' && el.closest('.toc-side, .hub-list')) return;
+      push(el, 'text', head, el.textContent);
+    });
+  });
+  SRCH.idx = idx;
+}
+const sbox = h('div', 'search-box'); sbox.hidden = true; sbox.setAttribute('role', 'dialog'); sbox.setAttribute('aria-label', 'Search');
+sbox.innerHTML = '<div class="sb-in"><input type="search" placeholder="Search both courses: a result, a word, “Fatou”, “VC dimension”, “4.9”…" aria-label="Search" autocomplete="off" spellcheck="false"><div class="sb-filt" role="group"><button type="button" data-sf="" aria-pressed="true">all</button><button type="button" data-sf="pmm" aria-pressed="false">PMM</button><button type="button" data-sf="clt" aria-pressed="false">CLT</button></div></div><div class="sb-res" role="listbox"></div><div class="sb-foot">↑↓ to move · enter to go · esc to close</div>';
+const sback = h('div', 'search-back'); sback.hidden = true;
+document.body.appendChild(sback); document.body.appendChild(sbox);
+const sin = $('input', sbox), sres = $('.sb-res', sbox); let sel = 0, hits = [], sfilt = '';
+function esc2(s) { return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+function snippet(text, terms) {
+  const low = text.toLowerCase(); let at = -1;
+  terms.forEach(t => { const i = low.indexOf(t); if (i >= 0 && (at < 0 || i < at)) at = i; });
+  let a = Math.max(0, at - 50), b = Math.min(text.length, (at < 0 ? 0 : at) + 130);
+  let s = (a > 0 ? '…' : '') + text.slice(a, b) + (b < text.length ? '…' : '');
+  s = esc2(s);
+  terms.forEach(t => { if (t.length < 2) return; s = s.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>'); });
+  return s;
+}
+const KW = { result: 0, section: 1, figure: 2, exercise: 3, question: 3, background: 4, text: 5 };
+function runSearch() {
+  if (!SRCH.idx) buildIndex();
+  const q = sin.value.trim().toLowerCase();
+  if (!q) { sres.innerHTML = '<div class="sb-empty">Type to search every chapter and problem sheet. Results come first, then sections, figures, exercises and text.</div>'; hits = []; return; }
+  const terms = q.split(/\s+/).filter(Boolean);
+  hits = SRCH.idx.filter(e => (!sfilt || e.course === sfilt) && terms.every(t => e.low.includes(t)))
+    .map(e => { const tl = e.title.toLowerCase(); let sc = KW[e.kind] * 10; terms.forEach(t => { if (tl.includes(t)) sc -= 25; if (tl.startsWith(t)) sc -= 5; }); return [sc, e]; })
+    .sort((a, b) => a[0] - b[0]).slice(0, 40).map(x => x[1]);
+  sel = 0;
+  sres.innerHTML = hits.length ? hits.map((e, i) => '<div class="sb-r' + (i === sel ? ' on' : '') + '" role="option" data-i="' + i + '"><div class="sb-k"><span class="sb-kind k-' + e.kind + '">' + e.kind + '</span>' + esc2(e.where) + (e.head && e.kind !== 'section' ? ' › ' + esc2(e.head) : '') + '</div><div class="sb-t">' + snippet(e.title, terms) + '</div>' + (e.text ? '<div class="sb-s">' + snippet(e.text, terms) + '</div>' : '') + '</div>').join('')
+    : '<div class="sb-empty">Nothing matches all of those words.</div>';
+}
+function openSearch() { sbox.hidden = false; sback.hidden = false; sin.focus(); sin.select(); runSearch(); }
+function closeSearch() { sbox.hidden = true; sback.hidden = true; }
+function goHit(i) {
+  const e = hits[i]; if (!e) return; closeSearch();
+  jump(e.id, null);
+  setTimeout(() => { const t = document.getElementById(e.id); if (t) { const d = t.closest('details'); if (d) { let p = d; while (p) { if (p.tagName === 'DETAILS') p.open = true; p = p.parentElement; } } t.scrollIntoView({ block: 'center' }); t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash'); } }, 150);
+}
+let sT = 0;
+sin.addEventListener('input', () => { clearTimeout(sT); sT = setTimeout(runSearch, 90); });
+sin.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); sel = clamp(sel + (e.key === 'ArrowDown' ? 1 : -1), 0, Math.max(0, hits.length - 1)); $$('.sb-r', sres).forEach((r, i) => r.classList.toggle('on', i === sel)); const on = $('.sb-r.on', sres); if (on) on.scrollIntoView({ block: 'nearest' }); }
+  if (e.key === 'Enter') { e.preventDefault(); goHit(sel); }
+  if (e.key === 'Escape') closeSearch();
+});
+sres.addEventListener('click', e => { const r = e.target.closest('.sb-r'); if (r) goHit(+r.dataset.i); });
+sback.addEventListener('click', closeSearch);
+$$('[data-sf]', sbox).forEach(b => b.addEventListener('click', () => { sfilt = b.dataset.sf; pressGroup($$('[data-sf]', sbox), sfilt, 'data-sf'); runSearch(); sin.focus(); }));
+document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#search-btn')) openSearch(); });
+document.addEventListener('keydown', e => {
+  const typing = e.target.closest && e.target.closest('input, textarea, [contenteditable]');
+  if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !typing)) { e.preventDefault(); openSearch(); }
+});
+setTimeout(buildIndex, 50);

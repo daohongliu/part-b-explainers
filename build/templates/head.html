@@ -748,6 +748,27 @@ body.has-toc .cmap-btn:not([hidden]) ~ .minimap, body:has(.cmap-btn:not([hidden]
 .focus .cmap-n:not(.near) { opacity: .45; }
 @media (max-width: 1299px) { .cmap, .cmap-btn { display: none; } }
 
+
+/* search */
+.search-back { position: fixed; inset: 0; z-index: 80; background: color-mix(in srgb, var(--ink) 18%, transparent); }
+.search-box { position: fixed; z-index: 81; left: 50%; top: 9vh; transform: translateX(-50%); width: min(44rem, calc(100vw - 24px)); max-height: 78vh; display: flex; flex-direction: column;
+  background: var(--paper); border: 1.3px solid var(--ink-soft); border-radius: 3px 14px 4px 12px / 12px 4px 14px 3px; box-shadow: 5px 6px 0 var(--dot); }
+.sb-in { display: flex; gap: .5rem; align-items: center; padding: .7rem .8rem .55rem; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.sb-in input { flex: 1 1 16rem; font: inherit; font-size: 1.05rem; color: var(--ink); background: var(--paper-2); border: 1px solid var(--rule); border-radius: 4px; padding: .45rem .6rem; }
+.sb-in input:focus { outline: 1.5px solid var(--blue); }
+.sb-filt { display: flex; gap: .25rem; } .sb-filt button { font-size: .72rem; padding: .2rem .5rem; }
+.sb-res { overflow-y: auto; padding: .3rem .3rem .5rem; }
+.sb-r { padding: .45rem .6rem .5rem; border-radius: 6px; cursor: pointer; }
+.sb-r.on, .sb-r:hover { background: var(--blue-wash); }
+.sb-k { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" .6; font-size: .66rem; color: var(--ink-soft); display: flex; gap: .45rem; align-items: baseline; flex-wrap: wrap; }
+.sb-kind { text-transform: uppercase; letter-spacing: .06em; font-weight: 600; color: var(--ink-soft); }
+.sb-kind.k-result { color: var(--blue); } .sb-kind.k-figure, .sb-kind.k-exercise, .sb-kind.k-question { color: var(--ochre); } .sb-kind.k-section { color: var(--ink); }
+.sb-t { font-size: 1rem; margin-top: .1rem; }
+.sb-s { font-size: .86rem; color: var(--ink-soft); line-height: 1.4; margin-top: .1rem; }
+.sb-r mark { background: var(--ochre-wash); color: inherit; border-radius: 2px; padding: 0 1px; }
+.sb-empty { padding: 1rem .8rem; color: var(--ink-soft); font-style: italic; }
+.sb-foot { font-family: var(--mono); font-size: .64rem; color: var(--ink-soft); padding: .35rem .8rem .5rem; border-top: 1px solid var(--rule); }
+
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {

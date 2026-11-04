@@ -162,7 +162,7 @@ def process(s):
             body = body[:idx] + q + body[idx:] if idx >= 0 else body + q
             return ph(f'<div class="proof">{body}</div>')
         if tag == 'role':
-            r = a.get('r', 'idea'); lab = ROLES.get(r, r); ann = a.get('a', '')
+            r = a.get('r', 'idea'); lab = ROLES.get(r, r); ann = a.get('a', '').replace('<', '&lt;').replace('>', '&gt;')
             tip = ROLE_TIPS.get(r, '')
             return ph(f'<div class="role r-{r}"><div class="role-l" data-tip="{tip}"><span class="role-k">{lab}</span>' + (f'<span class="role-a">{ann}</span>' if ann else '') + f'</div>{body}</div>')
         if tag == 'pause':
