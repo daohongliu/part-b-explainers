@@ -1,0 +1,18 @@
+<figure class="wide" id="fig4-1">
+  <div class="fig-body">
+    <div class="btn-row" role="group" aria-label="Training data">
+      <button type="button" data-ab-d="disc" aria-pressed="true">a disc</button>
+      <button type="button" data-ab-d="band" aria-pressed="false">a diagonal band</button>
+      <button type="button" data-ab-d="xor" aria-pressed="false">a checkerboard</button>
+    </div>
+    <canvas id="clt-ab-canvas" width="720" height="360" aria-label="Training points sized by their AdaBoost weight, the current decision stump, the combined classifier as shaded regions, and on the right the training error and its bound over the rounds."></canvas>
+    <div class="controls">
+      <button type="button" id="clt-ab-step">one round</button>
+      <button type="button" id="clt-ab-ten">ten rounds</button>
+      <button type="button" id="clt-ab-reset">start again</button>
+      <label><input type="checkbox" id="clt-ab-region" checked> shade the vote</label>
+    </div>
+    <div class="readout" id="clt-ab-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 4.1</span>AdaBoost with decision stumps, which are about the weakest learners there are: each one cuts the square once, horizontally or vertically, and predicts \(+\) on one side. Each round the stump with the smallest weighted error is chosen (dashed line). Point sizes show the weights \(D_t(i)\), so you can watch the mistakes grow. On the right, the training error of the vote \(\hat h\) and the bound \(\prod Z_{t+1}\) from (4.8). On the checkerboard no stump does better than chance once the weights balance, the weak learning assumption fails, and the bound stops falling.</figcaption>
+</figure>
