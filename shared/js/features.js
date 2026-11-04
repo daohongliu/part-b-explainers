@@ -819,8 +819,19 @@ setTimeout(buildIndex, 50);
 
 /* ---------- copy a result as a Mochi flashcard (markdown: front, ---, back) ---------- */
 const MOCHI_MAC = [['PP','\\mathbb{P}'],['E','\\mathbb{E}'],['R','\\mathbb{R}'],['N','\\mathbb{N}'],['Q','\\mathbb{Q}'],['Z','\\mathbb{Z}'],['Rbar','\\overline{\\mathbb{R}}'],['F','\\mathcal{F}'],['A','\\mathcal{A}'],['I','\\mathcal{I}'],['B','\\mathcal{B}'],['G','\\mathcal{G}'],['H','\\mathcal{H}'],['Pow','\\mathcal{P}'],['T','\\mathcal{T}'],['D','\\mathcal{D}'],['M','\\mathcal{M}'],['C','\\mathcal{C}'],['X','\\mathcal{X}'],['eps','\\varepsilon'],['ind','\\mathbf{1}'],['as','\\text{ a.s.}'],['dto','\\xrightarrow{d}'],['pto','\\xrightarrow{\\mathbb{P}}'],['err','\\operatorname{err}'],['EX','\\mathrm{EX}'],['VCD','\\operatorname{VCD}'],['size','\\operatorname{size}'],['poly','\\operatorname{poly}'],['sgn','\\operatorname{sgn}']];
+function stripWhy(t) {
+  let i;
+  while ((i = t.indexOf('\\why')) >= 0) {
+    let j = t.indexOf('{', i); if (j < 0) break; let d = 0, k = j;
+    for (; k < t.length; k++) { if (t[k] === '{') d++; else if (t[k] === '}' && --d === 0) break; }
+    const inner = t.slice(j + 1, k).replace(/\$([^$]*)\$/g, '\\($1\\)');
+    t = t.slice(0, i) + '\\qquad\\text{' + inner + '}' + t.slice(k + 1);
+  }
+  return t;
+}
 function mochiTex(t) {
-  t = t.replace(/\\Lp\s*\{?(\w)\}?/g, '\\mathcal{L}^{$1}').replace(/\\bit\s*\{([^{}]*)\}/g, '\\overline{$1}').replace(/\\why\s*\{[^{}]*\}/g, '');
+  t = t.replace(/\\Lp\s*\{?(\w)\}?/g, '\\mathcal{L}^{$1}').replace(/\\bit\s*\{([^{}]*)\}/g, '\\overline{$1}');
+  t = stripWhy(t);
   MOCHI_MAC.forEach(([k, v]) => { t = t.replace(new RegExp('\\\\' + k + '(?![A-Za-z])', 'g'), () => v); });
   return t;
 }
@@ -831,7 +842,7 @@ function mdOf(node) {
     if (n.nodeType !== 1) return;
     const t = n.tagName, c = n.classList;
     if (t === 'MJX-CONTAINER') { const tex = mochiTex((n.dataset.tex || '').trim()); out += n.dataset.disp ? '\n\n$$' + tex + '$$\n\n' : '$$' + tex + '$$'; return; }
-    if (c.contains('pg') || c.contains('qed') || c.contains('head') || t === 'SCRIPT' || t === 'STYLE' || t === 'SN' || c.contains('sn')) return;
+    if (c.contains('pg') || c.contains('qed') || c.contains('head') || c.contains('phead') || c.contains('role-l') || c.contains('fc-btn') || t === 'SCRIPT' || t === 'STYLE' || t === 'SN' || c.contains('sn')) return;
     if (t === 'STRONG' || t === 'B') { out += '**' + mdOf(n).trim() + '**'; return; }
     if (t === 'EM' || t === 'I') { out += '_' + mdOf(n).trim() + '_'; return; }
     if (t === 'UL' || t === 'OL') { let i = 0; out += '\n\n'; n.querySelectorAll(':scope > li').forEach(li => { i++; out += (t === 'OL' ? i + '. ' : '- ') + mdOf(li).trim() + '\n'; }); out += '\n'; return; }
@@ -841,6 +852,17 @@ function mdOf(node) {
   });
   return out;
 }
+function findProof(el) {
+  const v = el.closest('.view');
+  if (el.id && v) { const named = [...v.querySelectorAll('.proof')].find(p => { const hd = p.querySelector('.phead'); return hd && hd.querySelector('a[href=' + JSON.stringify(String.fromCharCode(35) + el.id) + ']'); }); if (named) return named; }
+  let n = el.nextElementSibling, k = 0;
+  while (n && k++ < 8) {
+    if (n.matches('.proof')) return n;
+    if (n.matches('.thm, .algo, h2, h3, section, .sub-block, .sec-block')) return null;
+    n = n.nextElementSibling;
+  }
+  return null;
+}
 function flashcardMd(el) {
   const label = el.dataset.label || '', name = el.dataset.name || '', desc = el.dataset.desc || '';
   const kw = label.split(' ')[0];
@@ -848,6 +870,8 @@ function flashcardMd(el) {
   const tb = body.querySelector('.tb') || body;
   let back = mdOf(tb).replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
   back = back.replace(/^\*{0,2}[^\n]*?\([^\n]*?\)\.\*{0,2}\s*/, m => m.length < 140 && /^\*{0,2}(Definition|Theorem|Lemma|Proposition|Corollary|Example|Remark|Claim|Fact|Algorithm)/i.test(m) ? '' : m);
+  const pf = findProof(el);
+  if (pf) back += '\n\n**Proof.** ' + mdOf(pf).replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim() + ' ∎';
   const title = name || desc;
   const v = el.closest('.view'); const src = v ? (v.dataset.short || '') + ' ' + label : label;
   let front;
