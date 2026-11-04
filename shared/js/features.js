@@ -109,7 +109,7 @@ function buildToc(v) {
       a.appendChild(h('span', 'tl-t', hd.dataset.name || ''));
     } else {
       const sec = hd.querySelector('.sec');
-      if (sec) a.appendChild(h('span', 'tl-n', sec.textContent));
+      a.appendChild(h('span', 'tl-n', sec ? sec.textContent : '§'));
       a.appendChild(h('span', 'tl-t', plainHeading(hd)));
       if (hd.dataset.min) a.appendChild(h('span', 'tl-m', hd.dataset.min + '′'));
       if (hd.dataset.d) {
