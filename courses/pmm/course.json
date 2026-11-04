@@ -1,0 +1,13 @@
+{
+ "prefix": "",
+ "code": "B8.1",
+ "short": "PMM",
+ "title": "Probability, Measure and Martingales",
+ "titlehtml": "Probability, Measure <em>and</em> Martingales",
+ "eyebrow": "Michaelmas Term 2025",
+ "after": "after Harald Oberhauser’s lecture notes",
+ "dek": "From σ-algebras to stopping times, written to be read without having taken Part A Integration. Every idea borrowed from that course is explained where it is first needed.",
+ "blurb": "σ-algebras, integration, modes of convergence, conditional expectation and stopping times, from scratch.",
+ "motif": "walk",
+ "colophon": "<p>Based on Harald Oberhauser’s lecture notes for B8.1 <em>Probability, Measure and Martingales</em> (Michaelmas Term 2025), which descend from notes by Jan Obłój and James Martin, and before them Alison Etheridge, Oliver Riordan and Zhongmin Qian. Numbering follows the notes. The background explanations, figures and exercises are additions; errors in them are new. Chapters 6 (Martingales) and 7 (Applications) are not written yet.</p>"
+}

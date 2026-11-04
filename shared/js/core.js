@@ -213,7 +213,7 @@ function fitMath(c) {
 }
 function fixWide(nodes) { nodes.forEach(n => $$('mjx-container[jax="SVG"]', n).forEach(fitMath)); }
 function typeset(nodes) {
-  mjChain = mjChain.then(() => window.__mjReady).then(() => MathJax.typesetPromise(nodes)).then(() => fixWide(nodes)).catch(err => console.error('[mathjax]', err));
+  mjChain = mjChain.then(() => window.__mjReady).then(() => MathJax.typesetPromise(nodes)).then(() => { tagTex(nodes); fixWide(nodes); }).catch(err => console.error('[mathjax]', err));
   return mjChain;
 }
 let resizeT = null;
@@ -313,7 +313,10 @@ function buildCard(a) {
   const lab = document.createElement('span'); lab.textContent = labelOf(t) + (v && v.dataset.short && v.id !== currentView ? '  ·  ' + v.dataset.short : '');
   const go = document.createElement('a'); go.href = '#' + id; go.textContent = 'go there →'; go.className = 'xgo';
   go.addEventListener('click', e => { e.preventDefault(); hideCard(true); jump(id, a); });
-  head.appendChild(lab); head.appendChild(go); card.appendChild(head);
+  const bs = document.createElement('button'); bs.type = 'button'; bs.className = 'xbeside'; bs.textContent = '⇥ beside'; bs.title = 'Keep this open in a panel beside the text';
+  bs.addEventListener('click', e => { e.preventDefault(); hideCard(true); openBeside(id); });
+  const acts = document.createElement('span'); acts.className = 'xacts'; acts.appendChild(bs); acts.appendChild(go);
+  head.appendChild(lab); head.appendChild(acts); card.appendChild(head);
   let body;
   if (t.tagName === 'FIGURE') body = ($('figcaption', t) || t).cloneNode(true);
   else if (/^H[23]$/.test(t.tagName)) {
@@ -372,58 +375,3 @@ document.addEventListener('click', e => {
 window.addEventListener('scroll', () => { if (!card.hidden && lastPointer !== 'touch') hideCard(true); }, { passive: true });
 window.addEventListener('resize', () => hideCard(true));
 
-/* ---------- landing strip: a few random walks drawn in ink ---------- */
-function walkStrip() {
-  const c = document.getElementById('walk-strip'); if (!c) return;
-  const dpr = Math.min(2, window.devicePixelRatio || 1), W = c.clientWidth || 600, H = 120;
-  c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.scale(dpr, dpr);
-  const cs = getComputedStyle(document.documentElement);
-  const cols = [cs.getPropertyValue('--blue'), cs.getPropertyValue('--ochre'), cs.getPropertyValue('--ink-soft')];
-  const R = rng(7);
-  for (let k = 0; k < 7; k++) {
-    g.beginPath(); g.strokeStyle = cols[k % 3].trim(); g.globalAlpha = k < 3 ? .9 : .45; g.lineWidth = k < 3 ? 1.4 : 1;
-    let y = H / 2; g.moveTo(0, y);
-    const n = 300; for (let i = 1; i <= n; i++) { y += (R() < .5 ? -1 : 1) * 1.25; if (y < 6 || y > H - 6) y = clamp(2 * (y < 6 ? 6 : H - 6) - y, 6, H - 6); g.lineTo(i * W / n, y); }
-    g.stroke();
-  }
-  g.globalAlpha = 1;
-}
-
-/* ---------- in-chapter contents sidebar ---------- */
-const tocSide = document.createElement('nav'); tocSide.className = 'toc-side'; tocSide.setAttribute('aria-label', 'Sections in this chapter'); tocSide.hidden = true;
-const tocBtn = document.createElement('button'); tocBtn.type = 'button'; tocBtn.className = 'toc-btn'; tocBtn.textContent = '§ sections'; tocBtn.hidden = true;
-tocBtn.setAttribute('aria-expanded', 'false');
-document.body.appendChild(tocSide); document.body.appendChild(tocBtn);
-let tocObs = null;
-function buildToc(id) {
-  const v = document.getElementById(id);
-  const isCh = v && v.classList.contains('chapter');
-  tocSide.hidden = !isCh; tocBtn.hidden = !isCh; tocSide.classList.remove('open'); tocBtn.setAttribute('aria-expanded', 'false');
-  if (tocObs) { tocObs.disconnect(); tocObs = null; }
-  if (!isCh) return;
-  const hs = $$('h2[id], h3[id]', v);
-  const t = v.querySelector('header.ch-head h1');
-  tocSide.innerHTML = '<div class="toc-title">' + (v.dataset.short || '') + ' · ' + (t ? t.textContent : '') + '</div>';
-  const ul = document.createElement('ul');
-  const links = hs.map(h => {
-    const li = document.createElement('li'); li.className = h.tagName === 'H3' ? 'sub' : '';
-    const a = document.createElement('a'); a.href = '#' + h.id;
-    const sec = h.querySelector('.sec');
-    a.textContent = (sec ? sec.textContent + '  ' : '') + Array.from(h.childNodes).filter(n => !(n.classList && (n.classList.contains('pg') || n.classList.contains('sec')))).map(n => n.textContent).join('').trim();
-    a.addEventListener('click', () => { tocSide.classList.remove('open'); tocBtn.setAttribute('aria-expanded', 'false'); });
-    li.appendChild(a); ul.appendChild(li); return [h, a];
-  });
-  tocSide.appendChild(ul);
-  const top = document.createElement('a'); top.href = '#' + id; top.className = 'toc-top'; top.textContent = '↑ top of chapter';
-  tocSide.appendChild(top);
-  tocObs = new IntersectionObserver(() => {
-    let cur = null; links.forEach(([h, a]) => { if (h.getBoundingClientRect().top < window.innerHeight * 0.3) cur = a; });
-    links.forEach(([, a]) => a.classList.toggle('cur', a === cur));
-  }, { rootMargin: '0px 0px -60% 0px', threshold: [0, 1] });
-  links.forEach(([h]) => tocObs.observe(h));
-  window.addEventListener('scroll', () => { if (!links.length) return; let cur = null; links.forEach(([h, a]) => { if (h.getBoundingClientRect().top < window.innerHeight * 0.3) cur = a; }); links.forEach(([, a]) => a.classList.toggle('cur', a === cur)); }, { passive: true });
-}
-tocBtn.addEventListener('click', () => { const o = !tocSide.classList.contains('open'); tocSide.classList.toggle('open', o); tocBtn.setAttribute('aria-expanded', String(o)); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { tocSide.classList.remove('open'); tocBtn.setAttribute('aria-expanded', 'false'); } });
-const _showView = showView;
-showView = function (id) { const r = _showView(id); buildToc(currentView); return r; };
