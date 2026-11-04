@@ -78,9 +78,11 @@ Let $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ be a filtered probability space and $\tau,\
 Here $a\wedge b=\min(a,b)$ and $a\vee b=\max(a,b)$.
 
 <pause n="Minimum and maximum" q="Prove Proposition 5.5.">
-(i) $\{t=k\}$ is $\Omega$ if $k=n$ and $\emptyset$ otherwise, and both are in every $\F_k$.
+**(i)** $\{t=k\}$ is $\Omega$ if $k=n$ and $\emptyset$ otherwise, and both are in every $\F_k$.
 
-(ii) Use the "$\le$" form of the definition: $\{\tau\wedge\rho\le n\}=\{\tau\le n\}\cup\{\rho\le n\}$ and $\{\tau\vee\rho\le n\}=\{\tau\le n\}\cap\{\rho\le n\}$, both in $\F_n$.
+**(ii)** Use the "$\le$" form of the definition:
+$$\{\tau\wedge\rho\le n\}=\{\tau\le n\}\cup\{\rho\le n\},\qquad\{\tau\vee\rho\le n\}=\{\tau\le n\}\cap\{\rho\le n\},$$
+both in $\F_n$.
 </pause>
 <role r="why" a="hitting times, the main example">
 
@@ -92,7 +94,9 @@ Let $X=(X_n)_{n\ge0}$ be an adapted process on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ 
 </thm>
 
 <pf>
-$\{h_B\le n\}=\bigcup_{k=0}^nX_k^{-1}(B)$, "$X$ has been in $B$ at some time up to $n$". Each $X_k^{-1}(B)\in\F_k\subseteq\F_n$ since $X$ is adapted.
+The event "$X$ has been in $B$ at some time up to $n$" is
+$$\{h_B\le n\}=\bigcup_{k=0}^nX_k^{-1}(B).$$
+Each $X_k^{-1}(B)\in\F_k\subseteq\F_n$ since $X$ is adapted, so the union is in $\F_n$.
 </pf>
 
 <pause n="One step too early" q="Toss a coin repeatedly and let $\tau$ be the first time you have seen two heads in a row. Is $\tau$ a stopping time for the natural filtration? Is $\tau-1$?">
@@ -124,9 +128,12 @@ Let $\tau,\rho$ be stopping times on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$. Then
 </thm>
 
 <pause n="Information at a stopping time" q="Prove Proposition 5.8.">
-(i) $\emptyset\cap\{\tau=n\}=\emptyset\in\F_n$. If $A\in\F_\tau$ then $A^c\cap\{\tau=n\}=\{\tau=n\}\setminus(A\cap\{\tau=n\})\in\F_n$ (both sets are in $\F_n$). If $A_k\in\F_\tau$ then $\big(\bigcup_kA_k\big)\cap\{\tau=n\}=\bigcup_k(A_k\cap\{\tau=n\})\in\F_n$.
+**(i)** We check the three σ-algebra axioms, one at a time.
+<ul><li>$\emptyset\cap\{\tau=n\}=\emptyset\in\F_n$.</li><li>If $A\in\F_\tau$ then $A^c\cap\{\tau=n\}=\{\tau=n\}\setminus(A\cap\{\tau=n\})\in\F_n$, since both sets are in $\F_n$.</li><li>If $A_k\in\F_\tau$ then $\big(\bigcup_kA_k\big)\cap\{\tau=n\}=\bigcup_k(A_k\cap\{\tau=n\})\in\F_n$.</li></ul>
 
-(ii) Use the "$\le$" form. Let $A\in\F_\tau$. Since $\tau\le\rho$, $\{\rho\le n\}\subseteq\{\tau\le n\}$, so $A\cap\{\rho\le n\}=(A\cap\{\tau\le n\})\cap\{\rho\le n\}$, an intersection of two sets in $\F_n$.
+**(ii)** Use the "$\le$" form. Let $A\in\F_\tau$. Since $\tau\le\rho$, we have $\{\rho\le n\}\subseteq\{\tau\le n\}$, so
+$$A\cap\{\rho\le n\}=(A\cap\{\tau\le n\})\cap\{\rho\le n\},$$
+an intersection of two sets in $\F_n$.
 </pause>
 <role r="link" a="stopped filtrations">
 
@@ -134,7 +141,8 @@ In particular, combining Propositions 5.5 and 5.8, $(\F_{\tau\wedge n})_{n\ge0}$
 </role>
 
 ## Stopped processes {42} [d2 i3]
-If $(X_n)_{n\ge0}$ represents our ongoing winnings in a game and $\tau$ is our stopping strategy, then our final winnings are $X_\tau$. If $\tau<\infty$ then this is a well-defined function $$\Omega\ni\omega\longmapsto X_\tau(\omega):=X_{\tau(\omega)}(\omega),$$ and it is $\F$-measurable since $X_\tau^{-1}(B)=\bigcup_{n\ge0}\big(\tau^{-1}(\{n\})\cap X_n^{-1}(B)\big)\in\F$. In fact $X_\tau$ is $\F_\tau$-measurable. We rephrase this by introducing the stopped process.
+If $(X_n)_{n\ge0}$ represents our ongoing winnings in a game and $\tau$ is our stopping strategy, then our final winnings are $X_\tau$. If $\tau<\infty$ then this is a well-defined function $$\Omega\ni\omega\longmapsto X_\tau(\omega):=X_{\tau(\omega)}(\omega),$$ and it is $\F$-measurable since
+$$X_\tau^{-1}(B)=\bigcup_{n\ge0}\big(\tau^{-1}(\{n\})\cap X_n^{-1}(B)\big)\in\F.$$ In fact $X_\tau$ is $\F_\tau$-measurable. We rephrase this by introducing the stopped process.
 
 <thm k="Proposition 5.9" nm="Stopped process" pg="42" it>
 Let $X=(X_n)_{n\ge0}$ be an adapted process on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ and $\tau$ a stopping time. Then $X^\tau=(X_{\tau\wedge n})_{n\ge0}$ is a stochastic process, called the <strong>stopped process</strong>. $X^\tau$ is adapted to the filtration $(\F_{\tau\wedge n})_{n\ge0}$ and hence also to the filtration $(\F_n)_{n\ge0}$.
@@ -147,7 +155,11 @@ The stopped process follows $X$ until time $\tau$ and then freezes at the value 
 @@fig5-92@@
 
 <pf>
-It suffices to show that if $\rho$ is a finite stopping time then $X_\rho$ is $\F_\rho$-measurable (then apply it to $\rho=\tau\wedge n$). This follows from <a class="xref" href="#eq20">(20)</a>, since $$\{X_\rho\le x\}\cap\{\rho=n\}=\{X_n\le x\}\cap\{\rho=n\}\in\F_n\qquad\text{for all }n\ge0.$$ (Also $\{X_\rho\le x\}\in\F_\infty$, as a countable union of such sets.)
+It suffices to show that if $\rho$ is a finite stopping time then $X_\rho$ is $\F_\rho$-measurable; then apply it to $\rho=\tau\wedge n$.
+
+This follows from <a class="xref" href="#eq20">(20)</a>, since on the event $\{\rho=n\}$ the variable $X_\rho$ is just $X_n$:
+$$\{X_\rho\le x\}\cap\{\rho=n\}=\{X_n\le x\}\cap\{\rho=n\}\in\F_n\qquad\text{for all }n\ge0.$$
+(Also $\{X_\rho\le x\}\in\F_\infty$, as a countable union of such sets.)
 </pf>
 <role r="roadmap" a="where martingales begin">
 

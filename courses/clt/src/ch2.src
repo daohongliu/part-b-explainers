@@ -41,7 +41,9 @@ So a consistent learner just has to fit the training data with something from $\
 </role>
 
 <bg id="bg-erm" t="Empirical risk minimisation" lead="For machine learners">
-In statistical learning the data come from a distribution on pairs $(x,y)$ and a **loss** $\ell(y',y)\ge0$ measures the cost of predicting $y'$ when the truth is $y$. The **risk** of $h$ is $R(h)=\E_{(x,y)\sim\D}[\ell(h(x),y)]$ and the **empirical risk** on a sample $S$ of size $m$ is $\hat R(h)=\frac1m\sum_{(x,y)\in S}\ell(h(x),y)$. **Empirical risk minimisation** (ERM) picks $h\in\H$ minimising $\hat R$. With the zero-one loss $\ell(y',y)=\ind(y'\neq y)$, and in the **realisable** case where some $h\in\H$ has risk $0$, ERM is exactly consistent learning.
+In statistical learning the data come from a distribution on pairs $(x,y)$ and a **loss** $\ell(y',y)\ge0$ measures the cost of predicting $y'$ when the truth is $y$. The **risk** of $h$ and its **empirical risk** on a sample $S$ of size $m$ are
+$$R(h)=\E_{(x,y)\sim\D}[\ell(h(x),y)],\qquad\hat R(h)=\frac1m\sum_{(x,y)\in S}\ell(h(x),y).$$
+**Empirical risk minimisation** (ERM) picks $h\in\H$ minimising $\hat R$. With the zero-one loss $\ell(y',y)=\ind(y'\neq y)$, and in the **realisable** case where some $h\in\H$ has risk $0$, ERM is exactly consistent learning.
 </bg>
 
 <thm k="Theorem 2.2" nm="Occam’s razor, cardinality version" pg="22" it>
@@ -49,7 +51,17 @@ Let $L$ be a consistent learner for $\C$ using $\H$. For all $n\ge1$, $c\in\C_n$
 </thm>
 
 <pf>
-Fix $c$ and $\D$. Call $h\in\H_n$ **bad** if $\err(h)>\eps$. For each $h$, let $A_h$ be the event that all $m$ examples agree with $h$. A bad $h$ agrees with one random example with probability less than $1-\eps$, so $\PP[A_h]\le(1-\eps)^m\le e^{-\eps m}$. Let $E$ be the event that some bad hypothesis agrees with all the examples. By the union bound over the at most $|\H_n|$ bad hypotheses, $$\PP[E]\le\sum_{h\text{ bad}}\PP[A_h]\le|\H_n|\,e^{-\eps m},$$ which is at most $\delta$ exactly when $m\ge\frac1\eps(\log|\H_n|+\log\frac1\delta)$. When $E$ fails, every hypothesis consistent with the sample has error at most $\eps$, and the consistent learner outputs one of those.
+Fix $c$ and $\D$. Call $h\in\H_n$ **bad** if $\err(h)>\eps$.
+
+For each $h$, let $A_h$ be the event that all $m$ examples agree with $h$. A bad $h$ agrees with one random example with probability less than $1-\eps$, and the examples are independent, so
+$$\PP[A_h]\le(1-\eps)^m\le e^{-\eps m}.$$
+
+Let $E$ be the event that some bad hypothesis agrees with all the examples. By the union bound over the at most $|\H_n|$ bad hypotheses,
+$$\PP[E]\le\sum_{h\text{ bad}}\PP[A_h]\le|\H_n|\,e^{-\eps m},$$
+which is at most $\delta$ exactly when
+$$m\ge\frac1\eps\Big(\log|\H_n|+\log\frac1\delta\Big).$$
+
+When $E$ fails, every hypothesis consistent with the sample has error at most $\eps$, and the consistent learner outputs one of those.
 </pf>
 <role r="idea" a="every consistent hypothesis is good">
 
@@ -67,7 +79,15 @@ The theorem lets $\H_n$ depend only on $n$ (and $\C_n$). A more general version 
 </thm>
 
 <pause n="Why $\beta<1$ is enough" q="In Remark 2.3, (2.3) becomes $m\ge\frac1\eps\big(p\,m^\beta+\log\frac1\delta\big)$ with $p$ a polynomial in the other parameters. Why does some polynomially large $m$ satisfy this?">
-The left side grows linearly in $m$ and the right side grows like $m^\beta$ with $\beta<1$, so the left side eventually wins. Concretely, it is enough to have both $m\ge\frac2\eps p\,m^\beta$ and $m\ge\frac2\eps\log\frac1\delta$. The first holds once $m^{1-\beta}\ge\frac{2p}\eps$, that is $m\ge(2p/\eps)^{1/(1-\beta)}$. For a fixed $\beta<1$ the exponent $\frac1{1-\beta}$ is a constant, so this is still a polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$. If $\beta=1$ the inequality could fail for every $m$, which is the memorisation case.
+The left side grows linearly in $m$ and the right side grows like $m^\beta$ with $\beta<1$, so the left side eventually wins.
+
+Concretely, it is enough to have both
+$$m\ge\frac2\eps\,p\,m^\beta\qquad\text{and}\qquad m\ge\frac2\eps\log\frac1\delta.$$
+The first holds once $m^{1-\beta}\ge\frac{2p}\eps$, that is,
+$$m\ge(2p/\eps)^{1/(1-\beta)}.$$
+For a fixed $\beta<1$ the exponent $\frac1{1-\beta}$ is a constant, so this is still a polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$.
+
+If $\beta=1$ the inequality could fail for every $m$, which is the memorisation case.
 </pause>
 
 <sheet n="1" qs="4,5">With Occam’s razor in hand, Sheet 1 is complete.</sheet>

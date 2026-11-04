@@ -25,7 +25,11 @@ The advantage $\gamma$ may shrink as $n$ grows, but only polynomially: a weak le
 </role>
 
 <pause n="A weak learner for conjunctions" q="On $\{0,1\}^n$, let $\H_n$ contain the constant functions $0$ and $1$ and the $2n$ 'dictators' $z_i$ and $\bit{z_i}$. Why should some function in $\H_n$ have error noticeably below $\frac12$ for any target conjunction and any distribution? (This is Sheet 3, question 3. Think before opening.)">
-Here is the idea, without all the details. Let $c$ be a conjunction with literals $\ell_1,\dots,\ell_k$, and let $p=\PP[c(x)=1]$. If $p$ is far from $\frac12$, the right constant function already has error well below $\frac12$. If $p$ is close to $\frac12$, consider the negative examples: each one falsifies at least one of the $k\le2n$ literals, so some literal $\ell$ is false on at least a $\frac1{2n}$ fraction of the negative mass. Use $\ell$ itself as the hypothesis: it is $1$ on all positives (since $\ell$ is in $c$) and $0$ on that chunk of negatives. Balancing the two cases gives an advantage of order $\frac1n$, which is what the sheet asks you to prove carefully.
+Here is the idea, without all the details. Let $c$ be a conjunction with literals $\ell_1,\dots,\ell_k$, and let $p=\PP[c(x)=1]$.
+
+<ul><li>If $p$ is far from $\frac12$, the right constant function already has error well below $\frac12$.</li><li>If $p$ is close to $\frac12$, consider the negative examples. Each one falsifies at least one of the $k\le2n$ literals, so some literal $\ell$ is false on at least a $\frac1{2n}$ fraction of the negative mass. Use $\ell$ itself as the hypothesis: it is $1$ on all positives (since $\ell$ is in $c$) and $0$ on that chunk of negatives.</li></ul>
+
+Balancing the two cases gives an advantage of order $\frac1n$, which is what the sheet asks you to prove carefully.
 </pause>
 
 <sheet n="3" qs="3">Parts 1 and 2 need the weak learning definition; part 2 also uses AdaBoost from the next section.</sheet>
@@ -65,17 +69,39 @@ The proof shows something stronger and more useful: the training error after $T$
 <pf>
 **Allow for failures.** Each call to WeakLearn fails with probability at most $\delta/T$, so by the union bound all $T$ calls succeed with probability at least $1-\delta$. Assume they do.
 
-**Training error is at most an exponential sum.** For $y\in\{-1,1\}$, $\ind[\sgn(\tilde h(x))\neq y]\le e^{-y\tilde h(x)}$: if the sign is wrong then $y\tilde h(x)\le0$ and the right side is at least $1$; otherwise the right side is positive anyway. Averaging over the training set with $D_1$, $$#eq4-2 \PP_{i\sim D_1}[\hat h(x_i)\neq y_i]\le\sum_{i=1}^mD_1(i)\,e^{-y_i\tilde h(x_i)}. \tag{4.2}$$
+**Training error is at most an exponential sum.** For $y\in\{-1,1\}$,
+$$\ind[\sgn(\tilde h(x))\neq y]\le e^{-y\tilde h(x)}:$$
+if the sign is wrong then $y\tilde h(x)\le0$ and the right side is at least $1$; otherwise the right side is positive anyway. Averaging over the training set with $D_1$,
 
-**Peel off one round at a time.** Write $\tilde h_t=\sum_{s=t}^T\alpha_sh_s$ for the sum of rounds $t$ to $T$, so $\tilde h=\tilde h_1$ and $\tilde h_t=\alpha_th_t+\tilde h_{t+1}$. The update rule says $D_t(i)e^{-\alpha_ty_ih_t(x_i)}=Z_{t+1}D_{t+1}(i)$. So $$\sum_iD_1(i)e^{-y_i\tilde h_1(x_i)}=\sum_iD_1(i)e^{-\alpha_1y_ih_1(x_i)}e^{-y_i\tilde h_2(x_i)}=Z_2\sum_iD_2(i)e^{-y_i\tilde h_2(x_i)}.$$ Repeating this $T$ times, and using that the $D_{T+1}(i)$ sum to 1, $$#eq4-8 \sum_{i=1}^mD_1(i)\,e^{-y_i\tilde h(x_i)}=\prod_{t=1}^TZ_{t+1}. \tag{4.8}$$
+$$#eq4-2 \PP_{i\sim D_1}[\hat h(x_i)\neq y_i]\le\sum_{i=1}^mD_1(i)\,e^{-y_i\tilde h(x_i)}. \tag{4.2}$$
 
-**Bound each $Z_{t+1}$.** Splitting the sum defining $Z_{t+1}$ into correct and incorrect examples, $$Z_{t+1}=\sum_{i:\,h_t(x_i)=y_i}D_t(i)e^{-\alpha_t}+\sum_{i:\,h_t(x_i)\neq y_i}D_t(i)e^{\alpha_t}=(1-\eps_t)e^{-\alpha_t}+\eps_te^{\alpha_t}=2\sqrt{\eps_t(1-\eps_t)},$$ after substituting $e^{\alpha_t}=\sqrt{(1-\eps_t)/\eps_t}$. Write $\eps_t=\frac12-\gamma_t$. Then $4\eps_t(1-\eps_t)=1-4\gamma_t^2$, and since $1-x\le e^{-x}$, $$#eq4-9 Z_{t+1}=\sqrt{1-4\gamma_t^2}\le e^{-2\gamma_t^2}. \tag{4.9}$$
+**Peel off one round at a time.** Write
+$$\tilde h_t=\sum_{s=t}^T\alpha_sh_s$$
+for the sum of rounds $t$ to $T$, so $\tilde h=\tilde h_1$ and $\tilde h_t=\alpha_th_t+\tilde h_{t+1}$. The update rule says
+$$D_t(i)\,e^{-\alpha_ty_ih_t(x_i)}=Z_{t+1}D_{t+1}(i).$$
+So
+$$\begin{aligned}\sum_iD_1(i)e^{-y_i\tilde h_1(x_i)}&=\sum_iD_1(i)e^{-\alpha_1y_ih_1(x_i)}e^{-y_i\tilde h_2(x_i)}\\&=Z_2\sum_iD_2(i)e^{-y_i\tilde h_2(x_i)}.&&\why{update rule}\end{aligned}$$
+Repeating this $T$ times, and using that the $D_{T+1}(i)$ sum to 1,
 
-**Finish.** Each $\gamma_t\ge\gamma$, so the training error is at most $e^{-2T\gamma^2}$, which is at most $\frac1{2m}$ when $T\ge\frac{\log2m}{2\gamma^2}$. But the training error is a multiple of $\frac1m$, so if it is below $\frac1m$ it is $0$.
+$$#eq4-8 \sum_{i=1}^mD_1(i)\,e^{-y_i\tilde h(x_i)}=\prod_{t=1}^TZ_{t+1}. \tag{4.8}$$
+
+**Bound each $Z_{t+1}$.** Split the sum defining $Z_{t+1}$ into correct and incorrect examples:
+$$\begin{aligned}Z_{t+1}&=\sum_{i:\,h_t(x_i)=y_i}D_t(i)e^{-\alpha_t}+\sum_{i:\,h_t(x_i)\neq y_i}D_t(i)e^{\alpha_t}\\&=(1-\eps_t)e^{-\alpha_t}+\eps_te^{\alpha_t}\\&=2\sqrt{\eps_t(1-\eps_t)},&&\why{substituting $e^{\alpha_t}=\sqrt{(1-\eps_t)/\eps_t}$}\end{aligned}$$
+Write $\eps_t=\frac12-\gamma_t$. Then $4\eps_t(1-\eps_t)=1-4\gamma_t^2$, and since $1-x\le e^{-x}$,
+
+$$#eq4-9 Z_{t+1}=\sqrt{1-4\gamma_t^2}\le e^{-2\gamma_t^2}. \tag{4.9}$$
+
+**Finish.** Each $\gamma_t\ge\gamma$, so the training error is at most
+$$\prod_{t=1}^Te^{-2\gamma_t^2}\le e^{-2T\gamma^2},$$
+which is at most $\frac1{2m}$ when $T\ge\frac{\log2m}{2\gamma^2}$. But the training error is a multiple of $\frac1m$, so if it is below $\frac1m$ it is $0$.
 </pf>
 
 <pause n="Where the formula for $\alpha_t$ comes from" q="For a fixed $h_t$ with weighted error $\eps_t$, $Z_{t+1}$ as a function of $\alpha$ is $(1-\eps_t)e^{-\alpha}+\eps_te^{\alpha}$. Which $\alpha$ minimises it?">
-Differentiate: $-(1-\eps_t)e^{-\alpha}+\eps_te^{\alpha}=0$, so $e^{2\alpha}=\frac{1-\eps_t}{\eps_t}$ and $\alpha=\frac12\log\frac{1-\eps_t}{\eps_t}$. The second derivative is positive, so this is a minimum. Since the training error is bounded by $\prod Z_{t+1}$, AdaBoost is choosing each $\alpha_t$ greedily to make the bound as small as possible. That greedy choice is the "adaptive" in the name.
+Differentiate and set the derivative to zero:
+$$-(1-\eps_t)e^{-\alpha}+\eps_te^{\alpha}=0,\qquad\text{so}\qquad e^{2\alpha}=\frac{1-\eps_t}{\eps_t}\qquad\text{and}\qquad\alpha=\frac12\log\frac{1-\eps_t}{\eps_t}.$$
+The second derivative is positive, so this is a minimum.
+
+Since the training error is bounded by $\prod Z_{t+1}$, AdaBoost is choosing each $\alpha_t$ greedily to make the bound as small as possible. That greedy choice is the "adaptive" in the name.
 </pause>
 
 <sheet n="3" qs="2"></sheet>
@@ -95,9 +121,18 @@ If $\VCD(\H)=d$, then $\VCD(\mathrm{THRESHOLDS}_k(\H))=O(kd\log k)$.
 </thm>
 
 <pf>
-Count the dichotomies of a set $S$ of $m$ points. A function in the class is built in two stages. First choose $h_1,\dots,h_k$; this maps each point $x\in S$ to the vector $(h_1(x),\dots,h_k(x))\in\{-1,1\}^k$. Then apply a linear threshold function in $\R^k$ to these $m$ vectors.
+Count the dichotomies of a set $S$ of $m$ points. A function in the class is built in two stages.
+<ol class="parts"><li>Choose $h_1,\dots,h_k$. This maps each point $x\in S$ to the vector $(h_1(x),\dots,h_k(x))\in\{-1,1\}^k$.</li><li>Apply a linear threshold function in $\R^k$ to these $m$ vectors.</li></ol>
 
-Each $h_i$ can act on $S$ in at most $(em/d)^d$ ways by the Sauer–Shelah lemma, so the first stage produces at most $(em/d)^{dk}$ different configurations of $m$ vectors. For each configuration, linear threshold functions in $\R^k$ have VC dimension $k+1$, so they produce at most $\big(\frac{em}{k+1}\big)^{k+1}$ dichotomies. If $m$ is large enough that $$#eq4-10 \Big(\frac{em}{k+1}\Big)^{k+1}\Big(\frac{em}d\Big)^{dk}<2^m, \tag{4.10}$$ then $S$ is not shattered, so the VC dimension is below $m$. The left side is $2^{O(kd\log m)}$, and a short calculation shows (4.10) holds for all $m\ge c_0kd\log k$ for a suitable constant $c_0$ (Exercise 4.2 in the notes).
+**Counting stage 1.** Each $h_i$ can act on $S$ in at most $(em/d)^d$ ways by the Sauer–Shelah lemma, so the first stage produces at most $(em/d)^{dk}$ different configurations of $m$ vectors.
+
+**Counting stage 2.** For each configuration, linear threshold functions in $\R^k$ have VC dimension $k+1$, so they produce at most $\big(\frac{em}{k+1}\big)^{k+1}$ dichotomies.
+
+**Comparing with $2^m$.** If $m$ is large enough that
+
+$$#eq4-10 \Big(\frac{em}{k+1}\Big)^{k+1}\Big(\frac{em}d\Big)^{dk}<2^m, \tag{4.10}$$
+
+then $S$ is not shattered, so the VC dimension is below $m$. The left side is $2^{O(kd\log m)}$, and a short calculation shows (4.10) holds for all $m\ge c_0kd\log k$ for a suitable constant $c_0$ (Exercise 4.2 in the notes).
 </pf>
 <role r="payoff" a="weak learning implies PAC learning">
 

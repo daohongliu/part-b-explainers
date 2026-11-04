@@ -159,7 +159,11 @@ def process(s):
             body = first_p_insert(body, f'<span class="phead">{h}</span> ')
             q = '<span class="qed" data-tip="Quod erat demonstrandum. Or ‘quite easily done’, depending on who’s lecturing.">∎</span>'
             idx = body.rfind('</p>')
-            body = body[:idx] + q + body[idx:] if idx >= 0 else body + q
+            tail = body[idx + 4:].strip() if idx >= 0 else body
+            if idx >= 0 and not tail:
+                body = body[:idx] + q + body[idx:]
+            else:
+                body = body + q.replace('class="qed"', 'class="qed qed-end"')
             return ph(f'<div class="proof">{body}</div>')
         if tag == 'role':
             r = a.get('r', 'idea'); lab = ROLES.get(r, r); ann = a.get('a', '').replace('<', '&lt;').replace('>', '&gt;')

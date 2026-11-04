@@ -56,7 +56,22 @@ Here "a.s." (almost surely) means "with probability one", and $\E_{\mathbb Q}$ i
 </role>
 
 <pf h="Why it works (one step, then induction).">
-Take one period, from a node where the price is $s$, and suppose the claim pays $v_u$ if the price goes up and $v_d$ if it goes down. We want $H$ and $V$ with $H(1+u)s+(V-Hs)(1+r)=v_u$ and $H(1-d)s+(V-Hs)(1+r)=v_d$. Subtracting, $H=\dfrac{v_u-v_d}{(u+d)s}$; substituting back, $$V=\frac{1}{1+r}\big(q\,v_u+(1-q)\,v_d\big),\qquad q=\frac{r+d}{u+d}.$$ The condition $1-d<1+r<1+u$ is exactly $0<q<1$. So $V$ is a discounted *average* of the two outcomes, weighted by $q$ instead of the true probability. Call $\mathbb Q$ the measure under which each step goes up with probability $q$, independently. Under $\mathbb Q$, the expected next discounted price is $\frac{q(1+u)s+(1-q)(1-d)s}{(1+r)^{n+1}}=\frac{s}{(1+r)^n}$, which is the martingale property; and $q$ is the only up-probability that gives it. Working backwards from time $N$, one period at a time, builds $V_0$ and the whole strategy $H$, and unwinding the averages gives $V_0=(1+r)^{-N}\E_{\mathbb Q}[f]$.
+Take one period, starting from a node where the price is $s$, and suppose the claim pays $v_u$ if the price goes up and $v_d$ if it goes down. We want a holding $H$ of stock and a starting value $V$ that reproduce both outcomes:
+$$\begin{aligned}H(1+u)s+(V-Hs)(1+r)&=v_u,\\H(1-d)s+(V-Hs)(1+r)&=v_d.\end{aligned}$$
+
+Subtracting the two equations kills $V$ and gives
+$$H=\frac{v_u-v_d}{(u+d)s}.$$
+Substituting back,
+$$V=\frac{1}{1+r}\big(q\,v_u+(1-q)\,v_d\big),\qquad q=\frac{r+d}{u+d}.$$
+
+The condition $1-d<1+r<1+u$ is exactly $0<q<1$. So $V$ is a discounted *average* of the two outcomes, weighted by $q$ instead of the true probability.
+
+Call $\mathbb Q$ the measure under which each step goes up with probability $q$, independently. Under $\mathbb Q$, the expected next discounted price is
+$$\frac{q(1+u)s+(1-q)(1-d)s}{(1+r)^{n+1}}=\frac{s}{(1+r)^n},$$
+which is the martingale property; and $q$ is the only up-probability that gives it.
+
+Finally, work backwards from time $N$, one period at a time. This builds $V_0$ and the whole strategy $H$, and unwinding the averages gives
+$$V_0=(1+r)^{-N}\E_{\mathbb Q}[f].$$
 </pf>
 <role r="idea" a="why real-world odds drop out">
 
@@ -99,11 +114,19 @@ Let $f_n(\theta)=\E[\theta^{Z_n}]$. Then $f_n$ is the $n$-fold composition of $f
 </thm>
 
 <pf h="‘Proof’ (informal).">
-We proceed by induction. First, $f_0(\theta)=\E[\theta^1]=\theta$, the identity. Assume $n\ge1$ and that $f_{n-1}$ is the $(n-1)$-fold composition. If we know $Z_{n-1}=k$, then $Z_n$ is a sum of $k$ independent copies of $X$, so $$\E\big[\theta^{Z_n}\,\big|\,Z_{n-1}=k\big]=\E\big[\theta^{X_{n,1}+\dots+X_{n,k}}\big]=\E\big[\theta^{X_{n,1}}\big]\cdots\E\big[\theta^{X_{n,k}}\big]=f(\theta)^k,$$ using independence (the expectation of a product of independent variables is the product of expectations). Writing this for all $k$ at once:
+We proceed by induction. For the base case, $f_0(\theta)=\E[\theta^1]=\theta$, the identity. Now assume $n\ge1$ and that $f_{n-1}$ is the $(n-1)$-fold composition.
+
+Suppose we know that $Z_{n-1}=k$. Then $Z_n$ is a sum of $k$ independent copies of $X$, so
+$$\begin{aligned}\E\big[\theta^{Z_n}\,\big|\,Z_{n-1}=k\big]&=\E\big[\theta^{X_{n,1}+\dots+X_{n,k}}\big]\\&=\E\big[\theta^{X_{n,1}}\big]\cdots\E\big[\theta^{X_{n,k}}\big]&&\why{by independence}\\&=f(\theta)^k.\end{aligned}$$
+The middle step uses the fact that the expectation of a product of independent variables is the product of their expectations.
+
+Writing this for all $k$ at once:
 
 $$#eq1 \E\big[\theta^{Z_n}\,\big|\,Z_{n-1}\big]=f(\theta)^{Z_{n-1}}. \tag{1}$$
 
-This is our first example of a conditional expectation that is itself a *random variable*: its value depends on the random $Z_{n-1}$. Averaging over $Z_{n-1}$,
+This is our first example of a conditional expectation that is itself a *random variable*: its value depends on the random $Z_{n-1}$.
+
+Averaging over $Z_{n-1}$,
 
 $$#eq2 \begin{aligned}f_n(\theta)=\E\big[\theta^{Z_n}\big]&=\E\Big[\E\big[\theta^{Z_n}\,\big|\,Z_{n-1}\big]\Big]\\&=\E\big[f(\theta)^{Z_{n-1}}\big]=f_{n-1}\big(f(\theta)\big),\end{aligned} \tag{2}$$
 
@@ -111,7 +134,9 @@ and the claim follows by induction.
 </pf>
 <role r="technique" a="the tower property, met properly in Chapter 4">
 
-In <a class="xref" href="#eq2">(2)</a> we used the **tower property**: averaging the conditional averages gives the overall average. Here it is just the partition theorem from Prelims, $\E[Y]=\sum_k\E[Y\mid Z_{n-1}=k]\,\PP(Z_{n-1}=k)$, because the events $\{Z_{n-1}=k\}$ form a countable partition of the sample space. In the general theory we will need something that works when conditioning on a continuous random variable, where every single value has probability zero (Chapter 4).
+In <a class="xref" href="#eq2">(2)</a> we used the **tower property**: averaging the conditional averages gives the overall average. Here it is just the partition theorem from Prelims,
+$$\E[Y]=\sum_k\E[Y\mid Z_{n-1}=k]\,\PP(Z_{n-1}=k),$$
+which applies because the events $\{Z_{n-1}=k\}$ form a countable partition of the sample space. In the general theory we will need something that works when conditioning on a continuous random variable, where every single value has probability zero (Chapter 4).
 </role>
 
 Watson wanted the **extinction probability**, the probability that $Z_n=0$ for some $n$.
@@ -123,13 +148,24 @@ Let $q=\PP[Z_n=0\text{ for some }n]$. Then $q$ is the smallest root in $[0,1]$ o
 </thm>
 
 <pf h="‘Proof’ (informal).">
-Let $q_n=\PP[Z_n=0]=f_n(0)$. Since $\{Z_n=0\}\subseteq\{Z_{n+1}=0\}$, $q_n$ increases with $n$, and, intuitively,
+**Step 1: $q$ is a root of $f(\theta)=\theta$.** Let $q_n=\PP[Z_n=0]=f_n(0)$. Since $\{Z_n=0\}\subseteq\{Z_{n+1}=0\}$ (once the family dies out it stays dead), $q_n$ increases with $n$, and
 
 $$#eq3 q=\lim_{n\to\infty}q_n=\lim_{n\to\infty}f_n(0). \tag{3}$$
 
-(This is Lemma 1.4: the events $\{Z_n=0\}$ increase to $\{Z_n=0\text{ for some }n\}$.) Since $f_{n+1}(0)=f(f_n(0))$ and $f$ is continuous, letting $n\to\infty$ in $q_{n+1}=f(q_n)$ shows that $q$ satisfies $q=f(q)$.
+This is Lemma 1.4: the events $\{Z_n=0\}$ increase to $\{Z_n=0\text{ for some }n\}$.
 
-Now observe that $f$ is **convex** on $[0,1]$ (its second derivative $f''(\theta)=\sum_kk(k-1)p_k\theta^{k-2}$ is $\ge0$, so its graph bends upwards) and $f(1)=1$. So only two things can happen, depending on the slope $m=f'(1)$ at $1$. If $m\le1$, the graph of $f$ stays above the diagonal on $[0,1)$ and the only root is $\theta=1$. If $m>1$, the graph crosses the diagonal once more, at some $\theta_0<1$. In that case, to see that $q$ must be the smaller root $\theta_0$: $f$ is increasing, and $q_0=0\le\theta_0$, so by induction $q_{n+1}=f(q_n)\le f(\theta_0)=\theta_0$ for all $n$, giving $q\le\theta_0$.
+Now $f_{n+1}(0)=f(f_n(0))$, that is, $q_{n+1}=f(q_n)$. Since $f$ is continuous, letting $n\to\infty$ on both sides shows that
+$$q=f(q).$$
+
+**Step 2: what the roots look like.** The function $f$ is **convex** on $[0,1]$: its second derivative
+$$f''(\theta)=\sum_kk(k-1)p_k\theta^{k-2}$$
+is $\ge0$, so its graph bends upwards. Also $f(1)=1$. So only two things can happen, depending on the slope $m=f'(1)$ at $1$.
+
+<ul><li>If $m\le1$, the graph of $f$ stays above the diagonal on $[0,1)$, and the only root is $\theta=1$.</li><li>If $m>1$, the graph crosses the diagonal once more, at some $\theta_0<1$.</li></ul>
+
+**Step 3: which root.** In the second case we must check that $q$ is the *smaller* root $\theta_0$. The function $f$ is increasing, and $q_0=0\le\theta_0$, so by induction
+$$q_{n+1}=f(q_n)\le f(\theta_0)=\theta_0\qquad\text{for all }n.$$
+Letting $n\to\infty$ gives $q\le\theta_0$.
 </pf>
 
 @@fig0-3@@
@@ -139,7 +175,14 @@ It's not hard to guess the result for $m>1$ and $m<1$, but the case $m=1$ is far
 </role>
 
 <pause n="Two children or none" q="Each individual has no children with probability $\frac14$ and two children with probability $\frac34$. What is the extinction probability?">
-The generating function is $f(\theta)=\frac14+\frac34\theta^2$. Solving $\theta=f(\theta)$ means $3\theta^2-4\theta+1=0$, that is $(3\theta-1)(\theta-1)=0$, with roots $\frac13$ and $1$. The smallest is $q=\frac13$. This fits the picture above: the mean number of children is $\frac34\cdot2=\frac32>1$, so extinction is not certain. One check you can do in your head: the first individual's line dies out if it has no children (probability $\frac14$), or if it has two and both their lines die out (probability $\frac34q^2$). With $q=\frac13$ that is $\frac14+\frac34\cdot\frac19=\frac14+\frac1{12}=\frac13$.
+The generating function is $f(\theta)=\frac14+\frac34\theta^2$. Solving $\theta=f(\theta)$ means
+$$3\theta^2-4\theta+1=0,\qquad\text{that is}\qquad(3\theta-1)(\theta-1)=0,$$
+with roots $\frac13$ and $1$. The smallest is $q=\frac13$.
+
+This fits the picture above: the mean number of children is $\frac34\cdot2=\frac32>1$, so extinction is not certain.
+
+One check you can do in your head: the first individual's line dies out if it has no children (probability $\frac14$), or if it has two and both their lines die out (probability $\frac34q^2$). With $q=\frac13$ that is
+$$\tfrac14+\tfrac34\cdot\tfrac19=\tfrac14+\tfrac1{12}=\tfrac13.$$
 </pause>
 <role r="link" a="yet another martingale">
 

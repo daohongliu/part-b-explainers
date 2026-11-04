@@ -88,9 +88,19 @@ Let $(\Omega,\F,\mu)$ be a measure space.
 </thm>
 
 <pf h="Proof (the notes defer this to Part A).">
-For (1), cut $F$ into disjoint rings: $F=F_1\cup(F_2\setminus F_1)\cup(F_3\setminus F_2)\cup\cdots$, writing $F_0=\emptyset$. These rings are disjoint and in $\F$, so countable additivity gives $\mu(F)=\sum_{k\ge1}\mu(F_k\setminus F_{k-1})$. The $n$-th partial sum of this series is $\mu(F_n)$, because the first $n$ rings make up $F_n$. A series of non-negative terms converges to its sum through increasing partial sums, so $\mu(F_n)\uparrow\mu(F)$.
+**Part (1).** Cut $F$ into disjoint rings. Writing $F_0=\emptyset$,
+$$F=F_1\cup(F_2\setminus F_1)\cup(F_3\setminus F_2)\cup\cdots.$$
+These rings are disjoint and in $\F$, so countable additivity gives
+$$\mu(F)=\sum_{k\ge1}\mu(F_k\setminus F_{k-1}).$$
+The $n$-th partial sum of this series is $\mu(F_n)$, because the first $n$ rings make up $F_n$. A series of non-negative terms converges to its sum through increasing partial sums, so $\mu(F_n)\uparrow\mu(F)$.
 
-For (2), consider only $n\ge k$. The sets $G_k\setminus G_n$ increase to $G_k\setminus G$, so by (1), $\mu(G_k\setminus G_n)\uparrow\mu(G_k\setminus G)$. Since $\mu(G_k)<\infty$, all the sets involved have finite measure, and additivity gives $\mu(G_k\setminus G_n)=\mu(G_k)-\mu(G_n)$ and $\mu(G_k\setminus G)=\mu(G_k)-\mu(G)$. Subtracting from the finite number $\mu(G_k)$ gives $\mu(G_n)\downarrow\mu(G)$. With $\mu(G_k)=\infty$ the subtraction would read $\infty-\infty$, which is meaningless.
+**Part (2).** Consider only $n\ge k$. The sets $G_k\setminus G_n$ increase to $G_k\setminus G$, so by part (1),
+$$\mu(G_k\setminus G_n)\uparrow\mu(G_k\setminus G).$$
+Since $\mu(G_k)<\infty$, all the sets involved have finite measure, and additivity gives
+$$\mu(G_k\setminus G_n)=\mu(G_k)-\mu(G_n),\qquad\mu(G_k\setminus G)=\mu(G_k)-\mu(G).$$
+Subtracting from the finite number $\mu(G_k)$ gives $\mu(G_n)\downarrow\mu(G)$.
+
+Notice where finiteness was used: with $\mu(G_k)=\infty$ the subtraction would read $\infty-\infty$, which is meaningless.
 </pf>
 <role r="caution" a="the finiteness in Lemma 1.4 (2)">
 
@@ -112,9 +122,15 @@ In words: to check countable additivity, it is enough to check that sets shrinki
 </role>
 
 <pause n="Continuity at the empty set" q="Prove Lemma 1.5.">
-(⇒) Suppose $A_n\downarrow\emptyset$. Every point of $A_n$ leaves the sequence at some finite stage, so $A_n$ is the disjoint union of the sets $A_k\setminus A_{k+1}$, $k\ge n$, all of which lie in $\A$. Countable additivity gives $\mu(A_n)=\sum_{k\ge n}\mu(A_k\setminus A_{k+1})$. For $n=1$ this series converges (to $\mu(A_1)<\infty$), and $\mu(A_n)$ is its tail, so $\mu(A_n)\to0$.
+**(⇒)** Suppose $A_n\downarrow\emptyset$. Every point of $A_n$ leaves the sequence at some finite stage, so $A_n$ is the disjoint union of the sets $A_k\setminus A_{k+1}$, $k\ge n$, all of which lie in $\A$. Countable additivity gives
+$$\mu(A_n)=\sum_{k\ge n}\mu(A_k\setminus A_{k+1}).$$
+For $n=1$ this series converges (to $\mu(A_1)<\infty$), and $\mu(A_n)$ is its tail, so $\mu(A_n)\to0$.
 
-(⇐) Let $A_1,A_2,\dots\in\A$ be disjoint with $A=\bigcup_nA_n\in\A$. Put $R_N=A\setminus(A_1\cup\dots\cup A_N)$. Then $R_N\in\A$ because $\A$ is an algebra, and $R_N\downarrow\emptyset$. Finite additivity gives $\mu(A)=\sum_{n\le N}\mu(A_n)+\mu(R_N)$, and $\mu(R_N)\to0$.
+**(⇐)** Let $A_1,A_2,\dots\in\A$ be disjoint with $A=\bigcup_nA_n\in\A$, and put
+$$R_N=A\setminus(A_1\cup\dots\cup A_N).$$
+Then $R_N\in\A$ because $\A$ is an algebra, and $R_N\downarrow\emptyset$. Finite additivity gives
+$$\mu(A)=\sum_{n\le N}\mu(A_n)+\mu(R_N),$$
+and $\mu(R_N)\to0$, so letting $N\to\infty$ gives $\mu(A)=\sum_n\mu(A_n)$.
 </pause>
 
 <sheet n="1" qs="B3">You have just seen one solution; try writing it out without looking.</sheet>
@@ -202,9 +218,17 @@ We will often apply the theorem to a π-system with $\sigma(\I)=\F$, and then $\
 </role>
 
 <pf h="Proof sketch.">
-Let $\D=\{A\in\F:\mu_1(A)=\mu_2(A)\}$, the sets on which the measures agree. Because $\mu_1$ and $\mu_2$ are finite with equal total mass, $\D$ has three properties: $\Omega\in\D$; if $A\subseteq B$ are both in $\D$ then $B\setminus A\in\D$ (as $\mu_i(B\setminus A)=\mu_i(B)-\mu_i(A)$, a subtraction of finite numbers); and if $A_n\in\D$ with $A_n\uparrow A$ then $A\in\D$ (by Lemma 1.4). A collection with these three properties is called a **d-system** (or λ-system).
+Let
+$$\D=\{A\in\F:\mu_1(A)=\mu_2(A)\},$$
+the sets on which the two measures agree. Because $\mu_1$ and $\mu_2$ are finite with equal total mass, $\D$ has three properties:
 
-**Dynkin's lemma** says: a d-system that contains a π-system $\I$ contains all of $\sigma(\I)$. (The proof shows that the smallest d-system containing $\I$ is also closed under intersections, and a d-system closed under intersections is a σ-algebra.) Our $\D$ contains $\I$, so it contains $\sigma(\I)$, which is the claim.
+<ol class="parts"><li>$\Omega\in\D$;</li><li>if $A\subseteq B$ are both in $\D$ then $B\setminus A\in\D$, since $\mu_i(B\setminus A)=\mu_i(B)-\mu_i(A)$ is a subtraction of finite numbers;</li><li>if $A_n\in\D$ with $A_n\uparrow A$ then $A\in\D$, by Lemma 1.4.</li></ol>
+
+A collection with these three properties is called a **d-system** (or λ-system).
+
+**Dynkin's lemma** says: a d-system that contains a π-system $\I$ contains all of $\sigma(\I)$. (The proof shows that the smallest d-system containing $\I$ is also closed under intersections, and a d-system closed under intersections is a σ-algebra.)
+
+Our $\D$ contains $\I$, so it contains $\sigma(\I)$, which is the claim.
 </pf>
 <role r="why" a="why intersections?">
 
@@ -302,13 +326,27 @@ In other words, there is a one-to-one correspondence between distribution functi
 @@fig1-8@@
 
 <pf h="Proof of Theorem 1.15: uniqueness and ‘every µ arises’.">
-Suppose for the moment that the existence statement holds. Since $\pi(\R)=\{(-\infty,x]:x\in\R\}$ is a π-system which generates $\B(\R)$ (Example 1.10), uniqueness follows by Theorem 1.11: two probability measures with the same $F$ agree on every ray. For the final part, let $\mu$ be any Borel probability measure on $\R$ and let $F$ be its distribution function. Then $F$ has the properties required in the first part of the theorem, and we obtain a measure $\mu_F$ which by uniqueness is the measure $\mu$ we started with.
+Suppose for the moment that the existence statement holds.
+
+**Uniqueness.** The collection
+$$\pi(\R)=\{(-\infty,x]:x\in\R\}$$
+is a π-system which generates $\B(\R)$ (Example 1.10). Two probability measures with the same distribution function $F$ agree on every ray $(-\infty,x]$, so by Theorem 1.11 they agree on all of $\B(\R)$.
+
+**Every $\mu$ arises.** Let $\mu$ be any Borel probability measure on $\R$ and let $F$ be its distribution function. Then $F$ has the properties required in the first part of the theorem, so we obtain a measure $\mu_F$. By uniqueness, $\mu_F$ is the measure $\mu$ we started with.
 </pf>
 <role r="setup" a="an algebra of intervals">
 
 For existence we apply Theorem 1.12, so first we need a suitable algebra. For $-\infty\le a\le b<\infty$, let $I_{a,b}=(a,b]=\{x\in\R:a<x\le b\}$, and set $I_{a,\infty}=(a,\infty)$. Let $\I=\{I_{a,b}:-\infty\le a\le b\le\infty\}$ be the collection of intervals open on the left and closed on the right. Let $\A$ be the set of finite disjoint unions of elements of $\I$. Then $\A$ is an algebra (the complement of a finite union of such intervals is again one, and so is the union of two), and $\sigma(\A)=\sigma(\I)=\B(\R)$.
 
-Define a set function $\mu_0$ on $\A$ by $\mu_0(I_{a,b})=F(b)-F(a)$ for intervals (with $F(\pm\infty)$ read as the limits $1$ and $0$), extended to $\A$ by adding over disjoint unions. It is an easy exercise to show that $\mu_0$ is well defined (a set in $\A$ can be cut into intervals in many ways, but the sums agree, because $F(b)-F(a)=\big(F(b)-F(c)\big)+\big(F(c)-F(a)\big)$) and finitely additive. Carathéodory's Extension Theorem then gives a probability measure on $\B(\R)$ extending $\mu_0$, *provided $\mu_0$ is countably additive on $\A$*. Proving this is slightly tricky, and right continuity has to be used at some point. Since $\mu_0$ is finite and additive on $\A$, Lemma 1.5 says it is countably additive if and only if $\mu_0(A_n)\to0$ for every sequence $(A_n)$ in $\A$ with $A_n\downarrow\emptyset$. Here is what goes wrong without right continuity.
+Define a set function $\mu_0$ on $\A$ by
+$$\mu_0(I_{a,b})=F(b)-F(a)$$
+for intervals (with $F(\pm\infty)$ read as the limits $1$ and $0$), extended to $\A$ by adding over disjoint unions.
+
+It is an easy exercise to show that $\mu_0$ is well defined and finitely additive. (A set in $\A$ can be cut into intervals in many ways, but the sums agree, because $F(b)-F(a)=\big(F(b)-F(c)\big)+\big(F(c)-F(a)\big)$.)
+
+Carathéodory's Extension Theorem then gives a probability measure on $\B(\R)$ extending $\mu_0$, *provided $\mu_0$ is countably additive on $\A$*. Proving this is slightly tricky, and right continuity has to be used at some point. Since $\mu_0$ is finite and additive on $\A$, Lemma 1.5 says it is countably additive if and only if
+$$\mu_0(A_n)\to0\qquad\text{for every sequence }(A_n)\text{ in }\A\text{ with }A_n\downarrow\emptyset.$$
+Here is what goes wrong without right continuity.
 </role>
 
 @@fig1-9@@

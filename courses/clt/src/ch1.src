@@ -197,11 +197,22 @@ If $m\ge\frac{2n}\eps\log\frac{2n}\delta$, Algorithm 1.1 efficiently PAC (take I
 </thm>
 
 <pf>
-Fix the target $c$ and the distribution $\D$ on $\{0,1\}^n$. Think of a literal $\ell$ as a one-literal conjunction, so $\ell(x)=x_i$ if $\ell=z_i$ and $\ell(x)=1-x_i$ if $\ell=\bit{z_i}$. Let $$p(\ell)=\PP_{x\sim\D}\big[c(x)=1\text{ and }\ell(x)=0\big],$$ the chance that a fresh example would knock $\ell$ out of $h$. If $p(\ell)>0$ then $\ell$ is not in $c$, since a literal of $c$ is $1$ wherever $c$ is.
+**Setting up.** Fix the target $c$ and the distribution $\D$ on $\{0,1\}^n$. Think of a literal $\ell$ as a one-literal conjunction, so $\ell(x)=x_i$ if $\ell=z_i$ and $\ell(x)=1-x_i$ if $\ell=\bit{z_i}$. Let
+$$p(\ell)=\PP_{x\sim\D}\big[c(x)=1\text{ and }\ell(x)=0\big],$$
+the chance that a fresh example would knock $\ell$ out of $h$. If $p(\ell)>0$ then $\ell$ is not in $c$, since a literal of $c$ is $1$ wherever $c$ is.
 
-Call $\ell$ **harmful** if $p(\ell)\ge\eps/2n$. Harmful literals are the ones that would cost us if they survived, so we show that with high probability they all get removed. Let $A_\ell$ be the event that the harmful literal $\ell$ survives all $m$ draws. That needs every draw to avoid $\{c=1,\ell=0\}$, so $\PP[A_\ell]\le(1-\eps/2n)^m$. There are at most $2n$ harmful literals, so by the union bound the event $E$ that some harmful literal survives has $$\PP[E]\le2n\Big(1-\frac\eps{2n}\Big)^m\le2n\exp\Big(-\frac{m\eps}{2n}\Big),$$ which is at most $\delta$ when $m\ge\frac{2n}\eps\log\frac{2n}\delta$.
+**Harmful literals get removed.** Call $\ell$ **harmful** if $p(\ell)\ge\eps/2n$. Harmful literals are the ones that would cost us if they survived, so we show that with high probability they all get removed.
 
-Now suppose $E$ does not happen, so every literal left in $h$ is harmless. Since $h$ is never $1$ where $c$ is $0$, an error on $x$ means $c(x)=1$ and $h(x)=0$, and then some literal $\ell$ of $h$ has $\ell(x)=0$. Each such $\ell$ is harmless and there are at most $2n$ of them, so $$\err(h)=\PP[c(x)=1\wedge h(x)=0]\le\sum_{\ell\in h}\PP[c(x)=1\wedge\ell(x)=0]\le2n\cdot\frac\eps{2n}=\eps.$$ The algorithm does $O(n)$ work per example, so it runs in time polynomial in $n$, $1/\eps$ and $\log(1/\delta)$.
+Let $A_\ell$ be the event that the harmful literal $\ell$ survives all $m$ draws. That needs every draw to avoid $\{c=1,\ell=0\}$, so
+$$\PP[A_\ell]\le(1-\eps/2n)^m.$$
+There are at most $2n$ harmful literals, so by the union bound the event $E$ that some harmful literal survives has
+$$\PP[E]\le2n\Big(1-\frac\eps{2n}\Big)^m\le2n\exp\Big(-\frac{m\eps}{2n}\Big),$$
+which is at most $\delta$ when $m\ge\frac{2n}\eps\log\frac{2n}\delta$.
+
+**Harmless survivors cost little.** Now suppose $E$ does not happen, so every literal left in $h$ is harmless. Since $h$ is never $1$ where $c$ is $0$, an error on $x$ means $c(x)=1$ and $h(x)=0$, and then some literal $\ell$ of $h$ has $\ell(x)=0$. Each such $\ell$ is harmless and there are at most $2n$ of them, so
+$$\begin{aligned}\err(h)&=\PP[c(x)=1\wedge h(x)=0]\\&\le\sum_{\ell\in h}\PP[c(x)=1\wedge\ell(x)=0]&&\why{union bound}\\&\le2n\cdot\frac\eps{2n}=\eps.\end{aligned}$$
+
+**Running time.** The algorithm does $O(n)$ work per example, so it runs in time polynomial in $n$, $1/\eps$ and $\log(1/\delta)$.
 </pf>
 <role r="idea" a="only positives matter">
 
@@ -219,7 +230,12 @@ One could rerun the proof of Theorem 1.4 with clauses in place of literals. The 
 </role>
 <role r="technique" a="reduce k-CNF to conjunctions">
 
-Introduce a new boolean variable $z'_{\ell_1,\dots,\ell_k}$ for each tuple of literals, $(2n)^k$ of them, meant to stand for the clause $\ell_1\vee\dots\vee\ell_k$. An assignment $x\in\{0,1\}^n$ to the old variables determines an assignment to the new ones: set $z'_{\ell_1,\dots,\ell_k}=1$ exactly when $x$ satisfies $\ell_1\vee\dots\vee\ell_k$. This defines an injective map $f:\{0,1\}^n\to\{0,1\}^{(2n)^k}$. Now a $k$-CNF formula $\varphi$ corresponds to the **monotone** conjunction (one with no negated literals) $g(\varphi)$ of the new variables for its clauses, and $\varphi(x)=g(\varphi)(f(x))$.[[The map $g$ is purely syntactic: it sees $(z_1\vee z_2)$ and $(z_2\vee z_1)$ as different clauses, so it sends them to different new variables even though they are the same function.]] So for any $c,h\in k\text{-CNF}_n$, $$\err(h;c,\D)=\err\big(g(h);g(c),f(\D)\big),$$ where $f(\D)$ is the distribution of $f(x)$ for $x\sim\D$.
+Introduce a new boolean variable $z'_{\ell_1,\dots,\ell_k}$ for each tuple of literals, $(2n)^k$ of them, meant to stand for the clause $\ell_1\vee\dots\vee\ell_k$. An assignment $x\in\{0,1\}^n$ to the old variables determines an assignment to the new ones: set $z'_{\ell_1,\dots,\ell_k}=1$ exactly when $x$ satisfies $\ell_1\vee\dots\vee\ell_k$. This defines an injective map
+$$f:\{0,1\}^n\to\{0,1\}^{(2n)^k}.$$
+Now a $k$-CNF formula $\varphi$ corresponds to the **monotone** conjunction (one with no negated literals) $g(\varphi)$ of the new variables for its clauses,[[The map $g$ is purely syntactic: it sees $(z_1\vee z_2)$ and $(z_2\vee z_1)$ as different clauses, so it sends them to different new variables even though they are the same function.]] and
+$$\varphi(x)=g(\varphi)(f(x)).$$ So for any $c,h\in k\text{-CNF}_n$,
+$$\err(h;c,\D)=\err\big(g(h);g(c),f(\D)\big),$$
+where $f(\D)$ is the distribution of $f(x)$ for $x\sim\D$.
 
 So: draw examples $(x,y)$ from $\EX(c,\D)$, feed $(f(x),y)$, which are exactly examples from $\EX(g(c),f(\D))$, to Algorithm 1.1 started from the conjunction of all positive literals (which learns monotone conjunctions), and translate the answer back with $g^{-1}$. For fixed $k$, $f$, $g$ and $g^{-1}$ are computable in polynomial time.
 </role>
@@ -255,7 +271,13 @@ $$\sigma\in L\iff\text{some 3-term DNF formula is 1 on all of }S_+\text{ and 0 o
 </role>
 <role r="technique" a="from learner to RP algorithm">
 
-**Why this suffices.** Let $S=S_+\cup S_-$ and let $\D$ be uniform on $S$. Run the supposed learner with $\eps=\frac1{2|S|}$ and $\delta=\frac12$, answering its oracle calls by picking $x$ uniformly from $S$ and labelling it $1$ if $x\in S_+$. If $\sigma\in L$, a consistent formula $\varphi$ exists and we are faithfully simulating $\EX(\varphi,\D)$, so with probability at least $\frac12$ the learner returns $h$ with $\err(h)\le\frac1{2|S|}$. Each point of $S$ has mass $\frac1{|S|}$, so an error below that means $h$ gets every point of $S$ right. If $\sigma\notin L$, no 3-term DNF is consistent with $S$, so whatever the learner returns gets some point wrong. Checking $h$ against $S$ takes polynomial time. Accepting exactly when $h$ is consistent therefore never accepts wrongly and accepts correctly with probability at least $\frac12$. That puts $L$ in RP, and since $L$ is NP-complete, $\mathrm{RP}=\mathrm{NP}$.
+**Why this suffices.** Let $S=S_+\cup S_-$ and let $\D$ be uniform on $S$. Run the supposed learner with
+$$\eps=\frac1{2|S|},\qquad\delta=\frac12,$$
+answering its oracle calls by picking $x$ uniformly from $S$ and labelling it $1$ if $x\in S_+$.
+
+<ul><li>If $\sigma\in L$, a consistent formula $\varphi$ exists and we are faithfully simulating $\EX(\varphi,\D)$. So with probability at least $\frac12$ the learner returns $h$ with $\err(h)\le\frac1{2|S|}$. Each point of $S$ has mass $\frac1{|S|}$, so an error below that means $h$ gets every point of $S$ right.</li><li>If $\sigma\notin L$, no 3-term DNF is consistent with $S$, so whatever the learner returns gets some point wrong.</li></ul>
+
+Checking $h$ against $S$ takes polynomial time. Accepting exactly when $h$ is consistent therefore never accepts wrongly, and accepts correctly with probability at least $\frac12$. That puts $L$ in RP, and since $L$ is NP-complete, $\mathrm{RP}=\mathrm{NP}$.
 </role>
 
 ### Graph 3-colouring reduces to learning 3-TERM-DNF
@@ -270,9 +292,20 @@ Figure 1.4 shows the construction for a small graph. Recolour the vertices and w
 
 @@clt-fig1-4@@
 
-**If $G$ is 3-colourable, a consistent formula exists.** Fix a proper colouring and let $V_r,V_g,V_b$ be the red, green and blue vertices. Let $T_r=\bigwedge_{i\notin V_r}z_i$, the "and" of the variables of all *non-red* vertices, and define $T_g,T_b$ likewise; put $\varphi=T_r\vee T_g\vee T_b$. If vertex $i$ is red, $T_r$ doesn't mention $z_i$ and every other bit of $v(i)$ is $1$, so $v(i)$ satisfies $T_r$, hence $\varphi$. For an edge $\{i,j\}$ and any colour, at least one endpoint, say $i$, is not that colour, so the colour's term contains $z_i$ while $e(\{i,j\})$ has a $0$ there. No term is satisfied, so $\varphi(e(\{i,j\}))=0$.
+**If $G$ is 3-colourable, a consistent formula exists.** Fix a proper colouring and let $V_r,V_g,V_b$ be the red, green and blue vertices. Let
+$$T_r=\bigwedge_{i\notin V_r}z_i,$$
+the "and" of the variables of all *non-red* vertices, and define $T_g,T_b$ likewise. Put
+$$\varphi=T_r\vee T_g\vee T_b.$$
 
-**If a consistent formula exists, $G$ is 3-colourable.** Let $\varphi=T_r\vee T_g\vee T_b$ be 1 on $S_+$ and 0 on $S_-$. Colour each vertex $i$ by a term that $v(i)$ satisfies (there is one, since $\varphi(v(i))=1$). Suppose an edge $\{i,j\}$ had both ends red. Since $v(i)$ satisfies $T_r$ and has a $0$ only at position $i$, $T_r$ can't contain $z_i$, and it can't contain $\bit{z_k}$ for any $k\neq i$. Likewise from $v(j)$: no $z_j$, and no $\bit{z_k}$ for $k\neq j$. So $T_r$ has no negated literals at all and contains neither $z_i$ nor $z_j$. But then $e(\{i,j\})$, which is $1$ outside positions $i,j$, satisfies $T_r$, contradicting $\varphi(e(\{i,j\}))=0$. So the colouring is proper. This proves Theorem 1.6.
+*Positive examples are accepted.* If vertex $i$ is red, $T_r$ doesn't mention $z_i$ and every other bit of $v(i)$ is $1$, so $v(i)$ satisfies $T_r$, hence $\varphi$.
+
+*Negative examples are rejected.* For an edge $\{i,j\}$ and any colour, at least one endpoint, say $i$, is not that colour. So the colour's term contains $z_i$, while $e(\{i,j\})$ has a $0$ there. No term is satisfied, so $\varphi(e(\{i,j\}))=0$.
+
+**If a consistent formula exists, $G$ is 3-colourable.** Let $\varphi=T_r\vee T_g\vee T_b$ be 1 on $S_+$ and 0 on $S_-$. Colour each vertex $i$ by a term that $v(i)$ satisfies (there is one, since $\varphi(v(i))=1$).
+
+Suppose an edge $\{i,j\}$ had both ends red. Since $v(i)$ satisfies $T_r$ and has a $0$ only at position $i$, $T_r$ can't contain $z_i$, and it can't contain $\bit{z_k}$ for any $k\neq i$. Likewise from $v(j)$: no $z_j$, and no $\bit{z_k}$ for $k\neq j$. So $T_r$ has no negated literals at all and contains neither $z_i$ nor $z_j$.
+
+But then $e(\{i,j\})$, which is $1$ outside positions $i,j$, satisfies $T_r$, contradicting $\varphi(e(\{i,j\}))=0$. So the colouring is proper. This proves Theorem 1.6.
 
 <pause n="Why not 2-term DNF?" q="The same construction with two terms would show that learning 2-TERM-DNF properly is hard unless RP = NP, provided some problem is NP-complete. Which problem, and why does the argument fall apart?">
 The construction with two terms reduces *graph 2-colouring* to learning 2-term DNF, and the argument goes through word for word. But 2-colouring is easy: a graph is 2-colourable exactly when it has no odd cycle, which breadth-first search checks in linear time. So the reduction shows nothing. Proper learning of 2-term DNF is in fact also hard (Pitt and Valiant proved this for every fixed number of terms from 2 up), but the proof needs a different NP-complete problem.

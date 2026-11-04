@@ -53,7 +53,9 @@ Figure 3.1 lets you test sets of points against all three classes. The grid list
 @@clt-fig3-1@@
 
 <pause n="Thresholds and their VC dimension" q="On $\X=\R$, let $\C$ be the thresholds $c_t(x)=\ind[x\ge t]$, $t\in\R$. What is $\VCD(\C)$? And for the class of 'one-sided intervals' $\{\ind[x\ge t]\}\cup\{\ind[x\le t]\}$?">
-A single point can be labelled either way, so $\VCD(\C)\ge1$. For two points $x_1<x_2$, the labelling $x_1\mapsto1$, $x_2\mapsto0$ is impossible, since $x_1\ge t$ forces $x_2\ge t$. So $\VCD(\C)=1$, although $\C$ is uncountable. With thresholds in both directions, two points are shattered ($c_t$ handles three labellings and $\ind[x\le t]$ handles $1,0$). Three points $x_1<x_2<x_3$ are not: $+,-,+$ is impossible for either kind. So the VC dimension is $2$.
+**Thresholds.** A single point can be labelled either way, so $\VCD(\C)\ge1$. For two points $x_1<x_2$, the labelling $x_1\mapsto1$, $x_2\mapsto0$ is impossible, since $x_1\ge t$ forces $x_2\ge t$. So $\VCD(\C)=1$, although $\C$ is uncountable.
+
+**Thresholds in both directions.** Now two points are shattered: $c_t$ handles three labellings, and $\ind[x\le t]$ handles $1,0$. Three points $x_1<x_2<x_3$ are not, since $+,-,+$ is impossible for either kind. So the VC dimension is $2$.
 </pause>
 
 <sheet n="2" qs="2">Part 1 only needs the definition of shattering.</sheet>
@@ -91,9 +93,13 @@ For all $m,d\ge1$, $$#eq3-4 \Phi(m,d)=\Phi(m-1,d)+\Phi(m-1,d-1), \tag{3.4}$$ and
 </thm>
 
 <pf>
-For (3.4), count subsets of $\{1,\dots,m\}$ of size at most $d$ by whether they contain $m$. Those that don't are subsets of $\{1,\dots,m-1\}$ of size at most $d$: there are $\Phi(m-1,d)$. Those that do are $\{m\}$ together with a subset of $\{1,\dots,m-1\}$ of size at most $d-1$: there are $\Phi(m-1,d-1)$. (The notes do the same with Pascal's rule $\binom mi=\binom{m-1}i+\binom{m-1}{i-1}$.)
+**The recurrence (3.4).** Count subsets of $\{1,\dots,m\}$ of size at most $d$ by whether they contain $m$.
+<ul><li>Those that don't are subsets of $\{1,\dots,m-1\}$ of size at most $d$: there are $\Phi(m-1,d)$.</li><li>Those that do are $\{m\}$ together with a subset of $\{1,\dots,m-1\}$ of size at most $d-1$: there are $\Phi(m-1,d-1)$.</li></ul>
 
-For (3.5), multiply and divide by $(m/d)^d$. Since $d/m\le1$ and $i\le d$, we have $(d/m)^d\le(d/m)^i$, so $$\Phi(m,d)=\Big(\frac md\Big)^d\sum_{i=0}^d\binom mi\Big(\frac dm\Big)^d\le\Big(\frac md\Big)^d\sum_{i=0}^m\binom mi\Big(\frac dm\Big)^i=\Big(\frac md\Big)^d\Big(1+\frac dm\Big)^m\le\Big(\frac md\Big)^de^d,$$ using the binomial theorem and $1+x\le e^x$.
+(The notes do the same with Pascal's rule $\binom mi=\binom{m-1}i+\binom{m-1}{i-1}$.)
+
+**The bound (3.5).** Multiply and divide by $(m/d)^d$. Since $d/m\le1$ and $i\le d$, we have $(d/m)^d\le(d/m)^i$, so
+$$\begin{aligned}\Phi(m,d)&=\Big(\frac md\Big)^d\sum_{i=0}^d\binom mi\Big(\frac dm\Big)^d\\&\le\Big(\frac md\Big)^d\sum_{i=0}^m\binom mi\Big(\frac dm\Big)^i&&\why{more terms, larger powers}\\&=\Big(\frac md\Big)^d\Big(1+\frac dm\Big)^m&&\why{binomial theorem}\\&\le\Big(\frac md\Big)^de^d.&&\why{$1+x\le e^x$}\end{aligned}$$
 </pf>
 
 <thm k="Lemma 3.7" d="Growth function is at most Φ(m, d)" pg="31" it>
@@ -105,11 +111,20 @@ Lemmas 3.6 and 3.7 together prove the Sauer–Shelah lemma.
 </role>
 
 <pf>
-Induction on $m+d$. If $d=0$, no single point is shattered, so all concepts agree on every point and $\C$ produces one dichotomy on any set: $\Pi_\C(m)=1=\Phi(m,0)$. If $m=0$ there is one dichotomy of the empty set and $\Phi(0,d)=1$.
+We use induction on $m+d$.
 
-Now take $S$ with $|S|=m$ and a point $x\in S$. Every dichotomy of $S$ restricts to a dichotomy of $S\setminus\{x\}$. Some dichotomies of $S\setminus\{x\}$ extend in only one way (the class forces the label of $x$), others in two ways ($x$ can go either way). So $$#eq3-7 |\Pi_\C(S)|=|\Pi_\C(S\setminus\{x\})|+|\{\text{dichotomies of }S\setminus\{x\}\text{ that extend both ways}\}|. \tag{3.7}$$ The first term is at most $\Pi_\C(m-1)\le\Phi(m-1,d)$ by induction.
+**Base cases.** If $d=0$, no single point is shattered, so all concepts agree on every point and $\C$ produces one dichotomy on any set: $\Pi_\C(m)=1=\Phi(m,0)$. If $m=0$ there is one dichotomy of the empty set, and $\Phi(0,d)=1$.
 
-For the second term, let $\C'$ be the class (on $S\setminus\{x\}$) of dichotomies that extend both ways. If $\C'$ shatters a set $S'\subseteq S\setminus\{x\}$, then $\C$ shatters $S'\cup\{x\}$: any labelling of $S'$ comes from $\C'$, and both labels of $x$ are then available. So $|S'|+1\le d$, which means $\VCD(\C')\le d-1$, and by induction the second term is at most $\Phi(m-1,d-1)$. Adding and using (3.4) gives $|\Pi_\C(S)|\le\Phi(m,d)$.
+**Removing a point.** Now take $S$ with $|S|=m$ and a point $x\in S$. Every dichotomy of $S$ restricts to a dichotomy of $S\setminus\{x\}$. Some dichotomies of $S\setminus\{x\}$ extend in only one way (the class forces the label of $x$), others in two ways ($x$ can go either way). So
+
+$$#eq3-7 |\Pi_\C(S)|=|\Pi_\C(S\setminus\{x\})|+\big|\{\text{dichotomies of }S\setminus\{x\}\text{ that extend both ways}\}\big|. \tag{3.7}$$
+
+**The first term** is at most $\Pi_\C(m-1)\le\Phi(m-1,d)$, by induction.
+
+**The second term.** Let $\C'$ be the class (on $S\setminus\{x\}$) of dichotomies that extend both ways. If $\C'$ shatters a set $S'\subseteq S\setminus\{x\}$, then $\C$ shatters $S'\cup\{x\}$: any labelling of $S'$ comes from $\C'$, and both labels of $x$ are then available. So $|S'|+1\le d$, which means $\VCD(\C')\le d-1$, and by induction the second term is at most $\Phi(m-1,d-1)$.
+
+Adding, and using (3.4),
+$$|\Pi_\C(S)|\le\Phi(m-1,d)+\Phi(m-1,d-1)=\Phi(m,d).$$
 </pf>
 
 <sheet n="2" qs="3"></sheet>
@@ -147,11 +162,22 @@ Let $X=X_1+\dots+X_m$ be a sum of independent $\{0,1\}$-valued random variables 
 <pf>
 **Two samples.** Draw a sample $S_1$ of size $m$ and let $A$ be the event that $S_1$ is not an $\eps$-net. We want $\PP[A]\le\delta$. Now draw a second, independent sample $S_2$ of size $m$; it is only a device for the proof.
 
-**Step 1: $\PP[A]\le2\PP[B]$.** Let $B$ be the event that some $h\oplus c$ is $0$ on all of $S_1$ but $1$ on at least $\eps m/2$ points of $S_2$. Suppose $A$ happens, and fix a witness $\tilde h$: $(\tilde h\oplus c)$ is $0$ on $S_1$ but has mass at least $\eps$. Each point of $S_2$ lands where $\tilde h\oplus c=1$ with probability at least $\eps$, so the number $X$ of such points has mean at least $\eps m$, and the Chernoff bound gives $\PP[X<\eps m/2]\le e^{-\eps m/8}\le\frac12$ when $\eps m\ge16$. So given $A$, $B$ happens with probability at least $\frac12$, which means $\PP[B]\ge\frac12\PP[A]$.
+**Step 1: $\PP[A]\le2\PP[B]$.** Let $B$ be the event that some $h\oplus c$ is $0$ on all of $S_1$ but $1$ on at least $\eps m/2$ points of $S_2$.
 
-**Step 2: bound $\PP[B]$ by counting.** Here is the symmetrisation. Drawing $S_1$ and $S_2$ independently is the same as drawing $2m$ points $S$ first and then splitting them into two halves uniformly at random. Fix $S$. Only the dichotomies of $S$ matter now, and there are at most $\Pi_{\H\oplus c}(2m)\le(2em/d)^d$ of them. Take one that is $1$ on some $r\ge\eps m/2$ points of $S$. For $B$ to happen through it, all $r$ of those points must land in $S_2$. That is like dealing $2m$ cards, $r$ of them red, into two hands of $m$: the chance that the first hand gets no red card is $$\binom mr\Big/\binom{2m}r=\prod_{i=0}^{r-1}\frac{m-i}{2m-i}\le2^{-r}\le2^{-\eps m/2}.$$ A union bound over the dichotomies gives $$\PP[B]\le\Big(\frac{2em}d\Big)^d2^{-\eps m/2},\qquad\text{so}\qquad\PP[A]\le2\Big(\frac{2em}d\Big)^d2^{-\eps m/2}.$$
+Suppose $A$ happens, and fix a witness $\tilde h$: $(\tilde h\oplus c)$ is $0$ on $S_1$ but has mass at least $\eps$. Each point of $S_2$ lands where $\tilde h\oplus c=1$ with probability at least $\eps$, so the number $X$ of such points has mean at least $\eps m$. The Chernoff bound gives
+$$\PP[X<\eps m/2]\le e^{-\eps m/8}\le\tfrac12\qquad\text{when }\eps m\ge16.$$
+So given $A$, $B$ happens with probability at least $\frac12$, which means $\PP[B]\ge\frac12\PP[A]$.
 
-**Step 3: solve for $m$.** The right side is polynomial in $m$ times an exponentially small factor, so it drops below $\delta$ once $m$ is a large enough multiple of $\frac d\eps\log\frac1\eps+\frac1\eps\log\frac1\delta$. The notes carry out the calculation in full and find that $$m\ge\frac4{\eps\log2}\max\Big\{8d\log\frac4{\eps\log2},\ \log\frac2\delta\Big\}$$ suffices; this also ensures $\eps m\ge16$.
+**Step 2: bound $\PP[B]$ by counting.** Here is the symmetrisation. Drawing $S_1$ and $S_2$ independently is the same as drawing $2m$ points $S$ first and then splitting them into two halves uniformly at random.
+
+Fix $S$. Only the dichotomies of $S$ matter now, and there are at most $\Pi_{\H\oplus c}(2m)\le(2em/d)^d$ of them. Take one that is $1$ on some $r\ge\eps m/2$ points of $S$. For $B$ to happen through it, all $r$ of those points must land in $S_2$. That is like dealing $2m$ cards, $r$ of them red, into two hands of $m$: the chance that the first hand gets no red card is
+$$\binom mr\Big/\binom{2m}r=\prod_{i=0}^{r-1}\frac{m-i}{2m-i}\le2^{-r}\le2^{-\eps m/2}.$$
+A union bound over the dichotomies gives
+$$\PP[B]\le\Big(\frac{2em}d\Big)^d2^{-\eps m/2},\qquad\text{so}\qquad\PP[A]\le2\Big(\frac{2em}d\Big)^d2^{-\eps m/2}.$$
+
+**Step 3: solve for $m$.** The right side is polynomial in $m$ times an exponentially small factor, so it drops below $\delta$ once $m$ is a large enough multiple of $\frac d\eps\log\frac1\eps+\frac1\eps\log\frac1\delta$. The notes carry out the calculation in full and find that
+$$m\ge\frac4{\eps\log2}\max\Big\{8d\log\frac4{\eps\log2},\ \log\frac2\delta\Big\}$$
+suffices; this also ensures $\eps m\ge16$.
 </pf>
 <role r="why" a="why allow a larger H">
 
@@ -179,15 +205,27 @@ The idea of the first bound: put almost all the probability on one point $x_1$, 
 @@clt-fig3-91@@
 
 <pf>
-Suppose $L$ PAC learns $\C$ with $m$ examples, where $m<\frac{d-1}{32\eps}$ (we take $m=\frac{d-1}{32\eps}$ for simplicity). Let $T=\{x_1,\dots,x_d\}$ be shattered by $\C$, and let $\D(x_1)=1-8\eps$ and $\D(x_j)=\frac{8\eps}{d-1}$ for $j\ge2$. Only labellings of $T$ matter, and all $2^d$ occur. We may assume $L$ always labels $x_1$ correctly once it has seen it (if not, patch its output at $x_1$).
+**Set-up.** Suppose $L$ PAC learns $\C$ with $m$ examples, where $m<\frac{d-1}{32\eps}$ (we take $m=\frac{d-1}{32\eps}$ for simplicity). Let $T=\{x_1,\dots,x_d\}$ be shattered by $\C$, and put almost all the mass on one point:
+$$\D(x_1)=1-8\eps,\qquad\D(x_j)=\frac{8\eps}{d-1}\quad\text{for }j\ge2.$$
+Only labellings of $T$ matter, and all $2^d$ occur. We may assume $L$ always labels $x_1$ correctly once it has seen it (if not, patch its output at $x_1$).
 
-**Likely events.** The chance that $x_1$ never appears is $(1-8\eps)^m\le e^{-(d-1)/4}\le e^{-6}$. Let $Z$ count the draws that land in $T\setminus\{x_1\}$, so $\E[Z]=8\eps m=\frac{d-1}4$. By the upper Chernoff bound, $\PP[Z\ge\frac{d-1}2]=\PP[Z\ge2\E Z]\le e^{-(d-1)/12}\le e^{-2}$. Let $E$ be the event that $x_1$ is seen and $Z<\frac{d-1}2$; then $\PP[E]>\frac12$.
+**Likely events.** The chance that $x_1$ never appears is
+$$(1-8\eps)^m\le e^{-(d-1)/4}\le e^{-6}.$$
+Let $Z$ count the draws that land in $T\setminus\{x_1\}$, so $\E[Z]=8\eps m=\frac{d-1}4$. By the upper Chernoff bound,
+$$\PP\Big[Z\ge\frac{d-1}2\Big]=\PP[Z\ge2\E Z]\le e^{-(d-1)/12}\le e^{-2}.$$
+Let $E$ be the event that $x_1$ is seen and $Z<\frac{d-1}2$; then $\PP[E]>\frac12$.
 
-**Averaging over targets.** Choose the target $c$ uniformly from the $2^d$ labellings of $T$. Given $E$, the sample shows the labels of fewer than $\frac{d+1}2$ points of $T$, and the labels of the others are still uniformly random and independent of everything $L$ has seen. On each unseen point, whatever $h$ says is wrong with probability $\frac12$. More than $\frac{d-1}2$ points of $T\setminus\{x_1\}$ are unseen, so $$\E[\err(h)\mid E]>\frac12\cdot\frac{d-1}2\cdot\frac{8\eps}{d-1}=2\eps.$$ Since this is an average over $c$, there is a fixed target $c$ with $\E[\err(h)\mid E]>2\eps$.
+**Averaging over targets.** Choose the target $c$ uniformly from the $2^d$ labellings of $T$. Given $E$, the sample shows the labels of fewer than $\frac{d+1}2$ points of $T$, and the labels of the others are still uniformly random and independent of everything $L$ has seen. On each unseen point, whatever $h$ says is wrong with probability $\frac12$. More than $\frac{d-1}2$ points of $T\setminus\{x_1\}$ are unseen, so
+$$\E[\err(h)\mid E]>\frac12\cdot\frac{d-1}2\cdot\frac{8\eps}{d-1}=2\eps.$$
+Since this is an average over $c$, there is a fixed target $c$ with $\E[\err(h)\mid E]>2\eps$.
 
-**From average to probability.** Given $E$, $h$ is right at $x_1$, so $\err(h)\le8\eps$ always. If $\err(h)\le\eps$ had conditional probability more than $\frac67$, the conditional mean would be at most $\frac67\eps+\frac17\cdot8\eps=2\eps$, a contradiction. So given $E$, $\err(h)>\eps$ with probability at least $\frac17$, and overall with probability at least $\frac12\cdot\frac17=\frac1{14}$. A PAC learner must succeed for every $\delta$, including any $\delta<\frac1{14}$, so $L$ cannot manage with this many examples.
+**From average to probability.** Given $E$, $h$ is right at $x_1$, so $\err(h)\le8\eps$ always. If $\err(h)\le\eps$ had conditional probability more than $\frac67$, the conditional mean would be at most
+$$\tfrac67\eps+\tfrac17\cdot8\eps=2\eps,$$
+a contradiction. So given $E$, $\err(h)>\eps$ with probability at least $\frac17$, and overall with probability at least $\frac12\cdot\frac17=\frac1{14}$. A PAC learner must succeed for every $\delta$, including any $\delta<\frac1{14}$, so $L$ cannot manage with this many examples.
 
-**The second bound** uses two points. Since $\VCD(\C)\ge2$ there are $x_1,x_2$ and concepts $c_1,c_2$ with $c_1(x_1)=c_2(x_1)=0$ and $c_1(x_2)\neq c_2(x_2)$. Put $\D(x_1)=e^{-4\eps}$ and $\D(x_2)=1-e^{-4\eps}$. A sample of size $\frac1{4\eps}\log\frac1{4\delta}$ misses $x_2$ entirely with probability $(e^{-4\eps})^m=4\delta$. Then the learner can't tell $c_1$ from $c_2$, and for one of them it errs at $x_2$, which has mass $1-e^{-4\eps}>2\eps$ when $\eps<\frac14$. Arguing as above, it fails with probability more than $\delta$.
+**The second bound** uses two points. Since $\VCD(\C)\ge2$ there are $x_1,x_2$ and concepts $c_1,c_2$ with
+$$c_1(x_1)=c_2(x_1)=0\qquad\text{and}\qquad c_1(x_2)\neq c_2(x_2).$$
+Put $\D(x_1)=e^{-4\eps}$ and $\D(x_2)=1-e^{-4\eps}$. A sample of size $m=\frac1{4\eps}\log\frac1{4\delta}$ misses $x_2$ entirely with probability $(e^{-4\eps})^m=4\delta$. Then the learner can't tell $c_1$ from $c_2$, and for one of them it errs at $x_2$, which has mass $1-e^{-4\eps}>2\eps$ when $\eps<\frac14$. Arguing as above, it fails with probability more than $\delta$.
 </pf>
 <role r="payoff" a="VC dimension is the statistical story">
 
@@ -195,7 +233,13 @@ So, up to the $\log\frac1\eps$ factor, $\frac d\eps+\frac1\eps\log\frac1\delta$ 
 </role>
 
 <pause n="Lower bound for 3-CNF" q="Chapter 2 claimed that learning 3-CNF needs $\Omega(n^3/\eps)$ examples whatever the algorithm. Using Theorem 3.9, what do you need to show about 3-CNF?">
-You need $\VCD(3\text{-CNF}_n)=\Omega(n^3)$: a set of order $n^3$ points shattered by 3-CNF formulas. Here is one. For each clause $C$ made of three distinct variables, $C=z_i\vee z_j\vee z_k$, let $x_C$ be the instance that is $0$ in positions $i,j,k$ and $1$ elsewhere. $x_C$ falsifies $C$ and satisfies every other such clause (each other clause has a variable outside $\{i,j,k\}$, which is $1$). So for any subset $A$ of these instances, the 3-CNF formula made of the clauses $C$ with $x_C\in A$ is $0$ exactly on $A$. That shatters $\binom n3=\Omega(n^3)$ points, and Theorem 3.9 gives the $\Omega(n^3/\eps)$ bound.
+You need $\VCD(3\text{-CNF}_n)=\Omega(n^3)$: a set of order $n^3$ points shattered by 3-CNF formulas. Here is one.
+
+For each clause $C$ made of three distinct variables, $C=z_i\vee z_j\vee z_k$, let $x_C$ be the instance that is $0$ in positions $i,j,k$ and $1$ elsewhere. Then $x_C$ falsifies $C$ and satisfies every other such clause, because each other clause has a variable outside $\{i,j,k\}$, which is $1$.
+
+So for any subset $A$ of these instances, the 3-CNF formula
+$$\bigwedge_{C:\,x_C\in A}C$$
+is $0$ exactly on $A$. That shatters $\binom n3=\Omega(n^3)$ points, and Theorem 3.9 gives the $\Omega(n^3/\eps)$ bound.
 </pause>
 
 ## 3.5 Consistent Learner for Linear Threshold Functions {36} [d2 i2]

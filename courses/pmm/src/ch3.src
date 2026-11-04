@@ -28,7 +28,10 @@ $$\ind_{\limsup_{n\to\infty}A_n}=\limsup_{n\to\infty}\ind_{A_n},\qquad\ind_{\lim
 </thm>
 
 <pf>
-Note that $\ind_{\bigcup_nA_n}=\sup_n\ind_{A_n}$ (the union contains $\omega$ iff some indicator is 1) and $\ind_{\bigcap_nA_n}=\inf_n\ind_{A_n}$, and apply these twice. For example, $\ind_{\limsup A_n}=\inf_n\sup_{m\ge n}\ind_{A_m}=\limsup_n\ind_{A_n}$.
+Note that
+$$\ind_{\bigcup_nA_n}=\sup_n\ind_{A_n}\qquad\text{and}\qquad\ind_{\bigcap_nA_n}=\inf_n\ind_{A_n}:$$
+the union contains $\omega$ iff some indicator is 1, and the intersection contains $\omega$ iff every indicator is 1. Apply these twice. For example,
+$$\ind_{\limsup A_n}=\inf_n\sup_{m\ge n}\ind_{A_m}=\limsup_n\ind_{A_n}.$$
 </pf>
 <role r="link" a="Fatou for sets">
 
@@ -44,7 +47,19 @@ If $\sum_{n=1}^\infty\PP[A_n]<\infty$ then $\PP[A_n\text{ i.o.}]=0$.
 </role>
 
 <pf>
-Let $G_n=\bigcup_{m\ge n}A_m$. Then $\PP[G_n]\le\sum_{m=n}^\infty\PP[A_m]$ (countable subadditivity: the measure of a union is at most the sum of the measures, by writing the union as a disjoint union of smaller pieces). Also $G_n\downarrow G=\limsup_nA_n$, so by Lemma 1.4, $\PP[G_n]\downarrow\PP[G]$. Since $\sum_{n=1}^\infty\PP[A_n]<\infty$, the tails satisfy $\sum_{m=n}^\infty\PP[A_m]\to0$ as $n\to\infty$, and so $$\PP\big[\limsup_{n\to\infty}A_n\big]=\lim_{n\to\infty}\PP[G_n]=0.$$
+Let
+$$G_n=\bigcup_{m\ge n}A_m,$$
+the event that at least one of $A_n,A_{n+1},\dots$ happens. We need two facts about $G_n$.
+
+First, $G_n$ has small probability. By countable subadditivity (the probability of a union is at most the sum of the probabilities),
+$$\PP[G_n]\le\sum_{m=n}^\infty\PP[A_m].$$
+
+Second, the $G_n$ shrink down to the event we care about. As $n$ grows the union runs over fewer and fewer events, so $G_n\downarrow G=\limsup_nA_n$, and by Lemma 1.4, $\PP[G_n]\downarrow\PP[G]$.
+
+Now put the two together. Since $\sum_{n=1}^\infty\PP[A_n]<\infty$, the tails of the series go to zero:
+$$\sum_{m=n}^\infty\PP[A_m]\to0\qquad\text{as }n\to\infty.$$
+And so
+$$\PP\big[\limsup_{n\to\infty}A_n\big]=\lim_{n\to\infty}\PP[G_n]=0.$$
 </pf>
 <role r="technique" a="counting events with MCT">
 
@@ -60,7 +75,17 @@ Let $(A_n)$ be a sequence of independent events. If $\sum_{n=1}^\infty\PP[A_n]=\
 </thm>
 
 <pf>
-Set $a_m=\PP[A_m]$ and note that $1-a\le e^{-a}$ for all real $a$ (the line $1-a$ is the tangent to the convex function $e^{-a}$ at $0$, and lies below it). We consider the complementary event $\{A_n^c\text{ eventually}\}$. For each $n$, $$\PP\Big[\bigcap_{m\ge n}A_m^c\Big]=\prod_{m\ge n}(1-a_m)\le\exp\Big(-\sum_{m\ge n}a_m\Big)=0.$$ The equality uses independence (complements of independent events are independent; for an infinite intersection take the limit of finite ones, by Lemma 1.4), and the last step uses $\sum_{m\ge n}a_m=\infty$. Hence $$\PP[A_n^c\text{ eventually}]=\PP\Big[\bigcup_{n\in\N}\bigcap_{m\ge n}A_m^c\Big]\le\sum_{n=1}^\infty\PP\Big[\bigcap_{m\ge n}A_m^c\Big]=0,$$ and $\PP[A_n\text{ i.o.}]=1-\PP[A_n^c\text{ eventually}]=1$.
+Write $a_m=\PP[A_m]$. We shall use the elementary inequality
+$$1-a\le e^{-a}\qquad\text{for all real }a.$$
+It holds because the line $1-a$ is the tangent to the convex function $e^{-a}$ at $a=0$, and a convex function lies above its tangent lines.
+
+Rather than showing directly that infinitely many $A_n$ happen, we show that the complementary event $\{A_n^c\text{ eventually}\}$ has probability zero. Fix $n$. Then
+$$\begin{aligned}\PP\Big[\bigcap_{m\ge n}A_m^c\Big]&=\prod_{m\ge n}(1-a_m)&&\why{by independence}\\&\le\exp\Big(-\sum_{m\ge n}a_m\Big)&&\why{since $1-a\le e^{-a}$}\\&=0&&\why{since $\sum_m a_m=\infty$.}\end{aligned}$$
+The first step deserves a word. Complements of independent events are again independent, which handles any finite intersection; for the infinite intersection, take the limit of the finite ones using Lemma 1.4.
+
+Finally, $\{A_n^c\text{ eventually}\}$ is a countable union of the events we just handled, so by countable subadditivity
+$$\PP[A_n^c\text{ eventually}]=\PP\Big[\bigcup_{n\in\N}\bigcap_{m\ge n}A_m^c\Big]\le\sum_{n=1}^\infty\PP\Big[\bigcap_{m\ge n}A_m^c\Big]=0.$$
+Hence $\PP[A_n\text{ i.o.}]=1-\PP[A_n^c\text{ eventually}]=1$.
 </pf>
 
 @@fig3-1@@
@@ -185,11 +210,21 @@ Let $X_1,X_2,\dots$ and $X$ be random variables on $(\Omega,\F,\PP)$.
 </thm>
 
 <pf>
-For $\eps>0$ and $n\in\N$ let $A_{n,\eps}=\{|X_n-X|>\eps\}$.
+For $\eps>0$ and $n\in\N$ let
+$$A_{n,\eps}=\{|X_n-X|>\eps\},$$
+the event that $X_n$ misses $X$ by more than $\eps$.
 
-1. Suppose $X_n\to X$ a.s. If $X_n(\omega)\to X(\omega)$ then $\omega$ is in only finitely many $A_{n,\eps}$, so for any $\eps>0$ we have $\PP[A_{n,\eps}\text{ i.o.}]=0$. However, applying Fatou's Lemma to $\ind_{A_{n,\eps}^c}$, as after Lemma 3.2, $$\PP[A_{n,\eps}\text{ i.o.}]=\PP\big[\limsup_nA_{n,\eps}\big]\ge\limsup_{n\to\infty}\PP[A_{n,\eps}].$$ Hence $\PP[A_{n,\eps}]\to0$, so $X_n\pto X$.
+**Part 1.** Suppose $X_n\to X$ a.s. If $X_n(\omega)\to X(\omega)$ then $\omega$ is in only finitely many $A_{n,\eps}$, so for any $\eps>0$ we have $\PP[A_{n,\eps}\text{ i.o.}]=0$. On the other hand, applying Fatou's Lemma to $\ind_{A_{n,\eps}^c}$, as after Lemma 3.2,
+$$\PP[A_{n,\eps}\text{ i.o.}]=\PP\big[\limsup_nA_{n,\eps}\big]\ge\limsup_{n\to\infty}\PP[A_{n,\eps}].$$
+Hence $\PP[A_{n,\eps}]\to0$, so $X_n\pto X$.
 
-2. This is the more interesting direction. Suppose that $X_n\pto X$. Then for each $k\ge1$ we have $\PP[A_{n,1/k}]\to0$ as $n\to\infty$, so there is some $n_k$ such that $\PP[A_{n_k,1/k}]<1/k^2$, and we can choose $n_k>n_{k-1}$ for $k\ge2$. Setting $B_k=A_{n_k,1/k}$, we have $$\sum_{k=1}^\infty\PP[B_k]\le\sum_{k=1}^\infty k^{-2}<\infty.$$ Hence, by BC1, $\PP[B_k\text{ i.o.}]=0$. But if only finitely many $B_k$ hold, then $|X_{n_k}-X|\le1/k$ for all large $k$, and certainly $X_{n_k}\to X$. So $X_{n_k}\to X$ a.s.
+**Part 2.** This is the more interesting direction. Suppose that $X_n\pto X$. Then for each $k\ge1$ we have $\PP[A_{n,1/k}]\to0$ as $n\to\infty$, so there is some $n_k$ such that
+$$\PP[A_{n_k,1/k}]<1/k^2,$$
+and we can choose $n_k>n_{k-1}$ for $k\ge2$. Setting $B_k=A_{n_k,1/k}$, we have
+$$\sum_{k=1}^\infty\PP[B_k]\le\sum_{k=1}^\infty k^{-2}<\infty.$$
+Hence, by BC1, $\PP[B_k\text{ i.o.}]=0$.
+
+But if only finitely many $B_k$ hold, then $|X_{n_k}-X|\le1/k$ for all large $k$, and certainly $X_{n_k}\to X$. So $X_{n_k}\to X$ a.s.
 </pf>
 
 <sheet n="3" qs="B1"></sheet>
@@ -209,7 +244,10 @@ Let $(\Omega,\F,\PP)$ be a probability space and $X$ a non-negative random varia
 </thm>
 
 <pf>
-For each $\omega\in\Omega$ we have $X(\omega)\ge\lambda\ind_{\{X\ge\lambda\}}(\omega)$: where $X\ge\lambda$ the right side is $\lambda$, and elsewhere it is 0. Hence $\E[X]\ge\E[\lambda\ind_{\{X\ge\lambda\}}]=\lambda\PP[X\ge\lambda]$.
+For each $\omega\in\Omega$ we have
+$$X(\omega)\ge\lambda\ind_{\{X\ge\lambda\}}(\omega):$$
+where $X\ge\lambda$ the right side is $\lambda$, and elsewhere it is 0 (and $X\ge0$ everywhere). Taking expectations,
+$$\E[X]\ge\E[\lambda\ind_{\{X\ge\lambda\}}]=\lambda\PP[X\ge\lambda].$$
 </pf>
 
 <pause n="Markov is sharp" q="Find a non-negative random variable $X$ with $\E[X]=1$ and $\PP[X\ge10]=\frac1{10}$, so that Markov's inequality holds with equality.">
@@ -223,7 +261,9 @@ Let $X$ be a random variable taking values in a (measurable) set $A\subseteq\R$,
 </thm>
 
 <pf>
-$\PP[X\ge\lambda]\le\PP[\varphi(X)\ge\varphi(\lambda)]\le\frac{1}{\varphi(\lambda)}\E[\varphi(X)]$: the first because $\varphi$ is increasing, the second by Markov's inequality applied to $\varphi(X)\ge0$. (If $\varphi(\lambda)=0$ the bound is vacuous.)
+We have
+$$\begin{aligned}\PP[X\ge\lambda]&\le\PP[\varphi(X)\ge\varphi(\lambda)]&&\why{$\varphi$ is increasing}\\&\le\frac{1}{\varphi(\lambda)}\E[\varphi(X)]&&\why{Markov, applied to $\varphi(X)\ge0$.}\end{aligned}$$
+(If $\varphi(\lambda)=0$ the bound is vacuous.)
 </pf>
 <role r="example" a="Chebyshev’s inequality">
 
@@ -235,7 +275,8 @@ For $p>0$, convergence in $L^p$ implies convergence in probability.
 </thm>
 
 <pf>
-Recall that $X_n\to X$ in $L^p$ if $\E[|X_n-X|^p]\to0$. Now $$\PP[|X_n-X|>\eps]=\PP[|X_n-X|^p>\eps^p]\le\frac1{\eps^p}\E[|X_n-X|^p]\to0.$$
+Recall that $X_n\to X$ in $L^p$ if $\E[|X_n-X|^p]\to0$. Raising both sides of the inequality inside the probability to the power $p$ and then using Markov,
+$$\PP[|X_n-X|>\eps]=\PP[|X_n-X|^p>\eps^p]\le\frac1{\eps^p}\E[|X_n-X|^p]\to0.$$
 </pf>
 <role r="link" a="the weak law, from Prelims">
 
@@ -247,7 +288,12 @@ Let $(X_n)_{n\ge1}$ be i.i.d. random variables (on some probability space $(\Ome
 </thm>
 
 <pf>
-We have $\E[\bar X(n)]=n^{-1}\sum_{i=1}^n\E[X_i]=\mu$ and, since the $X_i$ are independent (so variances add), $$\mathrm{Var}[\bar X(n)]=n^{-2}\,\mathrm{Var}\Big[\sum_{i=1}^nX_i\Big]=n^{-2}\sum_{i=1}^n\mathrm{Var}[X_i]=\sigma^2/n.$$ Hence, by Chebyshev's inequality, $\PP[|\bar X(n)-\mu|>\eps]\le\frac{\mathrm{Var}[\bar X(n)]}{\eps^2}=\frac{\sigma^2}{\eps^2n}\to0$.
+First, the mean:
+$$\E[\bar X(n)]=\frac1n\sum_{i=1}^n\E[X_i]=\mu.$$
+Next, the variance. Since the $X_i$ are independent, variances add, so
+$$\mathrm{Var}[\bar X(n)]=\frac1{n^2}\,\mathrm{Var}\Big[\sum_{i=1}^nX_i\Big]=\frac1{n^2}\sum_{i=1}^n\mathrm{Var}[X_i]=\frac{\sigma^2}n.$$
+Hence, by Chebyshev's inequality,
+$$\PP[|\bar X(n)-\mu|>\eps]\le\frac{\mathrm{Var}[\bar X(n)]}{\eps^2}=\frac{\sigma^2}{\eps^2n}\to0.$$
 </pf>
 
 <sheet n="3" qs="B2"></sheet>
@@ -277,11 +323,30 @@ Suppose that $f:I\to\R$ is convex and let $m$ be an interior point of $I$. Then 
 </thm>
 
 <pf>
-For any $x<m<y$ with $x,y\in I$, write $m$ as a weighted average of $x$ and $y$: $m=\frac{y-m}{y-x}x+\frac{m-x}{y-x}y$. Convexity gives $$f(m)\le\frac{y-m}{y-x}f(x)+\frac{m-x}{y-x}f(y).$$ Rearranging (or, better, drawing a picture), this is equivalent to $$\frac{f(m)-f(x)}{m-x}\le\frac{f(y)-f(m)}{y-m}:$$ slopes of chords to the left of $m$ are at most slopes of chords to the right. It follows that $$\sup_{x<m}\frac{f(m)-f(x)}{m-x}\le\inf_{y>m}\frac{f(y)-f(m)}{y-m},$$ so we can choose $a$ in between. (If $f$ is differentiable at $m$ we can choose $a=f'(m)$.) Then for $x<m$, $\frac{f(m)-f(x)}{m-x}\le a$ rearranges to $f(x)\ge f(m)+a(x-m)$, and similarly for $y>m$.
+**Comparing chord slopes.** Take any $x<m<y$ with $x,y\in I$, and write $m$ as a weighted average of $x$ and $y$:
+$$m=\frac{y-m}{y-x}\,x+\frac{m-x}{y-x}\,y.$$
+Convexity gives
+$$f(m)\le\frac{y-m}{y-x}f(x)+\frac{m-x}{y-x}f(y).$$
+Rearranging (or, better, drawing a picture), this is equivalent to
+$$\frac{f(m)-f(x)}{m-x}\le\frac{f(y)-f(m)}{y-m}.$$
+In words: slopes of chords to the left of $m$ are at most slopes of chords to the right.
+
+**Choosing the slope $a$.** It follows that
+$$\sup_{x<m}\frac{f(m)-f(x)}{m-x}\le\inf_{y>m}\frac{f(y)-f(m)}{y-m},$$
+so we can choose a number $a$ in between. (If $f$ is differentiable at $m$ we can choose $a=f'(m)$.)
+
+**Checking it works.** For $x<m$, the inequality $\frac{f(m)-f(x)}{m-x}\le a$ rearranges to
+$$f(x)\ge f(m)+a(x-m),$$
+and similarly for $y>m$.
 </pf>
 
 <pf h="Proof of Theorem 3.16.">
-If $\E[X]$ is not an interior point of $I$ then it is an endpoint, and $X$ must be almost surely equal to it (a variable in $[c,\infty)$ with mean $c$ is $c$ a.s.), so the inequality is trivial. Otherwise, setting $m=\E[X]$ in Lemma 3.17 we have $f(X)\ge f(\E[X])+a(X-\E[X])$. Taking expectations, the last term has mean 0, and we recover $\E[f(X)]\ge f(\E[X])$.
+If $\E[X]$ is not an interior point of $I$ then it is an endpoint, and $X$ must be almost surely equal to it (a variable in $[c,\infty)$ with mean $c$ is $c$ a.s.). Then the inequality is trivial.
+
+Otherwise, set $m=\E[X]$ in Lemma 3.17. This gives a line below $f$ touching it at $m$:
+$$f(X)\ge f(\E[X])+a(X-\E[X]).$$
+Taking expectations, the last term has mean 0, and we recover
+$$\E[f(X)]\ge f(\E[X]).$$
 </pf>
 
 @@fig3-4@@
@@ -308,7 +373,14 @@ Let $0<r\le p$. Suppose $X\in\Lp p$. Then $X\in\Lp r$ and $\|X\|_r\le\|X\|_p$. I
 </thm>
 
 <pf>
-Let $X_k=|X|\wedge k$ (the smaller of $|X|$ and $k$), which is non-negative and bounded, so all its moments are finite. Applying Jensen's inequality with the convex function $f(x)=x^{p/r}$ on $[0,\infty)$ to the random variable $X_k^r$, we get $$\|X_k\|_r^p=\big(\E[X_k^r]\big)^{p/r}\le\E[X_k^p]\le\E[|X|^p]=\|X\|_p^p.$$ Let $k\to\infty$: by the Monotone Convergence Theorem $\E[X_k^r]\uparrow\E[|X|^r]$, giving the inequality. The statement about convergence follows by applying it to $X_n-X$.
+Let $X_k=|X|\wedge k$ (the smaller of $|X|$ and $k$). It is non-negative and bounded, so all its moments are finite.
+
+Apply Jensen's inequality with the convex function $f(x)=x^{p/r}$ on $[0,\infty)$ to the random variable $X_k^r$:
+$$\|X_k\|_r^p=\big(\E[X_k^r]\big)^{p/r}\le\E[X_k^p]\le\E[|X|^p]=\|X\|_p^p.$$
+
+Now let $k\to\infty$. By the Monotone Convergence Theorem $\E[X_k^r]\uparrow\E[|X|^r]$, giving the inequality.
+
+The statement about convergence follows by applying the inequality to $X_n-X$.
 </pf>
 <role r="caution" a="needs a probability measure">
 
@@ -330,9 +402,29 @@ With $p=q=2$, Hölder is the Cauchy–Schwarz inequality $\E|XZ|\le\sqrt{\E X^2\
 </role>
 
 <pf>
-*Hölder.* If $X=0$ a.s. there is nothing to show. Otherwise, define a new probability measure on $(\Omega,\F)$ by $$\mathbb Q(A)=\frac{\E[|X|^p\ind_A]}{\|X\|_p^p},$$ which reweights outcomes in proportion to $|X|^p$. (It is a measure by the Monotone Convergence Theorem, and $\mathbb Q(\Omega)=1$.) Integrals against $\mathbb Q$ are $\int W\,d\mathbb Q=\E[W|X|^p]/\|X\|_p^p$ for $W\ge0$, by the standard machine. Let $\bar Z=|Z|/|X|^{p-1}$ on $\{|X|>0\}$ and $0$ elsewhere, so that $\bar Z|X|^p=|XZ|$. Then, using Jensen with $f(x)=x^q$ under $\mathbb Q$, $$\begin{aligned}\big(\E|XZ|\big)^q&=\Big(\|X\|_p^p\int\bar Z\,d\mathbb Q\Big)^q\le\|X\|_p^{pq}\int\bar Z^q\,d\mathbb Q\\&=\|X\|_p^{pq-p}\,\E\big[|Z|^q|X|^{p-q(p-1)}\ind_{\{|X|>0\}}\big].\end{aligned}$$ From $\frac1p+\frac1q=1$ we get $pq=p+q$, so $p-q(p-1)=0$ and $pq-p=q$. The right side is therefore at most $\|X\|_p^q\,\E|Z|^q$. Raise both sides to the power $1/q$.
+**Hölder.** If $X=0$ a.s. there is nothing to show. Otherwise, the trick is to change measure so that Jensen applies.
 
-*Minkowski.* $X+Y\in\Lp p$ since it is a vector space. Let $c=\E[|X+Y|^p]^{1/q}=\big\||X+Y|^{p-1}\big\|_q$ (using $(p-1)q=p$); if $c=0$ there is nothing to prove. Using first the triangle inequality on $\R$, $|x+y|\le|x|+|y|$, and then Hölder's inequality, $$\begin{aligned}\E[|X+Y|^p]&\le\E\big[|X|\cdot|X+Y|^{p-1}\big]+\E\big[|Y|\cdot|X+Y|^{p-1}\big]\\&\le\|X\|_p\,c+\|Y\|_p\,c.\end{aligned}$$ Dividing by $c$ gives $\E[|X+Y|^p]^{1-1/q}\le\|X\|_p+\|Y\|_p$, and $1-\frac1q=\frac1p$.
+Define a new probability measure on $(\Omega,\F)$ by
+$$\mathbb Q(A)=\frac{\E[|X|^p\ind_A]}{\|X\|_p^p},$$
+which reweights outcomes in proportion to $|X|^p$. (It is a measure by the Monotone Convergence Theorem, and $\mathbb Q(\Omega)=1$.) By the standard machine, integrals against $\mathbb Q$ are
+$$\int W\,d\mathbb Q=\frac{\E[W|X|^p]}{\|X\|_p^p}\qquad\text{for }W\ge0.$$
+
+Let $\bar Z=|Z|/|X|^{p-1}$ on $\{|X|>0\}$ and $0$ elsewhere, so that $\bar Z|X|^p=|XZ|$. Then, using Jensen with $f(x)=x^q$ under $\mathbb Q$,
+$$\begin{aligned}\big(\E|XZ|\big)^q&=\Big(\|X\|_p^p\int\bar Z\,d\mathbb Q\Big)^q\\&\le\|X\|_p^{pq}\int\bar Z^q\,d\mathbb Q&&\why{Jensen}\\&=\|X\|_p^{pq-p}\,\E\big[|Z|^q|X|^{p-q(p-1)}\ind_{\{|X|>0\}}\big].\end{aligned}$$
+
+Now tidy the exponents. From $\frac1p+\frac1q=1$ we get $pq=p+q$, so
+$$p-q(p-1)=0\qquad\text{and}\qquad pq-p=q.$$
+The right side is therefore at most $\|X\|_p^q\,\E|Z|^q$. Raise both sides to the power $1/q$.
+
+**Minkowski.** $X+Y\in\Lp p$ since $\Lp p$ is a vector space. Let
+$$c=\E[|X+Y|^p]^{1/q}=\big\||X+Y|^{p-1}\big\|_q,$$
+using $(p-1)q=p$. If $c=0$ there is nothing to prove.
+
+Using first the triangle inequality on $\R$, $|x+y|\le|x|+|y|$, and then Hölder's inequality,
+$$\begin{aligned}\E[|X+Y|^p]&\le\E\big[|X|\cdot|X+Y|^{p-1}\big]+\E\big[|Y|\cdot|X+Y|^{p-1}\big]&&\why{triangle}\\&\le\|X\|_p\,c+\|Y\|_p\,c.&&\why{Hölder}\end{aligned}$$
+Dividing by $c$ gives
+$$\E[|X+Y|^p]^{1-1/q}\le\|X\|_p+\|Y\|_p,$$
+and $1-\frac1q=\frac1p$.
 </pf>
 
 <bg id="bg-banach" t="Norms, Cauchy sequences and completeness" lead="Background">
@@ -350,11 +442,24 @@ Let $p\ge1$. The vector space $\Lp p$ is complete, i.e., for any sequence $(X_n)
 </thm>
 
 <pf>
-*Find a fast subsequence.* Pick $k_1<k_2<\cdots$ such that $\sup_{r,s\ge k_n}\|X_s-X_r\|_p\le2^{-n}$, and in particular (Lemma 3.19 with $r=1$) $\E[|X_{k_n}-X_{k_{n+1}}|]\le\|X_{k_n}-X_{k_{n+1}}\|_p\le2^{-n}$.
+**Find a fast subsequence.** Pick $k_1<k_2<\cdots$ such that
+$$\sup_{r,s\ge k_n}\|X_s-X_r\|_p\le2^{-n}.$$
+In particular (Lemma 3.19 with $r=1$),
+$$\E[|X_{k_n}-X_{k_{n+1}}|]\le\|X_{k_n}-X_{k_{n+1}}\|_p\le2^{-n}.$$
 
-*It converges almost surely.* Put $Y=\sum_{n\ge1}|X_{k_n}-X_{k_{n+1}}|$. By the Monotone Convergence Theorem, $\E[Y]\le\sum_n2^{-n}<\infty$, and in particular $Y<\infty$ a.s. Where $Y(\omega)<\infty$, the telescoping series $X_{k_1}+\sum_n(X_{k_{n+1}}-X_{k_n})$ converges absolutely, so $\lim_nX_{k_n}(\omega)$ exists. Define $X(\omega):=\limsup_{n\to\infty}X_{k_n}(\omega)$ for all $\omega$, so that $X$ is a random variable (Lemma 2.3) and $X_{k_n}\to X$ a.s.
+**It converges almost surely.** Put
+$$Y=\sum_{n\ge1}|X_{k_n}-X_{k_{n+1}}|.$$
+By the Monotone Convergence Theorem, $\E[Y]\le\sum_n2^{-n}<\infty$, and in particular $Y<\infty$ a.s.
 
-*The whole sequence converges in $L^p$.* For $n\ge1$ and $r>k_n$, we have $\E[|X_r-X_{k_m}|^p]=\|X_r-X_{k_m}\|_p^p\le2^{-np}$ for all $m\ge n$. Let $m\to\infty$: by Fatou's Lemma, $\E[|X_r-X|^p]\le\liminf_m\E[|X_r-X_{k_m}|^p]\le2^{-np}$. It follows that $X_r-X\in\Lp p$, hence $X\in\Lp p$, and $X_r\to X$ in $L^p$.
+Where $Y(\omega)<\infty$, the telescoping series
+$$X_{k_1}+\sum_n(X_{k_{n+1}}-X_{k_n})$$
+converges absolutely, so $\lim_nX_{k_n}(\omega)$ exists. Define $X(\omega):=\limsup_{n\to\infty}X_{k_n}(\omega)$ for all $\omega$, so that $X$ is a random variable (Lemma 2.3) and $X_{k_n}\to X$ a.s.
+
+**The whole sequence converges in $L^p$.** For $n\ge1$ and $r>k_n$, we have
+$$\E[|X_r-X_{k_m}|^p]=\|X_r-X_{k_m}\|_p^p\le2^{-np}\qquad\text{for all }m\ge n.$$
+Let $m\to\infty$. By Fatou's Lemma,
+$$\E[|X_r-X|^p]\le\liminf_m\E[|X_r-X_{k_m}|^p]\le2^{-np}.$$
+It follows that $X_r-X\in\Lp p$, hence $X\in\Lp p$, and $X_r\to X$ in $L^p$.
 </pf>
 <role r="technique" a="a recipe worth remembering">
 

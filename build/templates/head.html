@@ -16,7 +16,8 @@ window.MathJax = {
       R: '{\\mathbb R}', N: '{\\mathbb N}', Q: '{\\mathbb Q}', Z: '{\\mathbb Z}', E: '{\\mathbb E}', PP: '{\\mathbb P}',
       eps: '\\varepsilon', Rbar: '{\\overline{\\mathbb R}}', ind: '{\\mathbf 1}', as: '\\text{ a.s.}',
       Lp: ['{\\mathcal L}^{#1}', 1], dto: '\\xrightarrow{d}', pto: '\\xrightarrow{\\PP}',
-      X: '{\\mathcal X}', err: '\\operatorname{err}', EX: '\\mathrm{EX}', VCD: '\\operatorname{VCD}', size: '\\operatorname{size}', poly: '\\operatorname{poly}', sgn: '\\operatorname{sgn}', bit: ['\\overline{#1}', 1]
+      X: '{\\mathcal X}', err: '\\operatorname{err}', EX: '\\mathrm{EX}', VCD: '\\operatorname{VCD}', size: '\\operatorname{size}', poly: '\\operatorname{poly}', sgn: '\\operatorname{sgn}', bit: ['\\overline{#1}', 1],
+      why: ['\\qquad\\class{why}{\\text{#1}}', 1]
     }
   },
   svg: { fontCache: 'global' },
@@ -668,9 +669,14 @@ details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-w
 .thm:has(+ .proof) { margin-bottom: .1rem; }
 .thm + .proof { margin-top: 0; }
 .proof .phead { font-family: var(--sc); font-style: normal; font-weight: 700; letter-spacing: .03em; color: var(--blue); margin-right: .4rem; }
-.proof > p + p, .proof > p + .disp, .proof > .disp + p { margin-top: .55rem; }
+.proof > p + p { margin-top: .95rem; }
+.proof > p + .disp, .proof > .disp + p { margin-top: .5rem; }
+.proof .disp { margin: .75rem 0 .85rem; }
+.proof p > strong:first-child, .proof .phead + strong { font-family: var(--sc); font-weight: 700; letter-spacing: .02em; color: color-mix(in srgb, var(--blue) 75%, var(--ink)); margin-right: .25rem; }
+mjx-container .why, mjx-container .why * { fill: var(--ink-soft); color: var(--ink-soft); }
 .proof > p:last-child { margin-bottom: .1rem; }
 .proof .qed { color: var(--blue); }
+.proof > .qed-end { position: absolute; right: .9rem; bottom: 1.05rem; float: none; margin: 0; }
 .proof .phead a.xref { color: inherit; text-decoration-color: color-mix(in srgb, var(--blue) 40%, transparent); }
 @media (max-width: 640px) {
   .sub-block { padding-left: .75rem; }

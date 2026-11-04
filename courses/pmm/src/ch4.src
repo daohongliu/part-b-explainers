@@ -20,7 +20,11 @@ Let $X\in\Lp2(\Omega,\F,\PP)$. Let $B\in\F$ with $\PP(B)>0$ (and $\PP(B^c)>0$), 
 </thm>
 <role r="idea" a="why the answer takes two values">
 
-Why: a $\sigma(B)$-measurable $Y$ can only take one value on $B$ and one on $B^c$ (the preimage of each value must be one of the four sets), so $Y=a\ind_B+b\ind_{B^c}$. Then $\E[(X-Y)^2]=\E[(X-a)^2\ind_B]+\E[(X-b)^2\ind_{B^c}]$, and the first term is a quadratic in $a$, $\E[X^2\ind_B]-2a\E[X\ind_B]+a^2\PP(B)$, minimised at $a=\E[X\ind_B]/\PP(B)$. Similarly for $b$. *The best guess on each piece is the average of $X$ over that piece.*
+Why: a $\sigma(B)$-measurable $Y$ can only take one value on $B$ and one on $B^c$ (the preimage of each value must be one of the four sets), so $Y=a\ind_B+b\ind_{B^c}$. Then
+$$\E[(X-Y)^2]=\E[(X-a)^2\ind_B]+\E[(X-b)^2\ind_{B^c}].$$
+The first term is a quadratic in $a$,
+$$\E[X^2\ind_B]-2a\E[X\ind_B]+a^2\PP(B),$$
+minimised at $a=\E[X\ind_B]/\PP(B)$. Similarly for $b$. *The best guess on each piece is the average of $X$ over that piece.*
 </role>
 <role r="link" a="from conditional probability to (12)">
 
@@ -69,7 +73,15 @@ Let $X$ be an integrable random variable on a probability space $(\Omega,\F,\PP)
 </thm>
 
 <pf h="Proof of uniqueness.">
-Let $Y,Z$ be two conditional expectations of $X$ given $\G$. Let $G:=\{Y>Z\}$ and note that $G\in\G$, as $Y,Z$ are $\G$-measurable (Lemma 2.3). By the defining relation, $\E[Y\ind_G]=\E[X\ind_G]=\E[Z\ind_G]$, so $\E[(Y-Z)\ind_G]=0$. But $(Y-Z)\ind_G\ge0$, and a non-negative random variable with expectation zero is zero a.s. (by Markov's inequality, $\PP((Y-Z)\ind_G>\frac1k)\le k\cdot0$ for each $k$). Since $Y-Z>0$ on $G$, this forces $\PP(G)=0$. Swapping $Y$ and $Z$, also $\PP(Z>Y)=0$, and hence $Y=Z$ a.s.
+Let $Y,Z$ be two conditional expectations of $X$ given $\G$. Let
+$$G:=\{Y>Z\},$$
+the set where they disagree one way. Note that $G\in\G$, as $Y,Z$ are $\G$-measurable (Lemma 2.3).
+
+By the defining relation, applied to both $Y$ and $Z$,
+$$\E[Y\ind_G]=\E[X\ind_G]=\E[Z\ind_G],\qquad\text{so}\qquad\E[(Y-Z)\ind_G]=0.$$
+But $(Y-Z)\ind_G\ge0$, and a non-negative random variable with expectation zero is zero a.s. (by Markov's inequality, $\PP((Y-Z)\ind_G>\frac1k)\le k\cdot0$ for each $k$). Since $Y-Z>0$ on $G$, this forces $\PP(G)=0$.
+
+Swapping $Y$ and $Z$, also $\PP(Z>Y)=0$, and hence $Y=Z$ a.s.
 </pf>
 <role r="caution" a="defined only up to null sets">
 
@@ -101,13 +113,19 @@ We omit the proof, which is beyond the scope of the course. (Uniqueness of $f$ i
 </role>
 
 <pf h="Proof of existence in Theorem 4.4.">
-Suppose first that $X$ is non-negative. We want an integrable, $\G$-measurable $Z$ such that
+**Non-negative $X$.** Suppose first that $X$ is non-negative. We want an integrable, $\G$-measurable $Z$ such that
 
 $$#eq17 \int_AZ\,d\PP=\int_AX\,d\PP\qquad\text{for all }A\in\G. \tag{17}$$
 
-So, for $A\in\G$, let $\mathbb Q[A]=\int_AX\,d\PP$. This defines a finite measure $\mathbb Q$ on $(\Omega,\G)$ (note: on $\G$, not $\F$). Let $\PP|_\G$ denote the measure $\PP$ restricted to the σ-algebra $\G$. Then $\mathbb Q\ll\PP|_\G$, since if $\PP(A)=0$ then $\int_AX\,d\PP=0$. Applying the Radon–Nikodym theorem to $\mathbb Q$ and $\PP|_\G$ *on the space $(\Omega,\G)$*, there is a $\G$-measurable function $Z=\frac{d\mathbb Q}{d\PP|_\G}$ such that <a class="xref" href="#eq17">(17)</a> holds.<sn>A small subtlety: we are using twice (with $Y=\ind_AX$ and $Y=\ind_AZ$) that if $Y$ is $\G$-measurable, then $\int Y\,d\PP|_\G=\int Y\,d\PP$. This follows from Remark 2.8: both integrals are determined by the same numbers $\PP(Y\le t)$.</sn> Certainly $Z$ is integrable, since $Z\ge0$ and $\int Z\,d\PP=\int X\,d\PP<\infty$.
+So, for $A\in\G$, let
+$$\mathbb Q[A]=\int_AX\,d\PP.$$
+This defines a finite measure $\mathbb Q$ on $(\Omega,\G)$ (note: on $\G$, not $\F$). Let $\PP|_\G$ denote the measure $\PP$ restricted to the σ-algebra $\G$. Then $\mathbb Q\ll\PP|_\G$, since if $\PP(A)=0$ then $\int_AX\,d\PP=0$.
 
-For the general case, write $X=X^+-X^-$ in terms of its positive and negative parts. Then $\E[X^+\mid\G]-\E[X^-\mid\G]$ is $\G$-measurable and, by linearity of the integral, satisfies the defining relation.
+Now apply the Radon–Nikodym theorem to $\mathbb Q$ and $\PP|_\G$ *on the space $(\Omega,\G)$*. It gives a $\G$-measurable function
+$$Z=\frac{d\mathbb Q}{d\PP|_\G}$$
+such that <a class="xref" href="#eq17">(17)</a> holds.<sn>A small subtlety: we are using twice (with $Y=\ind_AX$ and $Y=\ind_AZ$) that if $Y$ is $\G$-measurable, then $\int Y\,d\PP|_\G=\int Y\,d\PP$. This follows from Remark 2.8: both integrals are determined by the same numbers $\PP(Y\le t)$.</sn> Certainly $Z$ is integrable, since $Z\ge0$ and $\int Z\,d\PP=\int X\,d\PP<\infty$.
+
+**General $X$.** Write $X=X^+-X^-$ in terms of its positive and negative parts. Then $\E[X^+\mid\G]-\E[X^-\mid\G]$ is $\G$-measurable and, by linearity of the integral, satisfies the defining relation.
 </pf>
 <role r="idea" a="why work on the small σ-algebra">
 
@@ -143,19 +161,25 @@ Let $(\Omega,\F,\PP)$ be a probability space, $X$ and $Y$ integrable random vari
 <pf>
 All of these follow from the requirement that $\E[X\mid\G]$ be $\G$-measurable and the defining relation <a class="xref" href="#eq14">(14)</a>, plus uniqueness. The recipe is always: *propose a candidate, check it is $\G$-measurable, check the defining relation, conclude by uniqueness.*
 
-1. Set $G=\Omega$ in the defining relation.
+**Part 1.** Set $G=\Omega$ in the defining relation.
 
-2. $Z=a\E[X\mid\G]+b\E[Y\mid\G]$ is $\G$-measurable, so we just check the defining relation: for $G\in\G$, $$\begin{aligned}\int_GZ\,d\PP&=a\int_G\E[X\mid\G]\,d\PP+b\int_G\E[Y\mid\G]\,d\PP\\&=a\int_GX\,d\PP+b\int_GY\,d\PP=\int_G(aX+bY)\,d\PP.\end{aligned}$$ So $Z$ is a version of $\E[aX+bY\mid\G]$, and equality a.s. follows from uniqueness.
+**Part 2.** The candidate $Z=a\E[X\mid\G]+b\E[Y\mid\G]$ is $\G$-measurable, so we just check the defining relation. For $G\in\G$,
+$$\begin{aligned}\int_GZ\,d\PP&=a\int_G\E[X\mid\G]\,d\PP+b\int_G\E[Y\mid\G]\,d\PP\\&=a\int_GX\,d\PP+b\int_GY\,d\PP&&\why{defining relations}\\&=\int_G(aX+bY)\,d\PP.\end{aligned}$$
+So $Z$ is a version of $\E[aX+bY\mid\G]$, and equality a.s. follows from uniqueness.
 
-3. $X$ itself is $\G$-measurable and trivially satisfies $\E[X\ind_G]=\E[X\ind_G]$. 4 is the special case $X=c$ of 3, since constants are measurable for every σ-algebra.
+**Parts 3 and 4.** $X$ itself is $\G$-measurable and trivially satisfies $\E[X\ind_G]=\E[X\ind_G]$. Part 4 is the special case $X=c$ of part 3, since constants are measurable for every σ-algebra.
 
-5. The only functions measurable with respect to $\{\emptyset,\Omega\}$ are constants (a non-constant function would have a preimage that is neither $\emptyset$ nor $\Omega$). So $\E[X\mid\{\emptyset,\Omega\}]$ is a constant, and integrating over $\Omega$ identifies it as $\E[X]$.
+**Part 5.** The only functions measurable with respect to $\{\emptyset,\Omega\}$ are constants (a non-constant function would have a preimage that is neither $\emptyset$ nor $\Omega$). So $\E[X\mid\{\emptyset,\Omega\}]$ is a constant, and integrating over $\Omega$ identifies it as $\E[X]$.
 
-6. $\E[X]$ is a constant, so $\G$-measurable, and for $G\in\G$, $$\int_G\E[X]\,d\PP=\E[X]\,\PP[G]=\E[X]\,\E[\ind_G]=\E[X\ind_G]=\int_GX\,d\PP,$$ where the middle equality uses independence of $X$ and $\ind_G$. (For independent integrable $U,V$ we have $\E[UV]=\E[U]\E[V]$: for indicators this is the definition of independence, and the standard machine does the rest. This is on Problem Sheet 3.)
+**Part 6.** $\E[X]$ is a constant, so it is $\G$-measurable, and for $G\in\G$,
+$$\begin{aligned}\int_G\E[X]\,d\PP&=\E[X]\,\PP[G]=\E[X]\,\E[\ind_G]\\&=\E[X\ind_G]&&\why{independence}\\&=\int_GX\,d\PP.\end{aligned}$$
+The independence step: for independent integrable $U,V$ we have $\E[UV]=\E[U]\E[V]$. For indicators this is the definition of independence, and the standard machine does the rest. (This is on Problem Sheet 3.)
 
-7. Let $G=\{\E[X\mid\G]>\E[Y\mid\G]\}\in\G$. Then $\E\big[(\E[X\mid\G]-\E[Y\mid\G])\ind_G\big]=\E[(X-Y)\ind_G]\le0$, while the integrand on the left is $>0$ on $G$; so $\PP(G)=0$, as in the uniqueness proof.
+**Part 7.** Let $G=\{\E[X\mid\G]>\E[Y\mid\G]\}\in\G$. Then
+$$\E\big[(\E[X\mid\G]-\E[Y\mid\G])\ind_G\big]=\E[(X-Y)\ind_G]\le0,$$
+while the integrand on the left is $>0$ on $G$. So $\PP(G)=0$, as in the uniqueness proof.
 
-8. Apply 7 to $X\le|X|$ and $-X\le|X|$, and use 2.
+**Part 8.** Apply part 7 to $X\le|X|$ and $-X\le|X|$, and use part 2.
 </pf>
 <role r="idea" a="why property 6 is believable">
 
@@ -179,7 +203,13 @@ The proofs all use the defining relation <a class="xref" href="#eq14">(14)</a> t
 </role>
 
 <pause n="Conditional monotone convergence" q="Prove cMON.">
-By Proposition 4.6(7), the $Z_n=\E[X_n\mid\G]$ increase a.s.; let $Z=\lim_nZ_n$ (on the null set where they fail to increase, set $Z=0$). $Z$ is $\G$-measurable as a limit of $\G$-measurable functions. For $G\in\G$, apply the Monotone Convergence Theorem twice: $\E[Z\ind_G]=\lim_n\E[Z_n\ind_G]=\lim_n\E[X_n\ind_G]=\E[X\ind_G]$. So $Z$ satisfies the defining relation for $\E[X\mid\G]$ (if $X$ is integrable; otherwise the same argument works with values in $[0,\infty]$), and uniqueness gives $Z=\E[X\mid\G]$ a.s. cFatou then follows from cMON exactly as Fatou followed from MCT, and cDOM from cFatou as DCT from Fatou.
+**The candidate.** By Proposition 4.6(7), the $Z_n=\E[X_n\mid\G]$ increase a.s. Let $Z=\lim_nZ_n$ (on the null set where they fail to increase, set $Z=0$). Then $Z$ is $\G$-measurable as a limit of $\G$-measurable functions.
+
+**The defining relation.** For $G\in\G$, apply the Monotone Convergence Theorem twice:
+$$\E[Z\ind_G]=\lim_n\E[Z_n\ind_G]=\lim_n\E[X_n\ind_G]=\E[X\ind_G].$$
+So $Z$ satisfies the defining relation for $\E[X\mid\G]$ (if $X$ is integrable; otherwise the same argument works with values in $[0,\infty]$), and uniqueness gives $Z=\E[X\mid\G]$ a.s.
+
+**The other two.** cFatou then follows from cMON exactly as Fatou followed from MCT, and cDOM from cFatou as DCT from Fatou.
 </pause>
 <role r="roadmap" a="the most useful rules">
 
@@ -195,7 +225,18 @@ If $Y$ is known given $\G$, it behaves like a constant and can be pulled out, ju
 </role>
 
 <pf>
-The function $Y\E[X\mid\G]$ is clearly $\G$-measurable, so we must check that it satisfies the defining relation for $\E[XY\mid\G]$. We do this by the standard machine. First suppose that $X$ and $Y$ are non-negative. If $Y=\ind_A$ for some $A\in\G$, then for any $G\in\G$ we have $G\cap A\in\G$, and so by the defining relation for $\E[X\mid\G]$, $$\int_GY\,\E[X\mid\G]\,d\PP=\int_{G\cap A}\E[X\mid\G]\,d\PP=\int_{G\cap A}X\,d\PP=\int_GYX\,d\PP.$$ Now extend by linearity to simple $\G$-measurable random variables $Y\ge0$. Next suppose that $Y\ge0$ is $\G$-measurable. Then there is a sequence $(Y_n)$ of simple $\G$-measurable random variables with $Y_n\uparrow Y$, so $Y_nX\uparrow YX$ and $Y_n\E[X\mid\G]\uparrow Y\E[X\mid\G]$ (the latter as $\E[X\mid\G]\ge0$ a.s.), and the result follows by the Monotone Convergence Theorem. Finally, for $X$, $Y$ not necessarily non-negative, write $XY=(X^+-X^-)(Y^+-Y^-)$ and use linearity.
+The function $Y\E[X\mid\G]$ is clearly $\G$-measurable, so we must check that it satisfies the defining relation for $\E[XY\mid\G]$. We do this by the standard machine, building $Y$ up in stages. First suppose that $X$ and $Y$ are non-negative.
+
+**Indicators.** If $Y=\ind_A$ for some $A\in\G$, then for any $G\in\G$ we have $G\cap A\in\G$, and so by the defining relation for $\E[X\mid\G]$,
+$$\int_GY\,\E[X\mid\G]\,d\PP=\int_{G\cap A}\E[X\mid\G]\,d\PP=\int_{G\cap A}X\,d\PP=\int_GYX\,d\PP.$$
+
+**Simple functions.** Extend by linearity to simple $\G$-measurable random variables $Y\ge0$.
+
+**Non-negative functions.** Next suppose that $Y\ge0$ is $\G$-measurable. There is a sequence $(Y_n)$ of simple $\G$-measurable random variables with $Y_n\uparrow Y$, so
+$$Y_nX\uparrow YX\qquad\text{and}\qquad Y_n\E[X\mid\G]\uparrow Y\E[X\mid\G],$$
+the latter because $\E[X\mid\G]\ge0$ a.s. The result follows by the Monotone Convergence Theorem.
+
+**General signs.** Finally, for $X$, $Y$ not necessarily non-negative, write $XY=(X^+-X^-)(Y^+-Y^-)$ and use linearity.
 </pf>
 
 <thm k="Proposition 4.9" nm="Tower property of conditional expectations" pg="36" it>
@@ -203,7 +244,8 @@ Let $(\Omega,\F,\PP)$ be a probability space, $X$ an integrable random variable 
 </thm>
 
 <pf>
-The left-hand side is certainly $\F_1$-measurable, so we need to check the defining relation for $\E[X\mid\F_1]$. Let $G\in\F_1$, noting that $G\in\F_2$ too. Applying the defining relation twice, $$\int_G\E\big[\E[X\mid\F_2]\,\big|\,\F_1\big]\,d\PP=\int_G\E[X\mid\F_2]\,d\PP=\int_GX\,d\PP.$$
+The left-hand side is certainly $\F_1$-measurable, so we need to check the defining relation for $\E[X\mid\F_1]$. Let $G\in\F_1$, noting that $G\in\F_2$ too. Applying the defining relation twice,
+$$\begin{aligned}\int_G\E\big[\E[X\mid\F_2]\,\big|\,\F_1\big]\,d\PP&=\int_G\E[X\mid\F_2]\,d\PP&&\why{as $G\in\F_1$}\\&=\int_GX\,d\PP.&&\why{as $G\in\F_2$}\end{aligned}$$
 </pf>
 <role r="idea" a="the coarser information wins">
 
@@ -221,13 +263,20 @@ Suppose that $(\Omega,\F,\PP)$ is a probability space and that $X$ is an integra
 </thm>
 
 <pf h="Sketch proof; not examinable.">
-Take $I$ to be an open interval so that we don't have to worry about endpoints (they cause inconvenience rather than real problems). Recall from the proof of Jensen's inequality (Lemma 3.17) that if $f$ is convex then for every $m\in I$ we can find a straight line touching $f$ from below at $m$: $a,b\in\R$ with $f(x)\ge ax+b$ for all $x\in I$ and equality at $m$.
+Take $I$ to be an open interval so that we don't have to worry about endpoints (they cause inconvenience rather than real problems).
 
-Consider the set of all functions $g(x)=ax+b$ with $g\le f$ on $I$. Then $f$ is the pointwise supremum of this set. Also $f$ is continuous (convex functions on open intervals are). With a little work, it follows that we can find a *countable* set of such lines with $f(x)=\sup_n\{a_nx+b_n\}$ (use the supporting lines at rational points). Now, since $f(X)\ge a_nX+b_n$, Proposition 4.6 gives
+**Lines below $f$.** Recall from the proof of Jensen's inequality (Lemma 3.17) that if $f$ is convex then for every $m\in I$ we can find a straight line touching $f$ from below at $m$: there are $a,b\in\R$ with
+$$f(x)\ge ax+b\quad\text{for all }x\in I,\qquad\text{with equality at }m.$$
+Consider the set of all functions $g(x)=ax+b$ with $g\le f$ on $I$. Then $f$ is the pointwise supremum of this set. Also $f$ is continuous (convex functions on open intervals are). With a little work, it follows that we can find a *countable* set of such lines with
+$$f(x)=\sup_n\{a_nx+b_n\}$$
+(use the supporting lines at rational points).
+
+**Conditioning each line.** Since $f(X)\ge a_nX+b_n$, Proposition 4.6 gives
 
 $$#eq18 \E[f(X)\mid\G]\ge\E[a_nX+b_n\mid\G]=a_n\E[X\mid\G]+b_n\quad\text{a.s.} \tag{18}$$
 
-Each of these holds outside a null set. Since a countable union of null sets is null, <a class="xref" href="#eq18">(18)</a> holds simultaneously for all $n$ outside a single null set, and so $\E[f(X)\mid\G]\ge\sup_n\{a_n\E[X\mid\G]+b_n\}=f(\E[X\mid\G])$ a.s.
+**Putting the lines back together.** Each of these holds outside a null set. Since a countable union of null sets is null, <a class="xref" href="#eq18">(18)</a> holds simultaneously for all $n$ outside a single null set, and so
+$$\E[f(X)\mid\G]\ge\sup_n\{a_n\E[X\mid\G]+b_n\}=f(\E[X\mid\G])\quad\text{a.s.}$$
 </pf>
 
 <sheet n="3" qs="A3,B3,B4,B5,B6,B7,C5,C6"></sheet>
@@ -256,9 +305,23 @@ Let $K$ be a complete vector subspace of $\Lp2(\Omega,\F,\PP)$. For any $X\in\Lp
 </thm>
 
 <pf>
-Let $(Y_n)_{n\ge1}$ be a sequence in $K$ which approaches the infimum, $\|X-Y_n\|_2\to\Delta$. We argue that the sequence is Cauchy, using the **parallelogram law** $\|u+v\|^2+\|u-v\|^2=2\|u\|^2+2\|v\|^2$ (expand the inner products) with $u=X-\frac12(Y_r+Y_s)$ and $v=\frac12(Y_r-Y_s)$: $$\|X-Y_r\|_2^2+\|X-Y_s\|_2^2=2\big\|X-\tfrac12(Y_r+Y_s)\big\|_2^2+2\big\|\tfrac12(Y_r-Y_s)\big\|_2^2.$$ Since $K$ is a vector space, $\frac12(Y_r+Y_s)\in K$, and in particular $\|X-\frac12(Y_r+Y_s)\|_2^2\ge\Delta^2$. So $\frac12\|Y_r-Y_s\|_2^2\le\|X-Y_r\|_2^2+\|X-Y_s\|_2^2-2\Delta^2$, and the right side tends to 0 as $r,s\to\infty$. Hence $\sup_{r,s\ge n}\|Y_r-Y_s\|_2\to0$, i.e., $(Y_n)$ is Cauchy. Since $K$ is complete, there exists $Y\in K$ with $\|Y_n-Y\|_2\to0$. Minkowski's inequality (Theorem 3.20) then gives $\|X-Y\|_2\le\|X-Y_n\|_2+\|Y-Y_n\|_2$, and letting $n\to\infty$ we see that $\|X-Y\|_2=\Delta$, as required.
+**Existence of a closest point.** Let $(Y_n)_{n\ge1}$ be a sequence in $K$ which approaches the infimum, $\|X-Y_n\|_2\to\Delta$. We argue that the sequence is Cauchy. The tool is the **parallelogram law**
+$$\|u+v\|^2+\|u-v\|^2=2\|u\|^2+2\|v\|^2$$
+(expand the inner products). With $u=X-\frac12(Y_r+Y_s)$ and $v=\frac12(Y_r-Y_s)$ it reads
+$$\|X-Y_r\|_2^2+\|X-Y_s\|_2^2=2\big\|X-\tfrac12(Y_r+Y_s)\big\|_2^2+2\big\|\tfrac12(Y_r-Y_s)\big\|_2^2.$$
+Since $K$ is a vector space, $\frac12(Y_r+Y_s)\in K$, and in particular $\|X-\frac12(Y_r+Y_s)\|_2^2\ge\Delta^2$. So
+$$\tfrac12\|Y_r-Y_s\|_2^2\le\|X-Y_r\|_2^2+\|X-Y_s\|_2^2-2\Delta^2,$$
+and the right side tends to 0 as $r,s\to\infty$. Hence $\sup_{r,s\ge n}\|Y_r-Y_s\|_2\to0$, i.e., $(Y_n)$ is Cauchy.
 
-Now let $Z\in K$ with $\|Z\|_2>0$, and note that $Y+tZ\in K$ for all $t\in\R$. Using optimality of $Y$, $$0\le\|X-(Y+tZ)\|_2^2-\|X-Y\|_2^2=t^2\|Z\|_2^2-2t\,\E[Z(X-Y)].$$ Taking $t=\E[Z(X-Y)]/\|Z\|_2^2$ yields $0\le-\E[Z(X-Y)]^2/\|Z\|_2^2$, which implies $\E[Z(X-Y)]=0$, as desired.
+Since $K$ is complete, there exists $Y\in K$ with $\|Y_n-Y\|_2\to0$. Minkowski's inequality (Theorem 3.20) then gives
+$$\|X-Y\|_2\le\|X-Y_n\|_2+\|Y-Y_n\|_2,$$
+and letting $n\to\infty$ we see that $\|X-Y\|_2=\Delta$, as required.
+
+**Orthogonality.** Now let $Z\in K$ with $\|Z\|_2>0$, and note that $Y+tZ\in K$ for all $t\in\R$. Using optimality of $Y$,
+$$0\le\|X-(Y+tZ)\|_2^2-\|X-Y\|_2^2=t^2\|Z\|_2^2-2t\,\E[Z(X-Y)].$$
+Taking $t=\E[Z(X-Y)]/\|Z\|_2^2$ (the minimiser of the right side) yields
+$$0\le-\frac{\E[Z(X-Y)]^2}{\|Z\|_2^2},$$
+which implies $\E[Z(X-Y)]=0$, as desired.
 </pf>
 <role r="reading" a="Theorem 4.11">
 
@@ -272,9 +335,15 @@ We now have everything we need for an alternative proof of the existence of cond
 </role>
 
 <pf h="Proof of existence in Theorem 4.4, again.">
-Suppose first that $X\in\Lp2(\Omega,\F,\PP)$ and let $K=\Lp2(\Omega,\G,\PP)$. Clearly $K$ is a vector subspace of $\Lp2(\Omega,\F,\PP)$, and it is complete by Theorem 3.21 (applied on the probability space $(\Omega,\G,\PP)$). Let $Y$ be the orthogonal projection of $X$ on $K$ from Theorem 4.11. Then $Y$ is $\G$-measurable since $Y\in K$. And for $G\in\G$, $\ind_G\in K$, and since $X-Y$ is orthogonal to $K$, $\E[(X-Y)\ind_G]=0$: the defining relation holds.
+**Square-integrable $X$.** Suppose first that $X\in\Lp2(\Omega,\F,\PP)$ and let
+$$K=\Lp2(\Omega,\G,\PP).$$
+Clearly $K$ is a vector subspace of $\Lp2(\Omega,\F,\PP)$, and it is complete by Theorem 3.21 (applied on the probability space $(\Omega,\G,\PP)$). Let $Y$ be the orthogonal projection of $X$ on $K$ from Theorem 4.11.
 
-For $X\in\Lp1$, by linearity it is enough to deal with $X^\pm$ separately. Suppose thus that $X\ge0$ and let $X_n=X\wedge n$, which are bounded and in particular in $\Lp2$, so that $Y_n=\E[X_n\mid\G]$ exists by the above. Then $X_n\uparrow X$, and the argument of cMON (Proposition 4.7, which used only the defining relation) shows that $Y:=\limsup_nY_n$ is a version of $\E[X\mid\G]$.
+Then $Y$ is $\G$-measurable since $Y\in K$. And for $G\in\G$, $\ind_G\in K$, and since $X-Y$ is orthogonal to $K$,
+$$\E[(X-Y)\ind_G]=0:$$
+the defining relation holds.
+
+**Integrable $X$.** For $X\in\Lp1$, by linearity it is enough to deal with $X^\pm$ separately. Suppose thus that $X\ge0$ and let $X_n=X\wedge n$. These are bounded and in particular in $\Lp2$, so $Y_n=\E[X_n\mid\G]$ exists by the above. Then $X_n\uparrow X$, and the argument of cMON (Proposition 4.7, which used only the defining relation) shows that $Y:=\limsup_nY_n$ is a version of $\E[X\mid\G]$.
 </pf>
 
 <sheet n="3" qs="C4">This is the existence proof of Section 4.1 again, now as an exercise.</sheet>

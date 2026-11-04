@@ -51,7 +51,16 @@ This is the RSA cryptosystem with encryption exponent $3$. $N$ is the public key
 </role>
 
 <pause n="Cube roots by hand" q="Take $p=5$ and $q=11$, both of the form $3k+2$, so $N=55$. Find the decryption exponent $d$, and use it to find the cube root of $x=8$ modulo 55, and of $x=13$.">
-$\varphi(55)=4\cdot10=40$, and $3d\equiv1\pmod{40}$ gives $d=27$ (since $81=2\cdot40+1$). The cube root of $8$ is $2$, of course, and indeed $8^{27}\bmod55=2$, which you can check by repeated squaring: $8^2=64\equiv9$, $8^4\equiv81\equiv26$, $8^8\equiv676\equiv16$, $8^{16}\equiv256\equiv36$, and $27=16+8+2+1$ gives $36\cdot16\cdot9\cdot8=41472\equiv2\pmod{55}$. For $x=13$: $13^{27}\bmod55=7$, and check: $7^3=343=6\cdot55+13$. Without knowing $p$ and $q$, finding the 7 means trying cubes until one hits 13, which is hopeless once $N$ has hundreds of digits.
+**The exponent.** $\varphi(55)=4\cdot10=40$, and $3d\equiv1\pmod{40}$ gives $d=27$, since $81=2\cdot40+1$.
+
+**The cube root of 8.** It is $2$, of course, and indeed $8^{27}\bmod55=2$. You can check this by repeated squaring:
+$$8^2=64\equiv9,\qquad8^4\equiv81\equiv26,\qquad8^8\equiv676\equiv16,\qquad8^{16}\equiv256\equiv36,$$
+and $27=16+8+2+1$ gives
+$$8^{27}\equiv36\cdot16\cdot9\cdot8=41472\equiv2\pmod{55}.$$
+
+**The cube root of 13.** We get $13^{27}\bmod55=7$, and to check: $7^3=343=6\cdot55+13$.
+
+Without knowing $p$ and $q$, finding the 7 means trying cubes until one hits 13, which is hopeless once $N$ has hundreds of digits.
 </pause>
 
 ## 5.2 A learning problem based on the DCRA {47} [d3 i3]
