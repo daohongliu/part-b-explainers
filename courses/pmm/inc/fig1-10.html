@@ -1,0 +1,16 @@
+<figure class="wide" id="fig1-10">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Proof steps">
+      <button type="button" data-pf="0" aria-pressed="true">the \(A_n\)</button>
+      <button type="button" data-pf="1" aria-pressed="false">step 1 · chop</button>
+      <button type="button" data-pf="2" aria-pressed="false">step 2 · shrink</button>
+      <button type="button" data-pf="3" aria-pressed="false">step 3 · intersect</button>
+    </div>
+    <svg id="pf-svg" class="pt" viewBox="0 0 680 236" role="img" aria-label="Four rows of interval unions, transformed step by step as in the proof."></svg>
+    <div class="step-text" data-pft="0"><p>Each \(A_n\) is a finite union of intervals from \(\I\), the sequence is decreasing, and \(\mu_0(A_n)\ge\delta\) for every \(n\).</p></div>
+    <div class="step-text" data-pft="1" hidden><p><b>Step 1.</b> Replace \(A_n\) by \(B_n=A_n\cap(-l,l]\). Since \(\mu_0(A_n\setminus B_n)\le\mu_0\big((-\infty,-l]\cup(l,\infty)\big)=F(-l)+1-F(l)\), taking \(l\) large enough gives \(\mu_0(B_n)\ge\delta/2\) for all \(n\).</p></div>
+    <div class="step-text" data-pft="2" hidden><p><b>Step 2.</b> Suppose \(B_n=\bigcup_{i=1}^{k_n}I_{a_{n,i},b_{n,i}}\). Let \(C_n=\bigcup_{i=1}^{k_n}I_{\tilde a_{n,i},b_{n,i}}\) where \(a_{n,i}&lt;\tilde a_{n,i}&lt;b_{n,i}\), using right continuity of \(F\) to choose the \(\tilde a_{n,i}\) so that \(\mu_0(B_n\setminus C_n)&lt;\delta/2^{n+2}\) (the red slivers). The closure \(\overline{C_n}\) adds the points \(\tilde a_{n,i}\) and still lies in \(B_n\).</p></div>
+    <div class="step-text" data-pft="3" hidden><p><b>Step 3.</b> The \(C_n\) need not be decreasing, so set \(D_n=\bigcap_{i=1}^nC_i\) and \(E_n=\bigcap_{i=1}^n\overline{C_i}\). Since</p><div class="disp">\[\mu_0(D_n)\ge\mu_0(B_n)-\sum_{i=1}^n\mu_0(B_i\setminus C_i)\ge\frac\delta2-\sum_{i=1}^n\frac{\delta}{2^{i+2}}\ge\frac\delta4,\]</div><p>\(D_n\) is non-empty, so \(E_n\supseteq D_n\) is too. Each \(E_n\) is closed and bounded, hence compact, and \(E_{n+1}\subseteq E_n\). So some \(x\) lies in every \(E_n\). Since \(E_n\subseteq\overline{C_n}\subseteq B_n\subseteq A_n\), \(x\in A_n\) for all \(n\), contradicting \(A_n\downarrow\emptyset\).</p></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.10</span>The construction in the existence proof, run on a sample sequence. This sketch’s \(A_n\) don’t actually shrink to \(\emptyset\), and the argument ends by finding a point ★ in all of them. Under the proof’s assumption no such point can exist, which is the contradiction.<span class="qed" data-tip="Quod erat demonstrandum. Or ‘quite easily done’, depending on who’s lecturing.">∎</span></figcaption>
+</figure>

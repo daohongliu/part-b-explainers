@@ -1,0 +1,16 @@
+<figure class="wide" id="fig0-2">
+  <div class="fig-body">
+    <svg id="bt-svg" class="pt" viewBox="0 0 720 340" role="img" aria-label="A recombining binomial tree of share prices, with the hedging price of the claim at each node."></svg>
+    <div class="controls">
+      <label class="grow" for="bt-n">periods N <input type="range" id="bt-n" min="1" max="6" step="1" value="3"> <output id="bt-nv"></output></label>
+      <label class="grow" for="bt-u">up u <input type="range" id="bt-u" min="0.02" max="0.4" step="0.01" value="0.2"> <output id="bt-uv"></output></label>
+      <label class="grow" for="bt-d">down d <input type="range" id="bt-d" min="0.02" max="0.4" step="0.01" value="0.15"> <output id="bt-dv"></output></label>
+      <label class="grow" for="bt-r">interest r <input type="range" id="bt-r" min="0" max="0.15" step="0.005" value="0.03"> <output id="bt-rv"></output></label>
+      <label class="grow" for="bt-k">strike K <input type="range" id="bt-k" min="60" max="140" step="1" value="100"> <output id="bt-kv"></output></label>
+      <label class="grow" for="bt-p">real P(up) <input type="range" id="bt-p" min="0.05" max="0.95" step="0.01" value="0.7"> <output id="bt-pv"></output></label>
+      <label for="bt-f">claim <select id="bt-f"><option value="call">call: max(S_N − K, 0)</option><option value="put">put: max(K − S_N, 0)</option><option value="dig">digital: 1 if S_N &gt; K</option></select></label>
+    </div>
+    <div class="readout" id="bt-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 0.2</span>The binomial model, with \(S_0=100\). Each node shows the share price (top) and the price of the claim at that node (below, in blue), computed backwards from the payoff at time \(N\). Hover or focus a node to see the hedge \(H\): the number of shares that makes the trader’s wealth match the claim whichever way the price moves next. Slide the real-world probability of an up-move: the price doesn’t change.</figcaption>
+</figure>

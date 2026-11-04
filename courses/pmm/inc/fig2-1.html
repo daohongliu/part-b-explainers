@@ -1,0 +1,15 @@
+<figure class="wide" id="fig2-1">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="How to chop">
+      <button type="button" data-lz="leb" aria-pressed="true">Lebesgue: slice the range</button>
+      <button type="button" data-lz="rie" aria-pressed="false">Riemann: slice the domain</button>
+    </div>
+    <svg id="lz-svg" class="pt" viewBox="0 0 720 320" role="img" aria-label="A function on [0,1] with a staircase approximation underneath. In Lebesgue mode one horizontal band is highlighted together with the set of x where f lies in it."></svg>
+    <div class="controls">
+      <label class="grow" for="lz-n">n <input type="range" id="lz-n" min="1" max="7" step="1" value="3"> <output id="lz-nv"></output></label>
+      <label class="grow" for="lz-k">highlighted level <input type="range" id="lz-k" min="0" max="20" step="1" value="5"> <output id="lz-kv"></output></label>
+    </div>
+    <div class="readout" id="lz-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.1</span>Lebesgue’s idea. The staircase \(\varphi_n\) rounds \(f\) down to multiples of \(2^{-n}\). Its integral adds up, level by level, (height) × (measure of the set where \(f\) sits in that band); the highlighted band’s set is drawn in blue under the axis, and it is scattered, which a measure doesn’t mind. Switch to Riemann to compare: there the domain is cut into equal pieces instead. Both approximations increase to \(\int f\).</figcaption>
+</figure>

@@ -1,0 +1,11 @@
+<figure class="wide" id="fig2-4">
+  <div class="fig-body">
+    <canvas id="rs-canvas" width="720" height="290" aria-label="Partial sums of random-sign series for many independent sign sequences."></canvas>
+    <div class="controls">
+      <label class="grow" for="rs-p">p <input type="range" id="rs-p" min="0.3" max="1.2" step="0.01" value="0.75"> <output id="rs-pv"></output></label>
+      <button type="button" id="rs-new">new signs</button>
+    </div>
+    <div class="readout" id="rs-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.4</span>Partial sums of \(\sum_k\eps_k/k^p\) with independent fair random signs \(\eps_k=\pm1\), for 40 sign sequences; the horizontal axis is logarithmic in \(n\). The event “the series converges” is a tail event, so Kolmogorov’s 0-1 law says its probability is 0 or 1, never in between. Above \(p=\frac12\) every path settles; at or below it, every path wanders off.</figcaption>
+</figure>

@@ -1,0 +1,14 @@
+<figure class="wide" id="fig1-9">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Choose the value at the jump">
+      <button type="button" data-rc="R" aria-pressed="true">right continuous: \(G(0)=0.7\)</button>
+      <button type="button" data-rc="L" aria-pressed="false">left continuous: \(G(0)=0.3\)</button>
+    </div>
+    <svg id="rc-svg" class="pt" viewBox="0 0 680 284" role="img" aria-label="Left: a function with a jump at 0 and the interval (0, 1/n]. Right: bars showing the set function of (0, 1/k] for k from 1 to 20."></svg>
+    <div class="controls">
+      <label class="grow" for="rc-n">n <input type="range" id="rc-n" min="1" max="20" step="1" value="4"> <output id="rc-nv" for="rc-n">4</output></label>
+    </div>
+    <div class="readout" id="rc-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.9</span>Two functions with the same jump at 0, differing only in the value they take there. Each defines a set function \(\mu_0((a,b])=G(b)-G(a)\). The sets \(A_n=(0,\frac1n]\) decrease to \(\emptyset\). With the right continuous choice \(\mu_0(A_n)\to0\). With the other, \(\mu_0(A_n)\to0.4\): that mass is parked at \(0^+\), an address with no house, and countable additivity fails.</figcaption>
+</figure>

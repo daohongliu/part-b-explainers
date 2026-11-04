@@ -1,0 +1,12 @@
+<figure class="wide" id="fig4-1">
+  <div class="fig-body">
+    <svg id="bg4-svg" class="pt" viewBox="0 0 720 290" role="img" aria-label="A random variable X on the unit interval, an event B shaded, and two candidate guesses: one level on B and one off B."></svg>
+    <div class="controls">
+      <label class="grow" for="bg4-a">guess on B <input type="range" id="bg4-a" min="-0.5" max="2.5" step="0.01" value="0.4"> <output id="bg4-av"></output></label>
+      <label class="grow" for="bg4-b">guess off B <input type="range" id="bg4-b" min="-0.5" max="2.5" step="0.01" value="1.9"> <output id="bg4-bv"></output></label>
+      <button type="button" id="bg4-snap">use the averages</button>
+    </div>
+    <div class="readout" id="bg4-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 4.1</span>Example 4.1 on \(\Omega=[0,1]\) with Lebesgue measure. A \(\sigma(B)\)-measurable guess \(Y\) can only be one constant on \(B\) (shaded; drag its ends) and another off \(B\). Try to make the mean-square error \(\E[(X-Y)^2]\) as small as possible. The best you can do is the dashed lines, the averages \(\E[X\mid B]\) and \(\E[X\mid B^c]\), and then the areas of \(X\) above and below the guess balance on each piece: that is <a class="xref" href="#eq12">(12)</a>.</figcaption>
+</figure>

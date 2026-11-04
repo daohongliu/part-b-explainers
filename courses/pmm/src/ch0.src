@@ -1,0 +1,129 @@
+@num 0
+@title Introduction
+@titlehtml Three <em>examples</em>
+@pages 1–8
+@dek Before any definitions, three stories: a random walk, a trader, and a Victorian worried about surnames. Each hides the same object, a martingale, and each poses a question the rest of the course learns to answer.
+---
+## 0.1 Background {1}
+
+In the last fifty years probability theory has emerged both as a core mathematical discipline, alongside geometry, algebra and analysis, and as a fundamental way of thinking about the world. It gives a rigorous framework for modelling the randomness around us, and it has become an indispensable tool everywhere from physics and neuroscience to genetics, communication networks and mathematical finance. Probabilistic arguments have also become important inside mathematics itself, from number theory to partial differential equations.
+
+The course has two halves. The first (Chapters 1–3) builds measure theory: what it means to assign probabilities to events, and to integrate. The notes build on Part A Integration; this version explains everything it borrows. The second half (Chapters 4–7) uses that foundation to define *conditional expectation* properly and then to study **martingales**, a class of random processes with remarkable properties.<sn>The nearest thing to a course text is David Williams, <em>Probability with Martingales</em> (CUP). The notes also recommend Durrett’s <em>Probability: Theory and Examples</em>, Capiński and Kopp’s <em>Measure, Integral and Probability</em> (gentle), Meyer’s <em>Probability and Potentials</em> and Varadhan’s <em>Probability Theory</em> (“not for the faint-hearted”).</sn> This chapter shows three places martingales turn up, without any of the machinery. Read it for the ideas; every step marked as informal here is made rigorous later.
+
+## 0.3 Example 1: Simple Symmetric Random Walk {4}
+
+Consider a sequence of independent random variables $(X_n)_{n\ge1}$, all with the same distribution $$\PP(X_n=-1)=\PP(X_n=1)=\tfrac12.$$ Note that $\E[X_n]=0$ and $\mathrm{Var}(X_n)=\E[X_n^2]=1$. Let $S_0=0$ and $$S_n=\sum_{k=1}^nX_k,\qquad n\ge1,$$ be their cumulative sums. Think of a walker who tosses a fair coin each second and steps left or right. This process is the **simple symmetric random walk** (SSRW).
+
+Suppose we have watched the walk up to time $n-1$ and want to predict $S_n$. Since $S_n=S_{n-1}+X_n$, and $X_n$ is independent of everything so far and has mean 0, our best guess is $$\E[S_n\mid S_{n-1},\dots,S_0]=\E[S_n\mid S_{n-1}]=S_{n-1}+\E[X_n]=S_{n-1}.$$ Here $\E[\,\cdot\mid S_{n-1},\dots,S_0]$ means "the expectation, given the values of $S_0,\dots,S_{n-1}$", which you can compute with the conditional probabilities from Prelims because everything is discrete. Making this notion precise in general is the job of Chapter 4.
+
+This property captures something essential about the process $(S_n)_n$: *the current value is the best prediction of the next one, given the whole history*. A process with this property is called a **martingale**,<sn>The name has tangled origins. A <em>martingale</em> was a gambling system (double your stake after every loss), and also a strap in a horse’s harness; the word may come from the town of Martigues. The notes call these “weird historical reasons”, which is fair.</sn> and we'll define it properly in Chapter 6. It is not surprising that such processes turn up in many applications: fair games, prices in efficient markets and suitably normalised population sizes all have this property.
+
+There are many questions one could ask about the walk. One of the first is its long-time behaviour. From the weak law of large numbers we know that $S_n/n\to0$ in probability, that is, $\PP(|S_n/n|>\eps)\to0$ for every $\eps>0$. Later (Chapter 7) we will show that this convergence actually takes place almost surely: with probability one, the sequence of numbers $S_n/n$ tends to 0. This is a non-trivial extension; it took mathematicians over 200 years to prove it.
+
+You have also seen (the central limit theorem) that the *size* of $S_n$ is about $\sqrt n$: $$\frac{S_n}{\sqrt n}\dto N(0,1),$$ meaning $\PP(S_n/\sqrt n\le x)\to\Phi(x)$, the standard normal distribution function. Put differently, if I run 100 simulations of the walk and plot $S_n/\sqrt n$ for a large $n$, I expect only about 2 paths to be outside the interval $(-2.326,2.326)$, since $\PP(|Z|>2.326)\approx0.02$ for $Z\sim N(0,1)$.
+
+So what about those rare paths? How far do they get? This is governed by the **law of the iterated logarithm**: almost surely, $$\limsup_{n\to\infty}\frac{S_n}{\sqrt{n\log\log n}}=\sqrt2\qquad\text{and}\qquad\liminf_{n\to\infty}\frac{S_n}{\sqrt{n\log\log n}}=-\sqrt2.$$ Every path eventually stays inside $\pm(1+\eps)\sqrt{2n\log\log n}$, but keeps poking out past $\pm(1-\eps)\sqrt{2n\log\log n}$ forever. Although the walk evolves completely at random, these results pin down its shape remarkably precisely.
+
+<bg id="bg-limsup" t="lim sup and lim inf" lead="Background">
+For a sequence of real numbers $(x_n)$, $$\limsup_{n\to\infty}x_n=\lim_{n\to\infty}\Big(\sup_{m\ge n}x_m\Big),\qquad\liminf_{n\to\infty}x_n=\lim_{n\to\infty}\Big(\inf_{m\ge n}x_m\Big).$$ The tail suprema $\sup_{m\ge n}x_m$ can only decrease as $n$ grows, so the first limit always exists in $[-\infty,\infty]$; similarly for the second. The lim sup is the largest value the sequence keeps coming back near, the lim inf the smallest. A sequence converges exactly when the two agree (and are finite). For example $x_n=(-1)^n(1+\frac1n)$ has lim sup $1$ and lim inf $-1$.
+</bg>
+
+@@fig0-1@@
+
+## 0.4 Example 2: Mathematical Finance {4}
+
+Suppose $(S_n)_{n\ge0}$ models the price of a risky asset, a share, at times $n=0,1,2,\dots$ A trader buys and sells the share. At time $n$ they have wealth $V_n$ and decide to hold $H_n=H_n(S_0,S_1,\dots,S_n)$ shares; the notation says the decision may use the prices seen so far, but not future ones. The rest of their wealth, $V_n-H_nS_n$ (negative if they borrowed), sits in a bank account earning interest at rate $r$ per period. At time $n+1$ they therefore have $$\begin{aligned}V_{n+1}&=H_nS_{n+1}+(V_n-H_nS_n)(1+r)\\&=H_n\big(S_{n+1}-(1+r)S_n\big)+V_n(1+r).\end{aligned}$$
+
+Money at different times is easier to compare after removing the interest. Introduce **discounted** quantities $\tilde V_n:=(1+r)^{-n}V_n$ and $\tilde S_n:=(1+r)^{-n}S_n$. Dividing the last equation by $(1+r)^{n+1}$ gives $$\tilde V_{n+1}=H_n(\tilde S_{n+1}-\tilde S_n)+\tilde V_n=\dots=V_0+\sum_{t=0}^{n}H_t(\tilde S_{t+1}-\tilde S_t).$$ The trader's discounted wealth is their starting capital plus, at each step, (number of shares held) × (change in discounted price). We will meet this object again under the name *discrete stochastic integral* or *martingale transform* (Chapter 6).
+
+Now suppose that at time $0$ someone wants to buy from the trader a financial product which, at time $N$, pays $f(S_0,S_1,\dots,S_N)$; for example a call option paying $\max(S_N-K,0)$. What price should the trader set? If they can find a trading strategy $H$ such that $V_N=f$ no matter how prices move, then $V_0$ is the fair price: by trading, the trader reproduces (**hedges**) the payoff exactly, so they bear no risk. But when is this possible, and how do we find $V_0$? One case where it works is the binomial model.
+
+<thm k="Proposition 0.1" nm="Binomial model pricing" pg="6" it>
+Suppose there exist two constants $u,d$ such that $0<1-d<1<1+r<1+u$ and $S_{n+1}\in\{(1+u)S_n,(1-d)S_n\}$ a.s., for all $n\ge0$. Then for any $f$, there exist $V_0,H$ such that $f=V_N$ a.s. In addition, there exists a unique probability measure $\mathbb Q$ such that $(\tilde S_n)_{n\ge0}$ is a $\mathbb Q$-martingale and $$V_0=(1+r)^{-N}\E_{\mathbb Q}[f(S_0,\dots,S_N)].$$
+</thm>
+
+Here "a.s." (almost surely) means "with probability one", and $\E_{\mathbb Q}$ is expectation computed with the probabilities $\mathbb Q$ rather than the real-world ones.
+
+<pf h="Why it works (one step, then induction).">
+Take one period, from a node where the price is $s$, and suppose the claim pays $v_u$ if the price goes up and $v_d$ if it goes down. We want $H$ and $V$ with $H(1+u)s+(V-Hs)(1+r)=v_u$ and $H(1-d)s+(V-Hs)(1+r)=v_d$. Subtracting, $H=\dfrac{v_u-v_d}{(u+d)s}$; substituting back, $$V=\frac{1}{1+r}\big(q\,v_u+(1-q)\,v_d\big),\qquad q=\frac{r+d}{u+d}.$$ The condition $1-d<1+r<1+u$ is exactly $0<q<1$. So $V$ is a discounted *average* of the two outcomes, weighted by $q$ instead of the true probability. Call $\mathbb Q$ the measure under which each step goes up with probability $q$, independently. Under $\mathbb Q$, the expected next discounted price is $\frac{q(1+u)s+(1-q)(1-d)s}{(1+r)^{n+1}}=\frac{s}{(1+r)^n}$, which is the martingale property; and $q$ is the only up-probability that gives it. Working backwards from time $N$, one period at a time, builds $V_0$ and the whole strategy $H$, and unwinding the averages gives $V_0=(1+r)^{-N}\E_{\mathbb Q}[f]$.
+</pf>
+
+Notice what is missing from the formula: the real-world probability that the price goes up. Two traders who disagree completely about where the market is heading must still agree on the price of the option, or one of them can make risk-free money from the other.
+
+@@fig0-2@@
+
+The take-away message is that although the original process (the price) need not be a martingale, after a transformation (discounting, and a change of measure) it turns into one. This is useful because it lets us use martingale theory to study the original process. This is not special to finance: in many applications there is a martingale lurking somewhere.
+
+## 0.5 Example 3: The Galton–Watson Branching Process {6}
+
+In spite of earlier work by Bienaymé, the branching process is attributed to the polymath Sir Francis Galton and the Revd Henry Watson. Like many Victorians, Galton was worried about the demise of English family names. He posed a question in the *Educational Times* of 1873:
+
+<blockquote style="margin:0 0 1rem 1.2rem;font-style:italic;color:var(--ink-soft)">The decay of the families of men who have occupied conspicuous positions in past times has been a subject of frequent remark, and has given rise to various conjectures. The instances are very numerous in which surnames that were once common have become scarce or wholly disappeared. The tendency is universal, and, in explanation of it, the conclusion has hastily been drawn that a rise in physical comfort and intellectual capacity is necessarily accompanied by a diminution in ‘fertility’…</blockquote>
+
+He went on to ask "What is the probability that a name dies out by the ‘ordinary law of chances’?" Watson sent a solution, which they published jointly the following year. The first step was to distil the problem into a workable model.
+
+<thm k="Definition 0.2" nm="Galton–Watson branching process" pg="6">
+Let $(X_{n,r})_{n,r\ge1}$ be an infinite array of independent identically distributed random variables, each with the same distribution as $X$, where $\PP[X=k]=p_k$ for $k=0,1,2,\dots$ The sequence $(Z_n)_{n\ge0}$ defined by
+
+<ol><li>$Z_0=1$,</li><li>$Z_n=X_{n,1}+\dots+X_{n,Z_{n-1}}$ for $n\ge1$</li></ol>
+
+is the <strong>Galton–Watson branching process</strong> (started from a single ancestor) with offspring distribution $X$.
+</thm>
+
+In words: generation $n-1$ has $Z_{n-1}$ individuals; the $r$-th of them has $X_{n,r}$ children, independently of everyone else; and $Z_n$ counts all the children. (If $Z_{n-1}=0$ the sum is empty and $Z_n=0$: once extinct, always extinct.) In the original setting $Z_n$ counted the male descendants of a single male ancestor after $n$ generations. It is also a crude model for the spread of a virus, with each generation lasting a couple of weeks and each infected person independently infecting a random number of others.
+
+Two quantities control the process: the **mean offspring** $m=\E[X]=\sum_kkp_k$, which we assume finite, and the **probability generating function** (pgf) $$f(\theta)=\E[\theta^X]=\sum_{k=0}^\infty p_k\theta^k,\qquad0\le\theta\le1.$$ The pgf encodes the whole distribution: $f(0)=p_0$, $f(1)=1$, and $f'(1)=m$.
+
+<thm k="Claim 0.3" pg="7" it>
+Let $f_n(\theta)=\E[\theta^{Z_n}]$. Then $f_n$ is the $n$-fold composition of $f$ with itself (where by convention a 0-fold composition is the identity).
+</thm>
+
+<pf h="‘Proof’ (informal).">
+We proceed by induction. First, $f_0(\theta)=\E[\theta^1]=\theta$, the identity. Assume $n\ge1$ and that $f_{n-1}$ is the $(n-1)$-fold composition. If we know $Z_{n-1}=k$, then $Z_n$ is a sum of $k$ independent copies of $X$, so $$\E\big[\theta^{Z_n}\,\big|\,Z_{n-1}=k\big]=\E\big[\theta^{X_{n,1}+\dots+X_{n,k}}\big]=\E\big[\theta^{X_{n,1}}\big]\cdots\E\big[\theta^{X_{n,k}}\big]=f(\theta)^k,$$ using independence (the expectation of a product of independent variables is the product of expectations). Writing this for all $k$ at once:
+
+$$#eq1 \E\big[\theta^{Z_n}\,\big|\,Z_{n-1}\big]=f(\theta)^{Z_{n-1}}. \tag{1}$$
+
+This is our first example of a conditional expectation that is itself a *random variable*: its value depends on the random $Z_{n-1}$. Averaging over $Z_{n-1}$,
+
+$$#eq2 \begin{aligned}f_n(\theta)=\E\big[\theta^{Z_n}\big]&=\E\Big[\E\big[\theta^{Z_n}\,\big|\,Z_{n-1}\big]\Big]\\&=\E\big[f(\theta)^{Z_{n-1}}\big]=f_{n-1}\big(f(\theta)\big),\end{aligned} \tag{2}$$
+
+and the claim follows by induction.
+</pf>
+
+In <a class="xref" href="#eq2">(2)</a> we used the **tower property**: averaging the conditional averages gives the overall average. Here it is just the partition theorem from Prelims, $\E[Y]=\sum_k\E[Y\mid Z_{n-1}=k]\,\PP(Z_{n-1}=k)$, because the events $\{Z_{n-1}=k\}$ form a countable partition of the sample space. In the general theory we will need something that works when conditioning on a continuous random variable, where every single value has probability zero (Chapter 4).
+
+Watson wanted the **extinction probability**, the probability that $Z_n=0$ for some $n$.
+
+<thm k="Claim 0.4" pg="7" it>
+Let $q=\PP[Z_n=0\text{ for some }n]$. Then $q$ is the smallest root in $[0,1]$ of the equation $\theta=f(\theta)$. In particular, assuming $p_1=\PP[X=1]<1$,
+
+<ul><li>if $m=\E[X]\le1$, then $q=1$,</li><li>if $m=\E[X]>1$, then $q<1$.</li></ul>
+</thm>
+
+<pf h="‘Proof’ (informal).">
+Let $q_n=\PP[Z_n=0]=f_n(0)$. Since $\{Z_n=0\}\subseteq\{Z_{n+1}=0\}$, $q_n$ increases with $n$, and, intuitively,
+
+$$#eq3 q=\lim_{n\to\infty}q_n=\lim_{n\to\infty}f_n(0). \tag{3}$$
+
+(This is Lemma 1.4: the events $\{Z_n=0\}$ increase to $\{Z_n=0\text{ for some }n\}$.) Since $f_{n+1}(0)=f(f_n(0))$ and $f$ is continuous, letting $n\to\infty$ in $q_{n+1}=f(q_n)$ shows that $q$ satisfies $q=f(q)$.
+
+Now observe that $f$ is **convex** on $[0,1]$ (its second derivative $f''(\theta)=\sum_kk(k-1)p_k\theta^{k-2}$ is $\ge0$, so its graph bends upwards) and $f(1)=1$. So only two things can happen, depending on the slope $m=f'(1)$ at $1$. If $m\le1$, the graph of $f$ stays above the diagonal on $[0,1)$ and the only root is $\theta=1$. If $m>1$, the graph crosses the diagonal once more, at some $\theta_0<1$. In that case, to see that $q$ must be the smaller root $\theta_0$: $f$ is increasing, and $q_0=0\le\theta_0$, so by induction $q_{n+1}=f(q_n)\le f(\theta_0)=\theta_0$ for all $n$, giving $q\le\theta_0$.
+</pf>
+
+@@fig0-3@@
+
+It's not hard to guess the result for $m>1$ and $m<1$, but the case $m=1$ is far from obvious: on average each person has exactly one child, yet the family dies out with probability one.
+
+The extinction probability is only one statistic we might care about. Can we say anything about *how* the population grows or declines? Consider
+
+$$#eq4 \E[Z_{n+1}\mid Z_n=k]=\E[X_{n+1,1}+\dots+X_{n+1,k}]=km \tag{4}$$
+
+by linearity of expectation. In other words $\E[Z_{n+1}\mid Z_n]=mZ_n$, another conditional expectation that is a random variable. Now rescale: write $$M_n=\frac{Z_n}{m^n}.$$ Then $\E[M_{n+1}\mid M_n]=M_n$. In fact more is true, $\E[M_{n+1}\mid M_0,M_1,\dots,M_n]=M_n$: again we encounter a martingale!
+
+It is natural to ask whether $M_n$ has a limit as $n\to\infty$ and, if so, what we can say about it. We are going to develop the tools to answer this (Chapter 6). For now, notice that for $m\le1$ we have "proved" that the population dies out with probability one, so $M_\infty=\lim_nM_n=0$ with probability one, while $\E[M_n]=1$ for every $n$. So
+
+$$#eq5 0=\E[M_\infty]\ne\lim_{n\to\infty}\E[M_n]=1. \tag{5}$$
+
+Taking expectations and taking limits do not commute here. We will need to be careful when passing to limits; <a class="xref" href="#eq5">(5)</a> is our first meeting with the phenomenon behind Fatou's Lemma (Theorem 2.12) and uniform integrability (Chapter 6).
+
+One of the main aims of the course is to provide the tools to make arguments like these precise. Another is to make sense of martingales in much more general settings, which requires defining conditional expectation when conditioning on a continuous random variable. That starts with measure theory, in Chapter 1.

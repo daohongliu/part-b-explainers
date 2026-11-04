@@ -1,0 +1,15 @@
+<figure class="wide" id="fig1-2">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Choose a sequence of sets">
+      <button type="button" data-mode="up" aria-pressed="false">\(F_n=(0,n]\uparrow\)</button>
+      <button type="button" data-mode="down" aria-pressed="false">\(G_n=(0,\tfrac1n]\downarrow\)</button>
+      <button type="button" data-mode="run" aria-pressed="true">\(G_n=(n,\infty)\downarrow\)</button>
+    </div>
+    <svg id="mono-svg" class="pt" viewBox="0 0 680 308" role="img" aria-label="Stacked number lines showing the first n sets of the sequence and their limit."></svg>
+    <div class="controls">
+      <label class="grow" for="mono-n">n <input type="range" id="mono-n" min="1" max="8" step="1" value="5"> <output id="mono-nv" for="mono-n">5</output></label>
+    </div>
+    <div class="readout" id="mono-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.2</span>Continuity from below holds unconditionally. Continuity from above needs one set of finite measure: every \((n,\infty)\) has infinite length, yet nothing lies in all of them.</figcaption>
+</figure>

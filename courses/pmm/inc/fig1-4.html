@@ -1,0 +1,24 @@
+<figure class="wide" id="fig1-4">
+  <div class="fig-body">
+    <svg id="sig-svg" viewBox="0 0 680 196" role="img" aria-label="Six die faces, grouped into atoms by the chosen generating events."></svg>
+    <div class="sub-h">Generating events</div>
+    <div class="btn-row" id="sig-presets" role="group" aria-label="Toggle preset generating events">
+      <button type="button" data-gen="3">{1,2}</button>
+      <button type="button" data-gen="42">evens {2,4,6}</button>
+      <button type="button" data-gen="32">{6}</button>
+      <button type="button" data-gen="7">{1,2,3}</button>
+      <button type="button" data-gen="12">{3,4}</button>
+      <button type="button" id="sig-clear" class="ghost">clear all</button>
+    </div>
+    <div class="controls">
+      <span class="mono" id="sig-sel-label">Click faces to build your own event.</span>
+      <button type="button" id="sig-add" disabled>add as generator</button>
+    </div>
+    <div class="chips" id="sig-gens" aria-live="polite"></div>
+    <div class="readout" id="sig-count"></div>
+    <div class="note-line" id="sig-info"></div>
+    <div class="sub-h">Every set in \(\sigma(\A)\)</div>
+    <div class="sig-grid" id="sig-grid"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.4</span>A die, \(\Omega=\{1,\dots,6\}\). Choose generating events, or click faces and add your own. The machine sorts the faces into atoms and lists all of \(\sigma(\A)\) as punch cards; hover a card to see which faces it holds. Read \(\sigma(\A)\) as information: it contains exactly the events you can settle if you are only told which atom the roll landed in.</figcaption>
+</figure>

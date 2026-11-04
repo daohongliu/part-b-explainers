@@ -1,0 +1,17 @@
+<figure class="wide" id="fig2-2">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Choose a sequence of functions">
+      <button type="button" data-cv="spike" aria-pressed="true">spike \(n\ind_{(0,1/n)}\)</button>
+      <button type="button" data-cv="slide" aria-pressed="false">slide \(\ind_{[n,n+1]}\)</button>
+      <button type="button" data-cv="spread" aria-pressed="false">spread \(\tfrac1n\ind_{[0,n]}\)</button>
+      <button type="button" data-cv="dom" aria-pressed="false">dominated \(x^n\ind_{[0,1]}\)</button>
+      <button type="button" data-cv="mono" aria-pressed="false">monotone \(\min(n,x^{-1/2})\)</button>
+    </div>
+    <svg id="cv-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Graph of the n-th function in the chosen sequence, its pointwise limit, and the smallest function lying above the whole sequence."></svg>
+    <div class="controls">
+      <label class="grow" for="cv-n">n <input type="range" id="cv-n" min="1" max="12" step="1" value="3"> <output id="cv-nv"></output></label>
+    </div>
+    <div class="readout" id="cv-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.2</span>A laboratory for the convergence theorems, all with Lebesgue measure. Blue is \(f_n\); black is the pointwise limit \(f\); the dashed red curve is the envelope \(\sup_kf_k\), the smallest roof over the whole sequence. The first three sequences tend to 0 everywhere while keeping integral 1: mass escapes upwards, sideways and outwards. In each case the envelope has infinite integral, so the Dominated Convergence Theorem doesn’t apply, and Fatou’s inequality is strict.</figcaption>
+</figure>

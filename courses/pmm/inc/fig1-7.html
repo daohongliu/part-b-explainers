@@ -1,0 +1,12 @@
+<figure class="wide" id="fig1-7">
+  <div class="fig-body">
+    <svg id="cov-svg" class="pt" viewBox="0 0 680 222" role="img" aria-label="The unit interval with arches covering the first K rationals; uncovered stretches are shaded red."></svg>
+    <div class="controls">
+      <label class="grow" for="cov-eps">ε <input type="range" id="cov-eps" min="0" max="100" step="1" value="81"> <output id="cov-epsv" for="cov-eps">0.50</output></label>
+      <label class="grow" for="cov-k">intervals <input type="range" id="cov-k" min="0" max="200" step="1" value="12"> <output id="cov-kv" for="cov-k">12</output></label>
+      <button type="button" id="cov-play">▸ keep covering</button>
+    </div>
+    <div class="readout" id="cov-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.7</span>List the rationals in \([0,1]\) as \(0,1,\frac12,\frac13,\frac23,\frac14,\dots\) and cover the \(j\)-th by an interval of length \(\eps/2^j\). However many you cover, the lengths add to less than \(\eps\), so Lebesgue outer measure gives \(\mu^*(\Q\cap[0,1])=0\). With finitely many intervals you can never finish: a finite union of intervals containing every rational in \([0,1]\) contains all of \([0,1]\) except finitely many points, so its length is at least 1.</figcaption>
+</figure>

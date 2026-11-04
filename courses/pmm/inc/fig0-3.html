@@ -1,0 +1,12 @@
+<figure class="wide" id="fig0-3">
+  <div class="fig-body">
+    <svg id="gw-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Left: a sampled family tree over eight generations. Right: the generating function f, the diagonal, and the iteration of f from 0."></svg>
+    <div class="controls">
+      <label for="gw-law">offspring <select id="gw-law"><option value="pois">Poisson(m)</option><option value="bin">0 or 2 children</option></select></label>
+      <label class="grow" for="gw-m">mean m <input type="range" id="gw-m" min="0.5" max="2.5" step="0.05" value="1.4"> <output id="gw-mv"></output></label>
+      <button type="button" id="gw-new">another family</button>
+    </div>
+    <div class="readout" id="gw-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 0.3</span>Left, one family drawn from the Galton–Watson process. Right, the pgf \(f\) and the diagonal; the staircase is \(q_{n+1}=f(q_n)\) starting from \(q_0=0\), and it climbs to the first crossing, the extinction probability \(q\). Push \(m\) through 1 and watch the crossing peel away from \(\theta=1\). The readout compares \(q\) with the fraction of 4000 simulated families that died out.</figcaption>
+</figure>

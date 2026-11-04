@@ -1,0 +1,11 @@
+<figure class="wide" id="fig3-1">
+  <div class="fig-body">
+    <canvas id="bc-canvas" width="720" height="270" aria-label="Thirty independent sample outcomes; a dot marks each time n at which the event A_n occurs."></canvas>
+    <div class="controls">
+      <label class="grow" for="bc-p">P(A<sub>n</sub>) = n<sup>−p</sup>, p = <input type="range" id="bc-p" min="0.4" max="2" step="0.05" value="1.3"> <output id="bc-pv"></output></label>
+      <button type="button" id="bc-new">new outcomes</button>
+    </div>
+    <div class="readout" id="bc-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.1</span>Each row is one outcome \(\omega\); a dot at time \(n\) means \(\omega\in A_n\), where the \(A_n\) are independent with \(\PP(A_n)=n^{-p}\). The time axis is logarithmic, so every decade gets the same width. For \(p>1\) the probabilities are summable and, as BC1 promises, each row’s dots stop. For \(p\le1\) they are not, and BC2 promises dots in every row forever: about 2.3 per decade at \(p=1\), and more and more per decade below that.</figcaption>
+</figure>

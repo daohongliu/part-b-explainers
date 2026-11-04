@@ -1,0 +1,18 @@
+<figure class="wide" id="fig1-8">
+  <div class="fig-body">
+    <div class="btn-row" id="wb-presets" role="group" aria-label="Choose a distribution">
+      <button type="button" data-preset="uniform">Uniform</button>
+      <button type="button" data-preset="normal">Normal</button>
+      <button type="button" data-preset="expo">Exponential</button>
+      <button type="button" data-preset="die">Fair die</button>
+      <button type="button" data-preset="poisson">Poisson</button>
+      <button type="button" data-preset="cantor">Devil’s staircase</button>
+      <button type="button" data-preset="mix" aria-pressed="true">Mixture</button>
+    </div>
+    <div class="note-line" id="wb-desc"></div>
+    <svg id="wb-svg" class="pt" viewBox="0 0 720 428" role="img" aria-label="Top: the distribution function F. Bottom: the measure as density, atoms and Cantor dust. Draggable markers a and b select the interval (a, b]."></svg>
+    <div class="readout" id="wb-out" aria-live="polite"></div>
+    <div class="controls"><span class="mono dim" style="color:var(--ink-soft)">Click the lower strip to drop an atom of mass 0.15 there; the rest of the measure is scaled by 0.85.</span></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.8</span>A workbench for Theorem 1.15. Pick a distribution, or build your own. Drag \(a\) and \(b\): the mass in \((a,b]\) is always the rise \(F(b)-F(a)\). Snap \(a\) onto an atom to see why the bracket is half-open.</figcaption>
+</figure>

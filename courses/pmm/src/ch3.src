@@ -1,0 +1,276 @@
+@num 3
+@title Modes of convergence
+@titlehtml Modes of <em>convergence</em>
+@pages 22–31
+@dek “Random variables converge” can mean four different things. This chapter sorts them out, with two lemmas that decide whether events happen infinitely often, a handful of inequalities that do most of the day-to-day work, and the spaces L<sup>p</sup>.
+---
+## 3.1 The Borel–Cantelli Lemmas {22}
+
+We'll return to independence, or more importantly the lack of it, later. First we look at some consequences of our theory of integration for probability. Throughout, $(\Omega,\F,\PP)$ is a probability space.
+
+The first question: given a sequence of events $A_1,A_2,\dots$, which outcomes $\omega$ are in *infinitely many* of them? And which are in *all but finitely many*?
+
+<thm k="Definition 3.1" pg="22">
+Let $(A_n)$ be a sequence of sets from $\F$. We define $$\begin{aligned}\limsup_{n\to\infty}A_n&=\bigcap_{n=1}^\infty\bigcup_{m\ge n}A_m\\&=\{\omega\in\Omega:\omega\in A_m\text{ for infinitely many }m\}\\&=\{A_m\text{ occurs infinitely often}\}=\{A_m\text{ i.o.}\}\end{aligned}$$ and $$\begin{aligned}\liminf_{n\to\infty}A_n&=\bigcup_{n=1}^\infty\bigcap_{m\ge n}A_m\\&=\{\omega:\exists\,m_0(\omega)\text{ with }\omega\in A_m\text{ for all }m\ge m_0(\omega)\}\\&=\{A_m\text{ eventually}\}=\{A_m^c\text{ infinitely often}\}^c.\end{aligned}$$
+</thm>
+
+Read the formulas slowly once. $\omega\in\bigcup_{m\ge n}A_m$ says "$\omega$ is in some $A_m$ at or after time $n$". Requiring this for *every* $n$ (the outer intersection) says that however late you start looking, $\omega$ shows up again: infinitely often. Similarly $\omega\in\bigcap_{m\ge n}A_m$ says "from time $n$ on, $\omega$ is in every $A_m$", and the outer union asks for this to hold from *some* $n$ on: eventually. Both sets are in $\F$, being built from countably many unions and intersections.
+
+<thm k="Lemma 3.2" pg="23" it>
+$$\ind_{\limsup_{n\to\infty}A_n}=\limsup_{n\to\infty}\ind_{A_n},\qquad\ind_{\liminf_{n\to\infty}A_n}=\liminf_{n\to\infty}\ind_{A_n}.$$
+</thm>
+
+<pf>
+Note that $\ind_{\bigcup_nA_n}=\sup_n\ind_{A_n}$ (the union contains $\omega$ iff some indicator is 1) and $\ind_{\bigcap_nA_n}=\inf_n\ind_{A_n}$, and apply these twice. For example, $\ind_{\limsup A_n}=\inf_n\sup_{m\ge n}\ind_{A_m}=\limsup_n\ind_{A_n}$.
+</pf>
+
+So lim sup and lim inf of sets are the set versions of the same operations on numbers. If we apply Fatou's Lemma to the functions $\ind_{A_n}$ (using $\E[\ind_A]=\PP[A]$), we see that $$\PP[A_n\text{ eventually}]\le\liminf_{n\to\infty}\PP[A_n]$$ and hence (taking complements) $$\PP[A_n\text{ i.o.}]\ge\limsup_{n\to\infty}\PP[A_n].$$ These are not surprising, and easy to prove directly. In fact we can say much more about the probabilities of these events.
+
+<thm k="Lemma 3.3" nm="The First Borel–Cantelli Lemma, BC1" pg="23" it>
+If $\sum_{n=1}^\infty\PP[A_n]<\infty$ then $\PP[A_n\text{ i.o.}]=0$.
+</thm>
+
+<strong>Remark.</strong> Notice that we make no assumptions about independence. This is a very powerful result.
+
+<pf>
+Let $G_n=\bigcup_{m\ge n}A_m$. Then $\PP[G_n]\le\sum_{m=n}^\infty\PP[A_m]$ (countable subadditivity: the measure of a union is at most the sum of the measures, by writing the union as a disjoint union of smaller pieces). Also $G_n\downarrow G=\limsup_nA_n$, so by Lemma 1.4, $\PP[G_n]\downarrow\PP[G]$. Since $\sum_{n=1}^\infty\PP[A_n]<\infty$, the tails satisfy $\sum_{m=n}^\infty\PP[A_m]\to0$ as $n\to\infty$, and so $$\PP\big[\limsup_{n\to\infty}A_n\big]=\lim_{n\to\infty}\PP[G_n]=0.$$
+</pf>
+
+Alternatively, consider $N=\sum_{n=1}^\infty\ind_{A_n}$, the (random) number of events that occur. The Monotone Convergence Theorem gives $\E[N]=\sum_n\PP[A_n]<\infty$, and a random variable with finite expectation is finite almost surely, so $\PP[N=\infty]=0$. "If on average only finitely many happen, then almost surely only finitely many happen."
+
+A partial converse to BC1 is provided by the second Borel–Cantelli Lemma, but now we must assume the events are independent.
+
+<thm k="Lemma 3.4" nm="The Second Borel–Cantelli Lemma, BC2" pg="23" it>
+Let $(A_n)$ be a sequence of independent events. If $\sum_{n=1}^\infty\PP[A_n]=\infty$ then $\PP[A_n\text{ i.o.}]=1$.
+</thm>
+
+<pf>
+Set $a_m=\PP[A_m]$ and note that $1-a\le e^{-a}$ for all real $a$ (the line $1-a$ is the tangent to the convex function $e^{-a}$ at $0$, and lies below it). We consider the complementary event $\{A_n^c\text{ eventually}\}$. For each $n$, $$\PP\Big[\bigcap_{m\ge n}A_m^c\Big]=\prod_{m\ge n}(1-a_m)\le\exp\Big(-\sum_{m\ge n}a_m\Big)=0.$$ The equality uses independence (complements of independent events are independent; for an infinite intersection take the limit of finite ones, by Lemma 1.4), and the last step uses $\sum_{m\ge n}a_m=\infty$. Hence $$\PP[A_n^c\text{ eventually}]=\PP\Big[\bigcup_{n\in\N}\bigcap_{m\ge n}A_m^c\Big]\le\sum_{n=1}^\infty\PP\Big[\bigcap_{m\ge n}A_m^c\Big]=0,$$ and $\PP[A_n\text{ i.o.}]=1-\PP[A_n^c\text{ eventually}]=1$.
+</pf>
+
+@@fig3-1@@
+
+Without independence BC2 fails badly: take $A_n=A$ for every $n$ with $\PP[A]=\frac12$. Then $\sum\PP[A_n]=\infty$ but $\PP[A_n\text{ i.o.}]=\PP[A]=\frac12$.
+
+<thm k="Example 3.5" pg="24">
+A monkey is provided with a typewriter. At each time step it has probability $1/26$ of typing any of the 26 letters, independently of other times. What is the probability that it will type ABRACADABRA at least once? Infinitely often?
+</thm>
+
+*Solution.* Consider the events $$A_k=\{\text{ABRACADABRA is typed at times }11k+1,\dots,11k+11\}$$ for each $k$. These use disjoint blocks of keystrokes, so they are independent, and $\PP[A_k]=(1/26)^{11}>0$. So $\sum_k\PP[A_k]=\infty$, and BC2 says that with probability 1, $A_k$ happens infinitely often. (We only looked at blocks starting at multiples of 11, which is enough: finding infinitely many occurrences there certainly gives infinitely many occurrences overall.)
+
+Later in the course, with the help of a suitable martingale, we'll be able to work out how long we must wait, on average, before we see patterns like this. We'll see many applications of BC1 and BC2. Here is one more.
+
+<thm k="Example 3.6" pg="24">
+Let $(X_n)_{n\ge1}$ be independent exponentially distributed random variables with mean 1 and let $M_n=\max\{X_1,\dots,X_n\}$. Then $$\PP\Big[\lim_{n\to\infty}\frac{M_n}{\log n}=1\Big]=1.$$
+</thm>
+
+<pf>
+First recall that if $X$ is exponential with parameter 1 then $\PP[X\le x]=1-e^{-x}$ for $x\ge0$ (and $0$ for $x<0$). Fix $0<\eps<1$. Then $$\begin{aligned}\PP[M_n\le(1-\eps)\log n]&=\PP\Big[\bigcap_{i=1}^n\{X_i\le(1-\eps)\log n\}\Big]\\&=\prod_{i=1}^n\PP[X_i\le(1-\eps)\log n]\\&=\Big(1-\frac1{n^{1-\eps}}\Big)^n\le\exp(-n^\eps),\end{aligned}$$ using independence and then $1-a\le e^{-a}$. Thus $\sum_n\PP[M_n\le(1-\eps)\log n]<\infty$, and so by BC1, $\PP[M_n\le(1-\eps)\log n\text{ i.o.}]=0$. Since $\eps$ was arbitrary, take $\eps=\frac1j$ for $j=1,2,\dots$: a countable union of null events is null, so $$\PP\Big[\liminf_{n\to\infty}\frac{M_n}{\log n}<1\Big]=0.$$
+
+The reverse bound is similar. $\PP[X_n\ge(1+\eps)\log n]=n^{-(1+\eps)}$ is summable, so by BC1, $\PP[X_n\ge(1+\eps)\log n\text{ i.o.}]=0$. And $\{M_n\ge(1+\eps)\log n\text{ i.o.}\}$ is contained in that event up to a null set: if $M_n\ge(1+\eps)\log n$ then some $k\le n$ has $X_k\ge(1+\eps)\log n\ge(1+\eps)\log k$, and if this happens for infinitely many $n$ then, since each $X_k$ is finite, infinitely many different $k$ must be involved. Hence $\limsup_nM_n/\log n\le1$ almost surely as well.
+</pf>
+
+At first sight BC1 and BC2 might not look very powerful: they only tell us when certain events have probability zero or one. But for many applications, in particular when the events are independent, many interesting events can *only* have probability zero or one, because they are tail events (Theorem 2.31).
+
+If the $X_n$ in Example 2.32 have mean zero and variance one, then setting
+
+$$#eq9 B=\Big\{\limsup_{n\to\infty}\frac{S_n}{\sqrt{2n\log\log n}}=1\Big\}, \tag{9}$$
+
+by Kolmogorov's 0-1 law we have $\PP[B]=0$ or $\PP[B]=1$. In fact $\PP[B]=1$: this is the **law of the iterated logarithm** we met in Chapter 0. Under the slightly stronger assumption that $\E[|X_n|^{2+\alpha}]<\infty$ for some $\alpha>0$, Varadhan proves it by a delicate application of Borel–Cantelli.
+
+You may at this point be feeling a little confused. In Prelims Statistics or Part A Probability (or possibly even at school) you learned that if $(X_n)$ is a sequence of i.i.d. random variables with mean 0 and variance 1 then
+
+$$#eq10 \PP\Big[\frac{S_n}{\sqrt n}\le a\Big]\xrightarrow{n\to\infty}\int_{-\infty}^a\frac{e^{-x^2/2}}{\sqrt{2\pi}}\,dx. \tag{10}$$
+
+This is the **Central Limit Theorem**, without which statistics would be a very different subject. How does it fit with <a class="xref" href="#eq9">(9)</a>? <a class="xref" href="#eq10">(10)</a> says $S_n/\sqrt n$ is typically of size 1, while <a class="xref" href="#eq9">(9)</a> says that along every path $S_n/\sqrt n$ is unbounded (it reaches $\sqrt{2\log\log n}\to\infty$ infinitely often). There's no contradiction: they describe different *modes of convergence*. Figure 0.1 shows both at once.
+
+<thm k="Definition 3.7" nm="Modes of convergence" pg="25">
+Let $X_1,X_2,\dots$ and $X$ be random variables on a probability space $(\Omega,\F,\PP)$.
+
+<ol><li>We say that $(X_n)$ <strong>converges almost surely</strong> to $X$ (written $X_n\to X$ a.s., or $X_n\xrightarrow{\text{a.s.}}X$) if $$\PP[X_n\to X]=\PP\big[\{\omega:\lim_{n\to\infty}X_n(\omega)=X(\omega)\}\big]=1.$$</li>
+<li>We say that $(X_n)$ <strong>converges to $X$ in probability</strong> (written $X_n\pto X$) if, for every $\eps>0$, $$\lim_{n\to\infty}\PP(|X_n-X|>\eps)=\lim_{n\to\infty}\PP\big(\{\omega:|X_n(\omega)-X(\omega)|>\eps\}\big)=0.$$</li>
+<li>Suppose that $X$ and all $X_n$ have finite $p$-th moments for some real number $p>0$, i.e., $\E[|X|^p],\E[|X_n|^p]<\infty$. We say that $X_n$ <strong>converges to $X$ in $L^p$</strong> (or in $p$-th moment; written $X_n\xrightarrow{L^p}X$) if $$\lim_{n\to\infty}\E[|X_n-X|^p]=0.$$</li>
+<li>Let $F$ and $F_n$ denote the distribution functions of $X$ and $X_n$ respectively. We say that $X_n$ <strong>converges to $X$ in distribution</strong> (written $X_n\dto X$) if $$\lim_{n\to\infty}F_n(x)=F(x)\quad\text{for every }x\in\R\text{ at which }F\text{ is continuous.}$$</li></ol>
+</thm>
+
+What each one asks for, in words:
+
+<ul>
+<li><strong>Almost surely</strong>: for (almost) every individual outcome $\omega$, the *numbers* $X_n(\omega)$ converge. It is a statement about whole sample paths.</li>
+<li><strong>In probability</strong>: at each large time $n$, it is unlikely that $X_n$ is far from $X$. It says nothing about any single path for all $n$ at once; the rare bad outcomes can be different ones at different times.</li>
+<li><strong>In $L^p$</strong>: the average size of the error, measured by $\E|X_n-X|^p$, goes to zero. Large errors on small sets are penalised.</li>
+<li><strong>In distribution</strong>: only the *laws* converge. $X_n$ and $X$ don't even need to live on the same probability space. The exception at discontinuity points of $F$ is needed so that $X_n=\frac1n\to0$ counts as converging: here $F_n(0)=0$ for every $n$ but $F(0)=1$.</li>
+</ul>
+
+These notions of convergence are all different. The implications are:
+
+<div class="disp">\[\begin{array}{ccccc}\text{a.s.}&\Longrightarrow&\text{in probability}&\Longrightarrow&\text{in distribution}\\&&\Uparrow&&\\&&\text{in }L^p&&\end{array}\]</div>
+
+and no others hold in general. The figure below has a counterexample for every missing arrow; click an arrow, present or absent.
+
+@@fig3-3@@
+
+The notions of convergence almost surely and in $L^p$ are discussed (for Lebesgue measure, rather than general probability measures) in Part A Integration. Here are the two standard examples.
+
+<thm k="Example 3.8" pg="26">
+On the probability space $\Omega=[0,1]$ with the Borel σ-algebra and Lebesgue measure, consider the sequence of functions $$f_n(x)=\begin{cases}n(1-nx)&0\le x\le1/n,\\0&\text{otherwise.}\end{cases}$$ Then $f_n\to0$ almost everywhere on $[0,1]$ but $f_n\not\to0$ in $L^1$. Thinking of each $f_n$ as a random variable, we have $f_n\to0$ almost surely but $f_n\not\to0$ in $L^1$.
+</thm>
+
+The graph of $f_n$ is a triangle of height $n$ over $[0,\frac1n]$, with area $\frac12$. At every $x>0$, $f_n(x)=0$ once $n>1/x$, so the only point where $f_n$ doesn't tend to 0 is $x=0$, a null set. But $\E|f_n-0|=\frac12$ for every $n$. It is the escaping spike of Figure 2.2 again.
+
+<thm k="Example 3.9" nm="Convergence in probability does not imply a.s. convergence" pg="26">
+Stick with $[0,1]$ with the Borel sets and Lebesgue measure as our probability space. Define $(X_n)_{n\ge1}$ as follows: for each $n$ there is a unique pair of integers $(m,k)$ such that $n=2^m+k$ and $0\le k<2^m$. Set $$X_n(\omega)=\ind_{[k/2^m,(k+1)/2^m)}(\omega).$$
+</thm>
+
+Pictorially, a "moving blip" travels repeatedly across $[0,1]$, getting narrower at each pass: pass $m$ consists of $2^m$ blips of width $2^{-m}$ that sweep left to right. For fixed $\omega\in(0,1)$, every pass hits $\omega$ once, so $X_n(\omega)=1$ infinitely often and $X_n\not\to0$ a.s. But $\PP[X_n\ne0]=2^{-m}\to0$ as $n\to\infty$, so $X_n\pto0$. (Also $\E[|X_n-0|]=2^{-m}\to0$, so $X_n\to0$ in $L^1$.) On the other hand, if we look along the subsequence $(X_{2^n})_{n\ge1}$, we only ever see the first blip of each pass, $[0,2^{-n})$, and so $X_{2^n}\to0$ almost surely.
+
+@@fig3-2@@
+
+It turns out that this is a general phenomenon.
+
+<thm k="Theorem 3.10" nm="Convergence in probability and a.s. convergence" pg="27" it>
+Let $X_1,X_2,\dots$ and $X$ be random variables on $(\Omega,\F,\PP)$.
+
+<ol><li>If $X_n\to X$ a.s. then $X_n\pto X$.</li>
+<li>If $X_n\pto X$, then there exists a subsequence $(X_{n_k})_{k\ge1}$ such that $X_{n_k}\to X$ a.s. as $k\to\infty$.</li></ol>
+</thm>
+
+<pf>
+For $\eps>0$ and $n\in\N$ let $A_{n,\eps}=\{|X_n-X|>\eps\}$.
+
+1. Suppose $X_n\to X$ a.s. If $X_n(\omega)\to X(\omega)$ then $\omega$ is in only finitely many $A_{n,\eps}$, so for any $\eps>0$ we have $\PP[A_{n,\eps}\text{ i.o.}]=0$. However, applying Fatou's Lemma to $\ind_{A_{n,\eps}^c}$, as after Lemma 3.2, $$\PP[A_{n,\eps}\text{ i.o.}]=\PP\big[\limsup_nA_{n,\eps}\big]\ge\limsup_{n\to\infty}\PP[A_{n,\eps}].$$ Hence $\PP[A_{n,\eps}]\to0$, so $X_n\pto X$.
+
+2. This is the more interesting direction. Suppose that $X_n\pto X$. Then for each $k\ge1$ we have $\PP[A_{n,1/k}]\to0$ as $n\to\infty$, so there is some $n_k$ such that $\PP[A_{n_k,1/k}]<1/k^2$, and we can choose $n_k>n_{k-1}$ for $k\ge2$. Setting $B_k=A_{n_k,1/k}$, we have $$\sum_{k=1}^\infty\PP[B_k]\le\sum_{k=1}^\infty k^{-2}<\infty.$$ Hence, by BC1, $\PP[B_k\text{ i.o.}]=0$. But if only finitely many $B_k$ hold, then $|X_{n_k}-X|\le1/k$ for all large $k$, and certainly $X_{n_k}\to X$. So $X_{n_k}\to X$ a.s.
+</pf>
+
+The trick in part 2 is to go fast enough along the subsequence that the probabilities of being far away become *summable*, and then BC1 turns "unlikely at each time" into "eventually never". In Example 3.9 the subsequence $X_{2^n}$ does exactly this.
+
+### Inequalities
+
+The First Borel–Cantelli Lemma is a powerful tool for proving almost sure convergence. Its successful application often rests on being able to find good bounds on probabilities. We end this section with some inequalities that are often helpful. The first is trivial, but has many applications.
+
+<thm k="Lemma 3.11" nm="Markov’s inequality" pg="27" it>
+Let $(\Omega,\F,\PP)$ be a probability space and $X$ a non-negative random variable. Then, for each $\lambda>0$, $$\PP[X\ge\lambda]\le\frac1\lambda\E[X].$$
+</thm>
+
+<pf>
+For each $\omega\in\Omega$ we have $X(\omega)\ge\lambda\ind_{\{X\ge\lambda\}}(\omega)$: where $X\ge\lambda$ the right side is $\lambda$, and elsewhere it is 0. Hence $\E[X]\ge\E[\lambda\ind_{\{X\ge\lambda\}}]=\lambda\PP[X\ge\lambda]$.
+</pf>
+
+<thm k="Corollary 3.12" nm="General Chebyshev’s inequality" pg="28" it>
+Let $X$ be a random variable taking values in a (measurable) set $A\subseteq\R$, and let $\varphi:A\to[0,\infty]$ be an increasing, measurable function. Then for any $\lambda\in A$ with $\varphi(\lambda)<\infty$ we have $$\PP[X\ge\lambda]\le\frac{\E[\varphi(X)]}{\varphi(\lambda)}.$$
+</thm>
+
+<pf>
+$\PP[X\ge\lambda]\le\PP[\varphi(X)\ge\varphi(\lambda)]\le\frac{1}{\varphi(\lambda)}\E[\varphi(X)]$: the first because $\varphi$ is increasing, the second by Markov's inequality applied to $\varphi(X)\ge0$. (If $\varphi(\lambda)=0$ the bound is vacuous.)
+</pf>
+
+The most familiar special case takes $\varphi(x)=x^2$ on $[0,\infty)$ and applies the result to $Y=|X-\E[X]|$, giving **Chebyshev's inequality** $$\PP\big[|X-\E[X]|\ge t\big]\le\frac{\E[(X-\E[X])^2]}{t^2}=\frac{\mathrm{Var}[X]}{t^2}\qquad\text{for }t>0.$$ Corollary 3.12 is also often applied with $\varphi(x)=e^{\theta x}$, $\theta\ge0$, to obtain $$\PP[X\ge\lambda]\le e^{-\theta\lambda}\E[e^{\theta X}].$$ The next step is often to optimise over $\theta$ (this gives the Chernoff bounds).
+
+<thm k="Corollary 3.13" pg="28" it>
+For $p>0$, convergence in $L^p$ implies convergence in probability.
+</thm>
+
+<pf>
+Recall that $X_n\to X$ in $L^p$ if $\E[|X_n-X|^p]\to0$. Now $$\PP[|X_n-X|>\eps]=\PP[|X_n-X|^p>\eps^p]\le\frac1{\eps^p}\E[|X_n-X|^p]\to0.$$
+</pf>
+
+The next corollary is a result you have seen in Prelims. It is called the "weak" law because the notion of convergence is a weak one.
+
+<thm k="Corollary 3.14" nm="Weak law of large numbers" pg="28" it>
+Let $(X_n)_{n\ge1}$ be i.i.d. random variables (on some probability space $(\Omega,\F,\PP)$) with mean $\mu$ and variance $\sigma^2<\infty$. Set $\bar X(n)=\frac1n\sum_{i=1}^nX_i$. Then $\bar X(n)\to\mu$ in probability as $n\to\infty$.
+</thm>
+
+<pf>
+We have $\E[\bar X(n)]=n^{-1}\sum_{i=1}^n\E[X_i]=\mu$ and, since the $X_i$ are independent (so variances add), $$\mathrm{Var}[\bar X(n)]=n^{-2}\,\mathrm{Var}\Big[\sum_{i=1}^nX_i\Big]=n^{-2}\sum_{i=1}^n\mathrm{Var}[X_i]=\sigma^2/n.$$ Hence, by Chebyshev's inequality, $\PP[|\bar X(n)-\mu|>\eps]\le\frac{\mathrm{Var}[\bar X(n)]}{\eps^2}=\frac{\sigma^2}{\eps^2n}\to0$.
+</pf>
+
+The next inequality is about convex functions, which bend upwards.
+
+<thm k="Definition 3.15" nm="Convex function" pg="29">
+Let $I\subseteq\R$ be a (bounded or unbounded) interval. A function $f:I\to\R$ is <strong>convex</strong> if for all $x,y\in I$ and $t\in[0,1]$, $$f(tx+(1-t)y)\le tf(x)+(1-t)f(y).$$
+</thm>
+
+Geometrically: every chord of the graph lies above the graph. Important examples include $x^2$, $e^x$, $e^{-x}$ and $|x|$ on $\R$, and $1/x$ on $(0,\infty)$. A twice differentiable function $f$ is convex if and only if $f''(x)\ge0$ for all $x$.
+
+<thm k="Theorem 3.16" nm="Jensen’s inequality" pg="29" it>
+Let $f:I\to\R$ be a convex function on an interval $I\subseteq\R$. If $X$ is an integrable random variable taking values in $I$ then $$\E[f(X)]\ge f(\E[X]).$$
+</thm>
+
+(We assume the expectation of $f(X)$ exists; this is usually no problem since $f$ is often non-negative.) Definition 3.15 is exactly the case where $X$ takes two values, $x$ with probability $t$ and $y$ with probability $1-t$. Perhaps the nicest proof of the general case rests on the following geometric lemma: a convex function has a straight line touching it from below at any interior point.
+
+<thm k="Lemma 3.17" pg="29" it>
+Suppose that $f:I\to\R$ is convex and let $m$ be an interior point of $I$. Then there exists $a\in\R$ such that $f(x)\ge f(m)+a(x-m)$ for all $x\in I$.
+</thm>
+
+<pf>
+For any $x<m<y$ with $x,y\in I$, write $m$ as a weighted average of $x$ and $y$: $m=\frac{y-m}{y-x}x+\frac{m-x}{y-x}y$. Convexity gives $$f(m)\le\frac{y-m}{y-x}f(x)+\frac{m-x}{y-x}f(y).$$ Rearranging (or, better, drawing a picture), this is equivalent to $$\frac{f(m)-f(x)}{m-x}\le\frac{f(y)-f(m)}{y-m}:$$ slopes of chords to the left of $m$ are at most slopes of chords to the right. It follows that $$\sup_{x<m}\frac{f(m)-f(x)}{m-x}\le\inf_{y>m}\frac{f(y)-f(m)}{y-m},$$ so we can choose $a$ in between. (If $f$ is differentiable at $m$ we can choose $a=f'(m)$.) Then for $x<m$, $\frac{f(m)-f(x)}{m-x}\le a$ rearranges to $f(x)\ge f(m)+a(x-m)$, and similarly for $y>m$.
+</pf>
+
+<pf h="Proof of Theorem 3.16.">
+If $\E[X]$ is not an interior point of $I$ then it is an endpoint, and $X$ must be almost surely equal to it (a variable in $[c,\infty)$ with mean $c$ is $c$ a.s.), so the inequality is trivial. Otherwise, setting $m=\E[X]$ in Lemma 3.17 we have $f(X)\ge f(\E[X])+a(X-\E[X])$. Taking expectations, the last term has mean 0, and we recover $\E[f(X)]\ge f(\E[X])$.
+</pf>
+
+@@fig3-4@@
+
+<strong>Remark.</strong> Jensen's inequality only works for probability measures, but one can often exploit it to prove results for finite measures by first normalising. For example, suppose that $\mu$ is a finite measure on $(\Omega,\F)$, and define $\nu(A)=\mu(A)/\mu(\Omega)$, a probability measure. Then $$\int|f|^3\,d\mu=\mu(\Omega)\int|f|^3\,d\nu\ge\mu(\Omega)\Big|\int f\,d\nu\Big|^3=\mu(\Omega)^{-2}\Big|\int f\,d\mu\Big|^3.$$
+
+## 3.2 L<sup>p</sup> spaces {30}
+
+The set of all random variables on a probability space is a large set. It is useful to organise it by how integrable its members are.
+
+<thm k="Definition 3.18" pg="30">
+Let $p\ge0$. The space of all random variables $X$ such that $\E[|X|^p]<\infty$ is denoted $\Lp p$. In particular, $\Lp0$ is the space of all random variables. We also denote by $\Lp\infty$ the set of all random variables that are bounded.
+</thm>
+
+For example $X\in\Lp1$ means $X$ is integrable, and $X\in\Lp2$ means $X$ has finite variance (it is "square integrable"). For $p>0$ the function $x\mapsto x^p$ is increasing on $\R_+$, so $$(x+y)^p\le(2\max(x,y))^p\le2^p(x^p+y^p)\qquad\text{for all }x,y\ge0.$$ It follows that $X,Y\in\Lp p$ implies $X+Y\in\Lp p$. Obviously also $\alpha X\in\Lp p$ for any $\alpha\in\R$, so $\Lp p$ is a vector space. For $X\in\Lp p$ put $$\|X\|_p:=\big(\E[|X|^p]\big)^{1/p}.$$ This is a way of measuring the size of $X$; for $p=2$ it is the root-mean-square, and $\|X-\E X\|_2$ is the standard deviation.
+
+<thm k="Lemma 3.19" pg="30" it>
+Let $0<r\le p$. Suppose $X\in\Lp p$. Then $X\in\Lp r$ and $\|X\|_r\le\|X\|_p$. In particular, convergence in $L^p$ implies convergence in $L^r$.
+</thm>
+
+<pf>
+Let $X_k=|X|\wedge k$ (the smaller of $|X|$ and $k$), which is non-negative and bounded, so all its moments are finite. Applying Jensen's inequality with the convex function $f(x)=x^{p/r}$ on $[0,\infty)$ to the random variable $X_k^r$, we get $$\|X_k\|_r^p=\big(\E[X_k^r]\big)^{p/r}\le\E[X_k^p]\le\E[|X|^p]=\|X\|_p^p.$$ Let $k\to\infty$: by the Monotone Convergence Theorem $\E[X_k^r]\uparrow\E[|X|^r]$, giving the inequality. The statement about convergence follows by applying it to $X_n-X$.
+</pf>
+
+This depends on having a *probability* measure: on a two-point space, a random variable is just a pair of numbers, and the lemma says the $L^p$ "unit balls" are nested. The figure lets you see it.
+
+@@fig3-5@@
+
+We now derive two crucial inequalities. Hölder's inequality is used in many proofs, and Minkowski's inequality shows that $\|\cdot\|_p$ satisfies the triangle inequality.
+
+<thm k="Theorem 3.20" pg="30" it>
+Let $p,q>1$ be such that $\frac1p+\frac1q=1$. Suppose $X,Y\in\Lp p$ and $Z\in\Lp q$. Then $$\begin{aligned}\E[|XZ|]&\le\|X\|_p\|Z\|_q&&\text{(Hölder's inequality)},\\\|X+Y\|_p&\le\|X\|_p+\|Y\|_p&&\text{(Minkowski's inequality)}.\end{aligned}$$
+</thm>
+
+With $p=q=2$, Hölder is the Cauchy–Schwarz inequality $\E|XZ|\le\sqrt{\E X^2\,\E Z^2}$. Proofs on $(\R,\B(\R))$ with Lebesgue measure are in Part A. Here we follow Williams and derive both from Jensen's inequality, using a neat device: changing the probability measure.
+
+<pf>
+*Hölder.* If $X=0$ a.s. there is nothing to show. Otherwise, define a new probability measure on $(\Omega,\F)$ by $$\mathbb Q(A)=\frac{\E[|X|^p\ind_A]}{\|X\|_p^p},$$ which reweights outcomes in proportion to $|X|^p$. (It is a measure by the Monotone Convergence Theorem, and $\mathbb Q(\Omega)=1$.) Integrals against $\mathbb Q$ are $\int W\,d\mathbb Q=\E[W|X|^p]/\|X\|_p^p$ for $W\ge0$, by the standard machine. Let $\bar Z=|Z|/|X|^{p-1}$ on $\{|X|>0\}$ and $0$ elsewhere, so that $\bar Z|X|^p=|XZ|$. Then, using Jensen with $f(x)=x^q$ under $\mathbb Q$, $$\begin{aligned}\big(\E|XZ|\big)^q&=\Big(\|X\|_p^p\int\bar Z\,d\mathbb Q\Big)^q\le\|X\|_p^{pq}\int\bar Z^q\,d\mathbb Q\\&=\|X\|_p^{pq-p}\,\E\big[|Z|^q|X|^{p-q(p-1)}\ind_{\{|X|>0\}}\big].\end{aligned}$$ From $\frac1p+\frac1q=1$ we get $pq=p+q$, so $p-q(p-1)=0$ and $pq-p=q$. The right side is therefore at most $\|X\|_p^q\,\E|Z|^q$. Raise both sides to the power $1/q$.
+
+*Minkowski.* $X+Y\in\Lp p$ since it is a vector space. Let $c=\E[|X+Y|^p]^{1/q}=\big\||X+Y|^{p-1}\big\|_q$ (using $(p-1)q=p$); if $c=0$ there is nothing to prove. Using first the triangle inequality on $\R$, $|x+y|\le|x|+|y|$, and then Hölder's inequality, $$\begin{aligned}\E[|X+Y|^p]&\le\E\big[|X|\cdot|X+Y|^{p-1}\big]+\E\big[|Y|\cdot|X+Y|^{p-1}\big]\\&\le\|X\|_p\,c+\|Y\|_p\,c.\end{aligned}$$ Dividing by $c$ gives $\E[|X+Y|^p]^{1-1/q}\le\|X\|_p+\|Y\|_p$, and $1-\frac1q=\frac1p$.
+</pf>
+
+<bg id="bg-banach" t="Norms, Cauchy sequences and completeness" lead="Background">
+A **norm** on a vector space $V$ is a function $\|\cdot\|:V\to[0,\infty)$ with $\|\alpha v\|=|\alpha|\|v\|$, $\|v+w\|\le\|v\|+\|w\|$, and $\|v\|=0$ only if $v=0$. It gives a distance $\|v-w\|$, so we can talk about convergence: $v_n\to v$ means $\|v_n-v\|\to0$.
+
+A sequence is **Cauchy** if its terms get close to *each other*: $\sup_{r,s\ge n}\|v_r-v_s\|\to0$. Every convergent sequence is Cauchy. The space is **complete** if, conversely, every Cauchy sequence converges to something *in the space*. $\R$ is complete; $\Q$ is not (the decimal truncations of $\sqrt2$ are Cauchy but have no rational limit). A complete normed space is a **Banach space**. Completeness matters because it lets you prove that something exists by producing a Cauchy sequence that ought to converge to it, which is exactly how conditional expectation will be built in Chapter 4.
+</bg>
+
+The following result is of fundamental importance in functional analysis. We will use it for $p=2$.
+
+<thm k="Theorem 3.21" pg="31" it>
+Let $p\ge1$. The vector space $\Lp p$ is complete, i.e., for any sequence $(X_n)_{n\ge1}\subseteq\Lp p$ such that $$\sup_{r,s\ge n}\|X_s-X_r\|_p\xrightarrow{n\to\infty}0$$ there exists $X\in\Lp p$ such that $X_n\to X$ in $L^p$.
+</thm>
+
+<pf>
+*Find a fast subsequence.* Pick $k_1<k_2<\cdots$ such that $\sup_{r,s\ge k_n}\|X_s-X_r\|_p\le2^{-n}$, and in particular (Lemma 3.19 with $r=1$) $\E[|X_{k_n}-X_{k_{n+1}}|]\le\|X_{k_n}-X_{k_{n+1}}\|_p\le2^{-n}$.
+
+*It converges almost surely.* Put $Y=\sum_{n\ge1}|X_{k_n}-X_{k_{n+1}}|$. By the Monotone Convergence Theorem, $\E[Y]\le\sum_n2^{-n}<\infty$, and in particular $Y<\infty$ a.s. Where $Y(\omega)<\infty$, the telescoping series $X_{k_1}+\sum_n(X_{k_{n+1}}-X_{k_n})$ converges absolutely, so $\lim_nX_{k_n}(\omega)$ exists. Define $X(\omega):=\limsup_{n\to\infty}X_{k_n}(\omega)$ for all $\omega$, so that $X$ is a random variable (Lemma 2.3) and $X_{k_n}\to X$ a.s.
+
+*The whole sequence converges in $L^p$.* For $n\ge1$ and $r>k_n$, we have $\E[|X_r-X_{k_m}|^p]=\|X_r-X_{k_m}\|_p^p\le2^{-np}$ for all $m\ge n$. Let $m\to\infty$: by Fatou's Lemma, $\E[|X_r-X|^p]\le\liminf_m\E[|X_r-X_{k_m}|^p]\le2^{-np}$. It follows that $X_r-X\in\Lp p$, hence $X\in\Lp p$, and $X_r\to X$ in $L^p$.
+</pf>
+
+The proof is a recipe worth remembering: Cauchy in norm → choose a subsequence with summable gaps → almost sure limit → Fatou to upgrade back to norm convergence. Theorem 3.10 used the same idea.
+
+<strong>Remark.</strong> The above shows that $(\Lp p,\|\cdot\|_p)$ is almost a normed space; the only nuisance is that $\|X\|_p=0$ implies only $X=0$ a.s., not $X=0$. To get rid of this, we can quotient by the equivalence relation of a.s. equality. This gives the space $L^p$, whose elements are not random variables any more but equivalence classes of them. It is a complete normed space, a **Banach space**; courses on functional analysis study these systematically. From the probabilistic point of view, however, we prefer to work with actual functions, i.e. with random variables and not equivalence classes. One reason: when we have a large family $(X_t)_{t\ge0}$ of random variables, changing each of them on a null set may do a lot of harm, since uncountably many null sets can add up to something that isn't null.

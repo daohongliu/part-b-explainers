@@ -1,0 +1,11 @@
+<figure class="wide" id="fig2-3">
+  <div class="fig-body">
+    <svg id="fb-svg" class="pt" viewBox="0 0 720 392" role="img" aria-label="An eight by eight corner of an infinite matrix with ones on the diagonal and minus ones just above it, with row sums and column sums."></svg>
+    <div class="btn-row">
+      <button type="button" data-fb="rows" aria-pressed="false">sum each row, then add</button>
+      <button type="button" data-fb="cols" aria-pressed="false">sum each column, then add</button>
+    </div>
+    <div class="readout" id="fb-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.3</span>Fubini fails without integrability. The infinite matrix has \(a_{ii}=1\), \(a_{i,i+1}=-1\) and zeros elsewhere. Every row sums to 0, so adding rows first gives 0. Column 1 sums to 1 and every other column to 0, so adding columns first gives 1. The problem is that \(\sum_{i,j}|a_{ij}|=\infty\): the function is neither non-negative nor integrable, so neither half of Theorem 2.21 applies.</figcaption>
+</figure>

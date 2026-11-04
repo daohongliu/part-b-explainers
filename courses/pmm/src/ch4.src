@@ -1,0 +1,216 @@
+@num 4
+@title Conditional expectation
+@titlehtml Conditional <em>expectation</em>
+@pages 31–39
+@dek What is the best guess for X if you only know some of the information? The answer is a random variable, not a number, and getting its definition right, for information that can’t be broken into countably many pieces, is the key that unlocks martingales.
+---
+Let $X$ be a random variable on a probability space $(\Omega,\F,\PP)$ and $\G$ a sub-σ-algebra of $\F$. Does there exist a random variable that is only $\G$-measurable and, in a certain sense, "as close as possible" to $X$?
+
+Recall what $\G$-measurable means (Definition 2.25): a $\G$-measurable random variable is one whose value is determined by the information in $\G$. So the question is: *what is our best guess for $X$, if all we know is which events in $\G$ occurred?* This question turns up everywhere. In particular, when we study martingales we will want the best prediction of the future value of a process given its history up to now. But the importance of conditional expectation goes well beyond martingale theory.
+
+Before tackling the question in full generality, let's build intuition when $\G$ is simple and we measure closeness by $\|\cdot\|_2$, the root-mean-square distance of Section 3.2.
+
+<thm k="Example 4.1" pg="32">
+Let $X\in\Lp2(\Omega,\F,\PP)$. Let $B\in\F$ with $\PP(B)>0$ (and $\PP(B^c)>0$), and note that $\sigma(B)=\{\emptyset,\Omega,B,B^c\}$. Consider the optimisation problem $$\inf\E[(X-Y)^2]$$ where the inf is taken over all square-integrable, $\sigma(B)$-measurable random variables $Y$. The infimum is attained by the random variable $$\omega\mapsto\E[X\mid\sigma(B)](\omega)=\frac{\E[X\ind_B]}{\PP(B)}\ind_B(\omega)+\frac{\E[X\ind_{B^c}]}{\PP(B^c)}\ind_{B^c}(\omega).$$
+</thm>
+
+Why: a $\sigma(B)$-measurable $Y$ can only take one value on $B$ and one on $B^c$ (the preimage of each value must be one of the four sets), so $Y=a\ind_B+b\ind_{B^c}$. Then $\E[(X-Y)^2]=\E[(X-a)^2\ind_B]+\E[(X-b)^2\ind_{B^c}]$, and the first term is a quadratic in $a$, $\E[X^2\ind_B]-2a\E[X\ind_B]+a^2\PP(B)$, minimised at $a=\E[X\ind_B]/\PP(B)$. Similarly for $b$. *The best guess on each piece is the average of $X$ over that piece.*
+
+We denote the minimiser by $\E[X\mid\sigma(B)]$; here is why the notation makes sense. Recall the definition of **conditional probability**, $$\PP[A\mid B]=\frac{\PP[A\cap B]}{\PP[B]}\qquad\text{for }A,B\in\F\text{ with }\PP[B]>0,$$ and note that $\PP(\cdot\mid B)$ is a probability measure on $(\Omega,\F)$. We can take expectations with respect to this measure, and this gives the conditional expectation of a random variable given the *event* $B$: $$\E[X\mid B]=\int_\Omega X(\omega)\,d\PP(\omega\mid B)=\frac{\int_BX\,d\PP}{\PP(B)}=\frac{\E[X\ind_B]}{\PP(B)},$$ which you have probably met in Part A Probability. With this notation,
+
+$$#eq11 \E[X\mid\sigma(B)](\omega)=\E[X\mid B]\,\ind_B(\omega)+\E[X\mid B^c]\,\ind_{B^c}(\omega), \tag{11}$$
+
+which hopefully makes the notation $\E[X\mid\sigma(B)]$ more intuitive: look at which of $B$, $B^c$ happened, and report the average of $X$ there. Similar explicit formulas hold when $\sigma(B)$ is replaced by another simple σ-algebra. If $G_1,\dots,G_n$ form a partition of $\Omega$ with $\PP(G_i)>0$, then the same argument shows that for $\G=\sigma(\{G_1,\dots,G_n\})$ the minimiser is $$\E[X\mid\G]=\sum_{i=1}^n\E[X\mid G_i]\,\ind_{G_i}.$$ Finally, we note that
+
+$$#eq12 \E\big[\E[X\mid\sigma(B)]\,\ind_G\big]=\E[X\ind_G]\qquad\text{for all }G\in\sigma(B), \tag{12}$$
+
+which is immediate from <a class="xref" href="#eq11">(11)</a>. Informally, it says the random variable $\E[X\mid\G]$ matches the expectation of $X$ *locally*, where "locally" means on the finest level that $\G$ allows us to look at. This equality is the key to the general definition, when we condition on σ-algebras that are not as simple as $\sigma(B)$.
+
+@@fig4-1@@
+
+<thm k="Example 4.2" pg="32">
+Let $X,Y$ be random variables on $(\Omega,\F,\PP)$. We would like a random variable $Z$ that is as "close as possible" to $X$ but only measurable with respect to $\sigma(Y)$, that is, $Z$ must be a function of $Y$.
+</thm>
+
+Motivated by <a class="xref" href="#eq11">(11)</a> one might be tempted to set $$Z(\omega)=\frac{\E[X\ind_{\{Y=y\}}]}{\PP[Y=y]}\qquad\text{when }Y(\omega)=y.$$ But in general this makes no sense, since $\PP(Y=y)$ can be zero; for a continuous $Y$, it is zero for *every* $y$. To avoid dividing by zero, we can multiply out: $\E[Z\ind_{\{Y=y\}}]=\E[X\ind_{\{Y=y\}}]$. Still, if $\PP[Y=y]=0$ for every $y$, this condition just says $0=0$. So, just as when we failed to describe probability measures through the probabilities of individual values and passed to sets of values (Chapter 1), we pass to Borel sets. We insist that $Z$ is a function of $Y$ and
+
+$$#eq13 \E[Z\ind_{\{Y\in A\}}]=\E[X\ind_{\{Y\in A\}}] \tag{13}$$
+
+for each $A\in\B(\R)$. At this point we have no guarantee that such a $Z$ exists, but <a class="xref" href="#eq13">(13)</a> at least tells us a non-trivial property of it. (We'll see that <a class="xref" href="#eq13">(13)</a> together with measurability determines $Z$ uniquely up to a null set.) This is the special case $\G=\sigma(Y)$ of the general definition below, and we write $Z=\E[X\mid Y]=\E[X\mid\sigma(Y)]$. Since the events $\{Y\in A\}$ are exactly the events in $\sigma(Y)$, <a class="xref" href="#eq13">(13)</a> is <a class="xref" href="#eq12">(12)</a> again, with $\sigma(Y)$ in place of $\sigma(B)$.
+
+<thm k="Definition 4.3" nm="Conditional expectation" pg="33">
+Let $(\Omega,\F,\PP)$ be a probability space and $X$ an integrable random variable. Let $\G\subseteq\F$ be a σ-algebra. We say that a random variable $\E[X\mid\G]$ is (a version of) the <strong>conditional expectation of $X$ given $\G$</strong> if $\E[X\mid\G]$ is integrable, $\G$-measurable and $$#eq14 \E\big[\E[X\mid\G]\,\ind_G\big]=\E[X\ind_G]\qquad\text{for all }G\in\G. \tag{14}$$ The <strong>conditional probability</strong> is defined as the conditional expectation of an indicator: $\PP(A\mid\G):=\E[\ind_A\mid\G]$ for $A\in\F$. If $\G=\sigma(Y)$ is generated by a random variable $Y$, we also write $\E[X\mid Y]$ and $\PP(A\mid Y)$ for $\E[X\mid\G]$ and $\PP(A\mid\G)$.
+</thm>
+
+We refer to <a class="xref" href="#eq14">(14)</a> as the **defining relation** of conditional expectation. Two conditions, two jobs: $\G$-measurability says the guess may only use the information in $\G$; the defining relation says that on every event you can see in $\G$, the guess has the same integral as $X$. This is the "local averaging" property of Example 4.1. The difference between $X$ and $\E[X\mid\G]$ is that the latter is $\G$-measurable, whereas $X$ is only $\F$-measurable.
+
+<thm k="Theorem 4.4" nm="Existence and uniqueness of conditional expectation" pg="33" it>
+Let $X$ be an integrable random variable on a probability space $(\Omega,\F,\PP)$ and $\G\subseteq\F$ a σ-algebra. The conditional expectation of $X$ given $\G$ exists. It is a.s. unique in the sense that if $Z$ is also a version of the conditional expectation of $X$ given $\G$ then $Z=\E[X\mid\G]$ a.s.
+</thm>
+
+<pf h="Proof of uniqueness.">
+Let $Y,Z$ be two conditional expectations of $X$ given $\G$. Let $G:=\{Y>Z\}$ and note that $G\in\G$, as $Y,Z$ are $\G$-measurable (Lemma 2.3). By the defining relation, $\E[Y\ind_G]=\E[X\ind_G]=\E[Z\ind_G]$, so $\E[(Y-Z)\ind_G]=0$. But $(Y-Z)\ind_G\ge0$, and a non-negative random variable with expectation zero is zero a.s. (by Markov's inequality, $\PP((Y-Z)\ind_G>\frac1k)\le k\cdot0$ for each $k$). Since $Y-Z>0$ on $G$, this forces $\PP(G)=0$. Swapping $Y$ and $Z$, also $\PP(Z>Y)=0$, and hence $Y=Z$ a.s.
+</pf>
+
+So "the" conditional expectation is a random variable defined up to a null set; the different versions disagree only on events of probability zero, and we are free to pick any of them.
+
+For existence in general we use another important result from measure theory, the Radon–Nikodym theorem. Given a measure $\mu$ on a measurable space $(\Omega,\F)$, we can define a new measure $\nu$ on $(\Omega,\F)$ by taking any measurable $f\ge0$ and setting
+
+$$#eq15 \nu(A):=\int_Af\,d\mu. \tag{15}$$
+
+(It is countably additive by the Monotone Convergence Theorem.) You know this already: a probability density $f$ turns Lebesgue measure into the law of a continuous random variable. Is there a converse: can any measure be written in the form <a class="xref" href="#eq15">(15)</a>? Not every measure, since $\mu(A)=0$ forces $\nu(A)=0$. The Radon–Nikodym theorem says this condition is sufficient, if the measures are σ-finite (Definition 1.3).
+
+<thm k="Theorem 4.5" nm="Radon–Nikodym" pg="33" it>
+Let $(\Omega,\F)$ be a measurable space, and let $\nu$ and $\mu$ be σ-finite measures on $(\Omega,\F)$. If $$#eq16 \mu(A)=0\ \text{ implies }\ \nu(A)=0\qquad\text{for all }A\in\F, \tag{16}$$ then there exists a measurable function $f:\Omega\to[0,\infty)$ such that $\nu(A)=\int_Af\,d\mu$ for all $A\in\F$. The function $f$ is unique up to $\mu$-almost everywhere equality, and is denoted $f=\frac{d\nu}{d\mu}$.
+</thm>
+
+The requirement <a class="xref" href="#eq16">(16)</a> is called **absolute continuity** of $\nu$ with respect to $\mu$, written $\nu\ll\mu$: $\nu$ cannot see anything that $\mu$ doesn't. The function $f$ is the **Radon–Nikodym derivative**; the notation $\frac{d\nu}{d\mu}$ is chosen so that "$d\nu=\frac{d\nu}{d\mu}\,d\mu$" reads like the chain rule.
+
+<strong>Remark.</strong> The theorem has important uses besides conditional expectation. If $X$ is a real-valued random variable whose law $\mu_X=\PP\circ X^{-1}$ is absolutely continuous with respect to Lebesgue measure $m$, then the Radon–Nikodym theorem says that $X$ has a density: $\mu_X(A)=\int_Af_X(x)\,m(dx)$ with $f_X=\frac{d\mu_X}{dm}$. If $X$ is a discrete random variable, then $\mu_X$ is not absolutely continuous with respect to Lebesgue measure ($\mu_X$ gives positive mass to single points, which are Lebesgue-null), and indeed $X$ has only a probability mass function, not a density. The Cantor distribution of Chapter 1 is another non-example.
+
+We omit the proof, which is beyond the scope of the course. (Uniqueness of $f$ is essentially the uniqueness argument for conditional expectation above; existence is more involved.) Instead, let's see how it gives the existence of conditional expectation.
+
+<pf h="Proof of existence in Theorem 4.4.">
+Suppose first that $X$ is non-negative. We want an integrable, $\G$-measurable $Z$ such that
+
+$$#eq17 \int_AZ\,d\PP=\int_AX\,d\PP\qquad\text{for all }A\in\G. \tag{17}$$
+
+So, for $A\in\G$, let $\mathbb Q[A]=\int_AX\,d\PP$. This defines a finite measure $\mathbb Q$ on $(\Omega,\G)$ (note: on $\G$, not $\F$). Let $\PP|_\G$ denote the measure $\PP$ restricted to the σ-algebra $\G$. Then $\mathbb Q\ll\PP|_\G$, since if $\PP(A)=0$ then $\int_AX\,d\PP=0$. Applying the Radon–Nikodym theorem to $\mathbb Q$ and $\PP|_\G$ *on the space $(\Omega,\G)$*, there is a $\G$-measurable function $Z=\frac{d\mathbb Q}{d\PP|_\G}$ such that <a class="xref" href="#eq17">(17)</a> holds.<sn>A small subtlety: we are using twice (with $Y=\ind_AX$ and $Y=\ind_AZ$) that if $Y$ is $\G$-measurable, then $\int Y\,d\PP|_\G=\int Y\,d\PP$. This follows from Remark 2.8: both integrals are determined by the same numbers $\PP(Y\le t)$.</sn> Certainly $Z$ is integrable, since $Z\ge0$ and $\int Z\,d\PP=\int X\,d\PP<\infty$.
+
+For the general case, write $X=X^+-X^-$ in terms of its positive and negative parts. Then $\E[X^+\mid\G]-\E[X^-\mid\G]$ is $\G$-measurable and, by linearity of the integral, satisfies the defining relation.
+</pf>
+
+The point of doing it on $(\Omega,\G)$ is that Radon–Nikodym then hands back a function that is measurable for the *small* σ-algebra $\G$, which is exactly the constraint we wanted.
+
+<strong>Remark.</strong> In Example 4.1 we found explicit formulas when $\G$ is generated by a finite partition. For other σ-algebras $\G$ it is in general not possible to find explicit formulas. But for non-negative integrable $X$, if $\I$ is a π-system that generates $\G$, then it is enough to check the defining relation for $G\in\I$. (Apply Theorem 1.11 to the two finite measures $A\mapsto\int_AX\,d\PP$ and $A\mapsto\int_AZ\,d\PP$ on $(\Omega,\G)$, after also checking they have the same total mass, i.e. $\E Z=\E X$. For integrable $X$, consider positive and negative parts separately.)
+
+Here is a picture that makes conditional expectation on a partition concrete, and which will reappear as a martingale in Chapter 6.
+
+@@fig4-2@@
+
+## Properties of conditional expectation {34}
+
+Let's turn to some elementary properties of conditional expectation. Most of the following are obvious, once you remember one thing: *whereas expectation is a number, conditional expectation is a function on $\Omega$*. And since conditional expectation is only defined up to equality almost surely, we have to qualify many statements with "a.s.".
+
+<thm k="Proposition 4.6" pg="34" it>
+Let $(\Omega,\F,\PP)$ be a probability space, $X$ and $Y$ integrable random variables, $\G\subseteq\F$ a σ-algebra and $a,b,c$ real numbers. Then
+
+<ol><li>$\E[\E[X\mid\G]]=\E[X]$.</li>
+<li>$\E[aX+bY\mid\G]=a\E[X\mid\G]+b\E[Y\mid\G]$ a.s.</li>
+<li>If $X$ is $\G$-measurable, then $\E[X\mid\G]=X$ a.s.</li>
+<li>$\E[c\mid\G]=c$ a.s.</li>
+<li>$\E[X\mid\{\emptyset,\Omega\}]=\E[X]$.</li>
+<li>If $\sigma(X)$ and $\G$ are independent then $\E[X\mid\G]=\E[X]$ a.s.</li>
+<li>If $X\le Y$ a.s. then $\E[X\mid\G]\le\E[Y\mid\G]$ a.s.</li>
+<li>$\big|\E[X\mid\G]\big|\le\E[|X|\mid\G]$ a.s.</li></ol>
+</thm>
+
+<pf>
+All of these follow from the requirement that $\E[X\mid\G]$ be $\G$-measurable and the defining relation <a class="xref" href="#eq14">(14)</a>, plus uniqueness. The recipe is always: *propose a candidate, check it is $\G$-measurable, check the defining relation, conclude by uniqueness.*
+
+1. Set $G=\Omega$ in the defining relation.
+
+2. $Z=a\E[X\mid\G]+b\E[Y\mid\G]$ is $\G$-measurable, so we just check the defining relation: for $G\in\G$, $$\begin{aligned}\int_GZ\,d\PP&=a\int_G\E[X\mid\G]\,d\PP+b\int_G\E[Y\mid\G]\,d\PP\\&=a\int_GX\,d\PP+b\int_GY\,d\PP=\int_G(aX+bY)\,d\PP.\end{aligned}$$ So $Z$ is a version of $\E[aX+bY\mid\G]$, and equality a.s. follows from uniqueness.
+
+3. $X$ itself is $\G$-measurable and trivially satisfies $\E[X\ind_G]=\E[X\ind_G]$. 4 is the special case $X=c$ of 3, since constants are measurable for every σ-algebra.
+
+5. The only functions measurable with respect to $\{\emptyset,\Omega\}$ are constants (a non-constant function would have a preimage that is neither $\emptyset$ nor $\Omega$). So $\E[X\mid\{\emptyset,\Omega\}]$ is a constant, and integrating over $\Omega$ identifies it as $\E[X]$.
+
+6. $\E[X]$ is a constant, so $\G$-measurable, and for $G\in\G$, $$\int_G\E[X]\,d\PP=\E[X]\,\PP[G]=\E[X]\,\E[\ind_G]=\E[X\ind_G]=\int_GX\,d\PP,$$ where the middle equality uses independence of $X$ and $\ind_G$. (For independent integrable $U,V$ we have $\E[UV]=\E[U]\E[V]$: for indicators this is the definition of independence, and the standard machine does the rest. This is on Problem Sheet 3.)
+
+7. Let $G=\{\E[X\mid\G]>\E[Y\mid\G]\}\in\G$. Then $\E\big[(\E[X\mid\G]-\E[Y\mid\G])\ind_G\big]=\E[(X-Y)\ind_G]\le0$, while the integrand on the left is $>0$ on $G$; so $\PP(G)=0$, as in the uniqueness proof.
+
+8. Apply 7 to $X\le|X|$ and $-X\le|X|$, and use 2.
+</pf>
+
+Notice that 6 is intuitively clear. If $X$ is independent of $\G$, then telling me about events in $\G$ tells me nothing about $X$, so my assessment of its expectation doesn't change. At the other extreme, 3: if $X$ is $\G$-measurable, then telling me about events in $\G$ actually tells me the value of $X$.
+
+The conditional counterparts of our convergence theorems also hold.
+
+<thm k="Proposition 4.7" nm="Conditional convergence theorems" pg="35" it>
+Let $X_1,X_2,\dots$ and $X$ be random variables on a probability space $(\Omega,\F,\PP)$, and let $\G\subseteq\F$ be a σ-algebra.
+
+<ol><li><strong>cMON</strong>: If $X_n\ge0$ for all $n$ and $X_n\uparrow X$ as $n\to\infty$, then $\E[X_n\mid\G]\uparrow\E[X\mid\G]$ a.s. as $n\to\infty$.</li>
+<li><strong>cFatou</strong>: If $X_n\ge0$ for all $n$ then $\E[\liminf_nX_n\mid\G]\le\liminf_n\E[X_n\mid\G]$ a.s.</li>
+<li><strong>cDOM</strong>: If $Y$ is an integrable random variable, $|X_n|\le Y$ for all $n$ and $X_n\to X$ a.s., then $\E[X_n\mid\G]\to\E[X\mid\G]$ a.s. as $n\to\infty$.</li></ol>
+</thm>
+
+The proofs all use the defining relation <a class="xref" href="#eq14">(14)</a> to transfer the statement to the ordinary convergence theorems, and are left as an exercise. Here is the first, as a model.
+
+<pause lead="Exercise." q="Prove cMON.">
+By Proposition 4.6(7), the $Z_n=\E[X_n\mid\G]$ increase a.s.; let $Z=\lim_nZ_n$ (on the null set where they fail to increase, set $Z=0$). $Z$ is $\G$-measurable as a limit of $\G$-measurable functions. For $G\in\G$, apply the Monotone Convergence Theorem twice: $\E[Z\ind_G]=\lim_n\E[Z_n\ind_G]=\lim_n\E[X_n\ind_G]=\E[X\ind_G]$. So $Z$ satisfies the defining relation for $\E[X\mid\G]$ (if $X$ is integrable; otherwise the same argument works with values in $[0,\infty]$), and uniqueness gives $Z=\E[X\mid\G]$ a.s. cFatou then follows from cMON exactly as Fatou followed from MCT, and cDOM from cFatou as DCT from Fatou.
+</pause>
+
+The following results are very useful in manipulating conditional expectations.
+
+<thm k="Lemma 4.8" nm="“Taking out what is known”" pg="36" it>
+Let $X$ and $Y$ be random variables on $(\Omega,\F,\PP)$ with $X$, $Y$ and $XY$ integrable. Let $\G\subseteq\F$ be a σ-algebra and suppose that $Y$ is $\G$-measurable. Then $$\E[XY\mid\G]=Y\,\E[X\mid\G]\quad\text{a.s.}$$
+</thm>
+
+If $Y$ is known given $\G$, it behaves like a constant and can be pulled out, just as $\E[cX]=c\E[X]$.
+
+<pf>
+The function $Y\E[X\mid\G]$ is clearly $\G$-measurable, so we must check that it satisfies the defining relation for $\E[XY\mid\G]$. We do this by the standard machine. First suppose that $X$ and $Y$ are non-negative. If $Y=\ind_A$ for some $A\in\G$, then for any $G\in\G$ we have $G\cap A\in\G$, and so by the defining relation for $\E[X\mid\G]$, $$\int_GY\,\E[X\mid\G]\,d\PP=\int_{G\cap A}\E[X\mid\G]\,d\PP=\int_{G\cap A}X\,d\PP=\int_GYX\,d\PP.$$ Now extend by linearity to simple $\G$-measurable random variables $Y\ge0$. Next suppose that $Y\ge0$ is $\G$-measurable. Then there is a sequence $(Y_n)$ of simple $\G$-measurable random variables with $Y_n\uparrow Y$, so $Y_nX\uparrow YX$ and $Y_n\E[X\mid\G]\uparrow Y\E[X\mid\G]$ (the latter as $\E[X\mid\G]\ge0$ a.s.), and the result follows by the Monotone Convergence Theorem. Finally, for $X$, $Y$ not necessarily non-negative, write $XY=(X^+-X^-)(Y^+-Y^-)$ and use linearity.
+</pf>
+
+<thm k="Proposition 4.9" nm="Tower property of conditional expectations" pg="36" it>
+Let $(\Omega,\F,\PP)$ be a probability space, $X$ an integrable random variable and $\F_1,\F_2$ σ-algebras with $\F_1\subseteq\F_2\subseteq\F$. Then $$\E\big[\E[X\mid\F_2]\,\big|\,\F_1\big]=\E[X\mid\F_1]\quad\text{a.s.}$$ In other words, writing $X_i=\E[X\mid\F_i]$, we have $\E[X_2\mid\F_1]=X_1$ a.s.
+</thm>
+
+<pf>
+The left-hand side is certainly $\F_1$-measurable, so we need to check the defining relation for $\E[X\mid\F_1]$. Let $G\in\F_1$, noting that $G\in\F_2$ too. Applying the defining relation twice, $$\int_G\E\big[\E[X\mid\F_2]\,\big|\,\F_1\big]\,d\PP=\int_G\E[X\mid\F_2]\,d\PP=\int_GX\,d\PP.$$
+</pf>
+
+The coarser information wins: "my best guess, now, of what my better-informed future self will guess" is just my best guess now. This extends Proposition 4.6(1), which (in the light of 4.6(5)) is the case $\F_1=\{\emptyset,\Omega\}$. It is also the rigorous version of the step labelled "tower property" in Claim 0.3. In Figure 4.2, averaging the level-3 averages over level-1 blocks gives the level-1 averages directly.
+
+Jensen's inequality also extends to the conditional setting.
+
+<thm k="Proposition 4.10" nm="Conditional Jensen’s inequality" pg="36" it>
+Suppose that $(\Omega,\F,\PP)$ is a probability space and that $X$ is an integrable random variable taking values in an interval $I\subseteq\R$. Let $f:I\to\R$ be convex and let $\G$ be a sub σ-algebra of $\F$. If $\E[|f(X)|]<\infty$ then $$\E[f(X)\mid\G]\ge f(\E[X\mid\G])\quad\text{a.s.}$$
+</thm>
+
+<pf h="Sketch proof; not examinable.">
+Take $I$ to be an open interval so that we don't have to worry about endpoints (they cause inconvenience rather than real problems). Recall from the proof of Jensen's inequality (Lemma 3.17) that if $f$ is convex then for every $m\in I$ we can find a straight line touching $f$ from below at $m$: $a,b\in\R$ with $f(x)\ge ax+b$ for all $x\in I$ and equality at $m$.
+
+Consider the set of all functions $g(x)=ax+b$ with $g\le f$ on $I$. Then $f$ is the pointwise supremum of this set. Also $f$ is continuous (convex functions on open intervals are). With a little work, it follows that we can find a *countable* set of such lines with $f(x)=\sup_n\{a_nx+b_n\}$ (use the supporting lines at rational points). Now, since $f(X)\ge a_nX+b_n$, Proposition 4.6 gives
+
+$$#eq18 \E[f(X)\mid\G]\ge\E[a_nX+b_n\mid\G]=a_n\E[X\mid\G]+b_n\quad\text{a.s.} \tag{18}$$
+
+Each of these holds outside a null set. Since a countable union of null sets is null, <a class="xref" href="#eq18">(18)</a> holds simultaneously for all $n$ outside a single null set, and so $\E[f(X)\mid\G]\ge\sup_n\{a_n\E[X\mid\G]+b_n\}=f(\E[X\mid\G])$ a.s.
+</pf>
+
+The need for countably many lines is typical: we can afford countably many "a.s." statements at once, but not uncountably many. An important special case is $f(x)=x^p$ for $p>1$; in particular, for $p=2$, $\E[X^2\mid\G]\ge\E[X\mid\G]^2$ a.s.
+
+### Conditional expectation is the best mean-square guess
+
+<strong>Remark</strong> (Conditional expectation and mean-square approximation). Let $X,Y$ be square-integrable random variables, $\G$ a sub σ-algebra of $\F$, and suppose that $Y$ is $\G$-measurable. Then $$\begin{aligned}\E[(Y-X)^2]&=\E\Big[\big(Y-\E[X\mid\G]+\E[X\mid\G]-X\big)^2\Big]\\&=\E\big[(Y-\E[X\mid\G])^2\big]+\E\big[(\E[X\mid\G]-X)^2\big]+2\E[WZ],\end{aligned}$$ where $W=Y-\E[X\mid\G]$ and $Z=\E[X\mid\G]-X$. Now $Y$ and $\E[X\mid\G]$ are $\G$-measurable, so $W$ is $\G$-measurable, and using Proposition 4.6(1) and Lemma 4.8, $$\E[WZ]=\E\big[\E[WZ\mid\G]\big]=\E\big[W\,\E[Z\mid\G]\big].$$ But $\E\big[\E[X\mid\G]\mid\G\big]=\E[X\mid\G]$, so $\E[Z\mid\G]=0$. Hence $\E[WZ]=0$: the cross-terms vanish, and $$\begin{aligned}\E[(Y-X)^2]&=\E\big[(Y-\E[X\mid\G])^2\big]+\E\big[(\E[X\mid\G]-X)^2\big]\\&\ge\E\big[(\E[X\mid\G]-X)^2\big].\end{aligned}$$
+
+So we minimise $\E[(Y-X)^2]$ by choosing $Y=\E[X\mid\G]$. In other words, $\E[X\mid\G]$ is the **best mean-square approximation** of $X$ among all $\G$-measurable random variables, which brings us back to where Example 4.1 started. The displayed identity is Pythagoras' theorem, with "$W$ and $Z$ are orthogonal" meaning $\E[WZ]=0$. Indeed this gives a route to existence of conditional expectations without the Radon–Nikodym theorem, sketched next.
+
+## 4.1 Existence via orthogonal projection in L² (not examinable) {37}
+
+This section gives an alternative, more geometric existence proof. Neither proof is better or worse; they highlight two ways to think about conditional expectation. First recall from Prelims linear algebra: if $K\subseteq\R^d$ is a linear subspace and $x\in\R^d$, the **orthogonal projection** of $x$ onto $K$ is the unique vector $y\in K$ attaining $$\inf_{y\in K}\|x-y\|_{\R^d}.$$ Equivalently, $y$ is the unique element of $K$ such that $x-y$ is orthogonal to $K$: $\langle x-y,z\rangle_{\R^d}=0$ for all $z\in K$.
+
+Motivated by this, we replace $\R^d$ by $\Lp2(\Omega,\F,\PP)$, take as subspace $K=\Lp2(\Omega,\G,\PP)$ (the square-integrable random variables that are $\G$-measurable), and study, for $X\in\Lp2(\Omega,\F,\PP)$, the problem $$\inf_{Y\in K}\|X-Y\|_2.$$ If it has a minimiser, that should be our candidate for $\E[X\mid\G]$. Among all the $\Lp p$ spaces, $\Lp2$ is special because it carries an **inner product**, $$\langle X,Y\rangle:=\E[XY]\qquad\text{for }X,Y\in\Lp2,$$ with $\|X\|_2=\sqrt{\langle X,X\rangle}$. In particular we say that $X,Y$ are **orthogonal** if $\langle X,Y\rangle=0$. Having geometry and orthogonality available helps a lot. In fact the minimisation problem is well posed for any complete subspace $K$.
+
+<thm k="Theorem 4.11" pg="38" it>
+Let $K$ be a complete vector subspace of $\Lp2(\Omega,\F,\PP)$. For any $X\in\Lp2(\Omega,\F,\PP)$ the infimum $\inf_{Z\in K}\|X-Z\|_2$ is attained by some $Y\in K$, and $X-Y$ is orthogonal to $Z$ for all $Z\in K$ with $\|Z\|_2>0$.
+</thm>
+
+<pf>
+Let $(Y_n)_{n\ge1}$ be a sequence in $K$ which approaches the infimum, $\|X-Y_n\|_2\to\Delta$. We argue that the sequence is Cauchy, using the **parallelogram law** $\|u+v\|^2+\|u-v\|^2=2\|u\|^2+2\|v\|^2$ (expand the inner products) with $u=X-\frac12(Y_r+Y_s)$ and $v=\frac12(Y_r-Y_s)$: $$\|X-Y_r\|_2^2+\|X-Y_s\|_2^2=2\big\|X-\tfrac12(Y_r+Y_s)\big\|_2^2+2\big\|\tfrac12(Y_r-Y_s)\big\|_2^2.$$ Since $K$ is a vector space, $\frac12(Y_r+Y_s)\in K$, and in particular $\|X-\frac12(Y_r+Y_s)\|_2^2\ge\Delta^2$. So $\frac12\|Y_r-Y_s\|_2^2\le\|X-Y_r\|_2^2+\|X-Y_s\|_2^2-2\Delta^2$, and the right side tends to 0 as $r,s\to\infty$. Hence $\sup_{r,s\ge n}\|Y_r-Y_s\|_2\to0$, i.e., $(Y_n)$ is Cauchy. Since $K$ is complete, there exists $Y\in K$ with $\|Y_n-Y\|_2\to0$. Minkowski's inequality (Theorem 3.20) then gives $\|X-Y\|_2\le\|X-Y_n\|_2+\|Y-Y_n\|_2$, and letting $n\to\infty$ we see that $\|X-Y\|_2=\Delta$, as required.
+
+Now let $Z\in K$ with $\|Z\|_2>0$, and note that $Y+tZ\in K$ for all $t\in\R$. Using optimality of $Y$, $$0\le\|X-(Y+tZ)\|_2^2-\|X-Y\|_2^2=t^2\|Z\|_2^2-2t\,\E[Z(X-Y)].$$ Taking $t=\E[Z(X-Y)]/\|Z\|_2^2$ yields $0\le-\E[Z(X-Y)]^2/\|Z\|_2^2$, which implies $\E[Z(X-Y)]=0$, as desired.
+</pf>
+
+<strong>Remark.</strong> The result can be rephrased by saying that any $X\in\Lp2$ can be written as $X=Y+(X-Y)$ with $Y\in K$ and $X-Y$ orthogonal to $K$. Such a decomposition is a.s. unique: if there were two, $Y_1$ and $Y_2$, their difference would be both in $K$ and orthogonal to $K$, hence orthogonal to itself, so $\E[(Y_1-Y_2)^2]=0$ and $Y_1=Y_2$ a.s. We call $Y$ the (orthogonal) **projection** of $X$ on $K$.
+
+@@fig4-3@@
+
+We now have everything we need for an alternative proof of the existence of conditional expectations.
+
+<pf h="Proof of existence in Theorem 4.4, again.">
+Suppose first that $X\in\Lp2(\Omega,\F,\PP)$ and let $K=\Lp2(\Omega,\G,\PP)$. Clearly $K$ is a vector subspace of $\Lp2(\Omega,\F,\PP)$, and it is complete by Theorem 3.21 (applied on the probability space $(\Omega,\G,\PP)$). Let $Y$ be the orthogonal projection of $X$ on $K$ from Theorem 4.11. Then $Y$ is $\G$-measurable since $Y\in K$. And for $G\in\G$, $\ind_G\in K$, and since $X-Y$ is orthogonal to $K$, $\E[(X-Y)\ind_G]=0$: the defining relation holds.
+
+For $X\in\Lp1$, by linearity it is enough to deal with $X^\pm$ separately. Suppose thus that $X\ge0$ and let $X_n=X\wedge n$, which are bounded and in particular in $\Lp2$, so that $Y_n=\E[X_n\mid\G]$ exists by the above. Then $X_n\uparrow X$, and the argument of cMON (Proposition 4.7, which used only the defining relation) shows that $Y:=\limsup_nY_n$ is a version of $\E[X\mid\G]$.
+</pf>

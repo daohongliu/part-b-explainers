@@ -1,0 +1,23 @@
+<figure class="wide" id="fig1-5">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Steps">
+      <button type="button" data-step="1" aria-pressed="true">1 · rays</button>
+      <button type="button" data-step="2" aria-pressed="false">2 · \((a,b]\)</button>
+      <button type="button" data-step="3" aria-pressed="false">3 · points</button>
+      <button type="button" data-step="4" aria-pressed="false">4 · \((a,b)\)</button>
+      <button type="button" data-step="5" aria-pressed="false">5 · open sets</button>
+      <button type="button" data-step="6" aria-pressed="false">6 · and back</button>
+    </div>
+    <svg id="bk-svg" class="pt" viewBox="0 0 680 200" role="img" aria-label="Number line showing how sets are built from rays."></svg>
+    <div class="controls" id="bk-n-wrap">
+      <label class="grow" for="bk-n"><span id="bk-n-name">n</span> <input type="range" id="bk-n" min="1" max="24" step="1" value="3"> <output id="bk-nv" for="bk-n">3</output></label>
+    </div>
+    <div class="step-text" data-st="1"><p><b>A π-system.</b> Two rays meet in a ray: \((-\infty,x]\cap(-\infty,y]=(-\infty,\min(x,y)]\). Drag \(x\) and \(y\).</p></div>
+    <div class="step-text" data-st="2" hidden><p><b>Half-open intervals.</b> \((a,b]=(-\infty,b]\cap(-\infty,a]^c\): one ray with another removed. The endpoint \(a\) goes out with the removed ray, which is why the result is open on the left.</p></div>
+    <div class="step-text" data-st="3" hidden><p><b>Points.</b> \(\{b\}=\bigcap_{n\ge1}(b-\tfrac1n,b]\), a countable intersection of step-2 sets.</p></div>
+    <div class="step-text" data-st="4" hidden><p><b>Open intervals.</b> \((a,b)=\bigcup_{n\ge1}(a,b-\tfrac1n]\), a countable union of step-2 sets (those with \(b-\frac1n\le a\) are empty and contribute nothing).</p></div>
+    <div class="step-text" data-st="5" hidden><p><b>Open sets.</b> Every open \(U\subseteq\R\) is the union of the intervals \((p,q)\subseteq U\) with \(p,q\in\Q\). There are only countably many, so \(U\in\sigma(\pi(\R))\). The sketch uses endpoints in \(\frac1N\mathbb Z\); slide \(N\) up and the union fills \(U\). Hence \(\B(\R)=\sigma(\T)\subseteq\sigma(\pi(\R))\).</p></div>
+    <div class="step-text" data-st="6" hidden><p><b>And back.</b> Each ray \((-\infty,x]\) is closed, because its complement \((x,\infty)\) is open. So every ray is Borel, giving \(\sigma(\pi(\R))\subseteq\B(\R)\). The two σ-algebras are equal.</p></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.5</span>Building \(\B(\R)\) out of rays. Drag the labelled endpoints; where a step involves a limit, slide \(n\).</figcaption>
+</figure>

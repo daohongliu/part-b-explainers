@@ -1,0 +1,18 @@
+<figure class="wide" id="fig0-1">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Scaling">
+      <button type="button" data-sc="raw" aria-pressed="false">\(S_n\)</button>
+      <button type="button" data-sc="lln" aria-pressed="false">\(S_n/n\)</button>
+      <button type="button" data-sc="clt" aria-pressed="true">\(S_n/\sqrt n\)</button>
+      <button type="button" data-sc="lil" aria-pressed="false">\(S_n/\sqrt{n\log\log n}\)</button>
+    </div>
+    <canvas id="rw-canvas" width="720" height="300" aria-label="Many random walk paths, rescaled as chosen."></canvas>
+    <div class="controls">
+      <label class="grow" for="rw-k">paths <input type="range" id="rw-k" min="1" max="200" step="1" value="100"> <output id="rw-kv">100</output></label>
+      <label class="grow" for="rw-n">steps <input type="range" id="rw-n" min="0" max="100" step="1" value="62"> <output id="rw-nv"></output></label>
+      <button type="button" id="rw-new">new sample</button>
+    </div>
+    <div class="readout" id="rw-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 0.1</span>Many independent random walks, viewed through four lenses. Dividing by \(n\) squashes every path to 0 (law of large numbers). Dividing by \(\sqrt n\) keeps a spread that settles into a normal shape, with about 2% of paths outside the dashed band at any fixed time (central limit theorem). Dividing by \(\sqrt{n\log\log n}\) finds the outer envelope \(\pm\sqrt2\) (law of the iterated logarithm), which converges very slowly. Red paths are the ones currently outside the band.</figcaption>
+</figure>

@@ -1,0 +1,15 @@
+<figure class="wide" id="fig3-2">
+  <div class="fig-body">
+    <div class="tabs btn-row" role="group" aria-label="Which indices">
+      <button type="button" data-tw="all" aria-pressed="true">all n</button>
+      <button type="button" data-tw="sub" aria-pressed="false">only n = 2<sup>j</sup></button>
+    </div>
+    <svg id="tw-svg" class="pt" viewBox="0 0 720 222" role="img" aria-label="The unit interval with the current blip shaded and a draggable point omega; below, a barcode of the values X_k(omega)."></svg>
+    <div class="controls">
+      <label class="grow" for="tw-n">n <input type="range" id="tw-n" min="1" max="63" step="1" value="11"> <output id="tw-nv"></output></label>
+      <button type="button" id="tw-play">▸ play</button>
+    </div>
+    <div class="readout" id="tw-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.2</span>The moving blip of Example 3.9. Drag \(\omega\) anywhere: the barcode below records \(X_k(\omega)\) for \(k\le n\), and every pass across \([0,1]\) leaves exactly one black bar, so \(X_n(\omega)=1\) infinitely often. Yet the blip’s width, which is \(\PP[X_n\ne0]\), shrinks to 0. Switch to the subsequence \(n=2^j\): only the leftmost blip of each pass remains, and every \(\omega>0\) is eventually left alone.</figcaption>
+</figure>
