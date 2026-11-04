@@ -1,0 +1,13 @@
+{"nodes":[
+["dcr","Discrete cube roots","r5-1",0],
+["euler","Cubing is a bijection","s5-1",1],
+["dcra","DCRA: hard on average","r5-2",1],
+["lp","Cube roots as learning","s5-2",0],
+["free","Examples are free to make","s5-2",1],
+["bits","One output bit is hard","s5-2",1],
+["circ","Poly-size circuits are hard","r5-3",0],
+["sq","Repeated squaring","h5-5-2-1-a-hard-to-learn-concept-class",1],
+["depth","Even log-depth circuits","r5-4",0]],
+"edges":[["euler","dcr","makes well defined"],["dcr","dcra","assumed hard"],["dcra","lp","rephrased"],["lp","free","why it’s hard"],["lp","bits","boolean version"],["bits","circ","computed by"],["sq","circ","with d wired in"],["circ","depth","strengthened"]],
+"ext":[["c1","Proper hardness (RP ≠ NP)","r1-6"],["c3","VC dimension: statistics only","s3-4"]],
+"extedges":[["c1","circ","improper version"],["c3","circ","contrast"]]}

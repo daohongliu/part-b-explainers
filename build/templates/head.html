@@ -713,6 +713,41 @@ details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-w
 .mm-view { position: absolute; left: -3px; right: -3px; top: 0; background: color-mix(in srgb, var(--blue) 12%, transparent); border: 1px solid color-mix(in srgb, var(--blue) 45%, transparent); border-radius: 3px; pointer-events: none; }
 @media (min-width: 1300px) { body.has-toc .minimap { display: block; } body.side-open .minimap, body:has(.notes-drawer:not([hidden])) .minimap { display: none; } }
 
+
+/* chapter map */
+.cmap { position: fixed; z-index: 24; top: calc(var(--topbar-h, 2.6rem) + env(safe-area-inset-top, 0px) + 10px); bottom: 12px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 0 4px 10px 6px; }
+.cmap.floating { right: calc(var(--mmw, 4.75rem) + 4px); width: min(19rem, 40vw); bottom: auto; max-height: calc(100vh - var(--topbar-h, 2.6rem) - 40px); background: var(--paper); border: 1.3px solid var(--ink-soft); border-radius: 3px 14px 4px 12px / 12px 4px 14px 3px; box-shadow: 4px 5px 0 var(--dot); padding: 0 8px 10px; z-index: 50; }
+.cmap-h { position: sticky; top: 0; background: var(--paper); display: flex; justify-content: space-between; align-items: baseline; padding: .45rem 0 .3rem; z-index: 1; }
+.cmap-t { font-family: var(--sc); font-size: .78rem; letter-spacing: .05em; color: var(--ink-soft); }
+body.cmap-docked .cmap-x { display: none; }
+.cmap-btn { position: fixed; z-index: 26; right: 10px; top: calc(var(--topbar-h, 2.6rem) + env(safe-area-inset-top, 0px) + 14px); width: calc(var(--mmw, 4.75rem) - 1.2rem); font-size: .68rem; padding: .15rem 0; background: var(--paper); border: 1px solid var(--rule); color: var(--ink-soft); cursor: pointer; border-radius: 6px; }
+.cmap-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
+body.has-toc .cmap-btn:not([hidden]) ~ .minimap, body:has(.cmap-btn:not([hidden])) .minimap { top: calc(var(--topbar-h, 2.6rem) + env(safe-area-inset-top, 0px) + 44px); }
+.cmap-svg { display: block; overflow: visible; }
+.cmap-sec { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; fill: var(--ink-soft); }
+.cmap-n { cursor: pointer; outline: none; }
+.cmap-n rect { fill: var(--paper); stroke: var(--rule); stroke-width: 1; transition: fill .15s, stroke .15s; }
+.cmap-n text { font-family: var(--serif); font-size: 11px; fill: var(--ink); }
+.cmap-n.hub rect { fill: color-mix(in srgb, var(--blue-wash) 70%, var(--paper)); stroke: color-mix(in srgb, var(--blue) 45%, transparent); }
+.cmap-n.hub text { font-weight: 600; }
+.cmap-n.ext rect { stroke-dasharray: 3 2.5; fill: transparent; }
+.cmap-n.ext text { fill: var(--ink-soft); font-style: italic; }
+.cmap-n text.cmap-ch { font-family: var(--mono); font-style: normal; font-size: 8px; fill: var(--ochre); }
+.cmap-n.cur rect { stroke: var(--blue); stroke-width: 2; }
+.cmap-n:hover rect, .cmap-n:focus-visible rect { stroke: var(--ink); }
+.cmap-tree { fill: none; stroke: var(--rule); stroke-width: 1; }
+.cmap-e { fill: none; stroke: var(--ink-soft); stroke-width: 1; opacity: .35; transition: opacity .15s, stroke .15s; }
+.cmap-e.x { stroke-dasharray: 2 2.5; stroke: var(--ochre); }
+.cmap-ah { fill: none; stroke: var(--ink-soft); stroke-width: 1; opacity: .35; }
+.cmap-ah.x { stroke: var(--ochre); }
+.cmap-el { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: 8.5px; fill: var(--ink); opacity: 0; transition: opacity .15s; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.focus .cmap-e:not(.on), .focus .cmap-ah:not(.on) { opacity: .1; }
+.cmap-e.on, .cmap-ah.on { opacity: 1; stroke-width: 1.6; stroke: var(--blue); }
+.cmap-e.x.on, .cmap-ah.x.on { stroke: var(--ochre); }
+.cmap-el.on { opacity: 1; }
+.focus .cmap-n:not(.near) { opacity: .45; }
+@media (max-width: 1299px) { .cmap, .cmap-btn { display: none; } }
+
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {

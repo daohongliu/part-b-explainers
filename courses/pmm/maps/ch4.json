@@ -1,0 +1,16 @@
+{"nodes":[
+["q","Best guess given partial information","h4-warming-up-conditioning-on-a-partition",0],
+["e41","Conditioning on one event","r4-1",1],
+["e42","Conditioning on a random variable","r4-2",1],
+["def","Definition by the defining relation","r4-3",0],
+["ex","Existence and uniqueness","r4-4",1],
+["rn","Radon–Nikodym","r4-5",1],
+["prop","Rules of the game","h4-properties-of-conditional-expectation",0],
+["tow","Tower property","r4-9",1],
+["tak","Taking out what is known","r4-8",1],
+["cj","Conditional Jensen","r4-10",1],
+["ms","Best mean-square guess","h4-conditional-expectation-is-the-best-mean",0],
+["proj","Orthogonal projection in L²","r4-11",1]],
+"edges":[["e41","def","generalised by"],["e42","def","motivates"],["def","ex","well posed"],["rn","ex","existence"],["def","prop","consequences"],["prop","tow","includes"],["prop","tak","includes"],["prop","cj","includes"],["ms","proj","geometric view"],["proj","ex","second proof"]],
+"ext":[["c0","Branching: 𝔼[Zₙ₊₁ | Zₙ] = mZₙ","s0-5"],["c2","Convergence theorems","s2-2"],["c3","Jensen, Lᵖ completeness","s3-2"],["c2s","σ(X) and 𝒢-measurability","r2-25"],["c5","Filtrations and stopping times","ch5"]],
+"extedges":[["c0","e42","example of"],["c2","prop","conditional MCT, DCT"],["c3","cj","unconditional version"],["c3","proj","completeness"],["c2s","def","measurability"],["tow","c5","drives martingales"]]}

@@ -1,0 +1,14 @@
+{"nodes":[
+["rw","Random walk","s0-3",0],
+["rwp","Best guess = current value","s0-3",1],
+["rwl","How far it wanders: LLN, CLT, LIL","fig0-1",1],
+["fin","Pricing in a binomial market","s0-4",0],
+["fp","Price = discounted 𝔼_Q of payoff","r0-1",1],
+["gw","Galton–Watson process","s0-5",0],
+["gf","Generating function fₙ = f∘…∘f","r0-3",1],
+["ext","Extinction: smallest root of θ = f(θ)","r0-4",1],
+["mn","Mₙ = Zₙ/mⁿ, a fair game","s0-5",1],
+["lim","𝔼[M∞] = 0 ≠ 1 = lim 𝔼[Mₙ]","eq5",1]],
+"edges":[["rw","rwp","shows"],["fin","fp","gives"],["gf","ext","yields"],["gw","mn","rescaled"],["mn","lim","but"],["rwp","fp","same idea"],["fp","mn","same idea"]],
+"ext":[["c4","Conditional expectation","ch4"],["c3","Limits vs expectations","s3-1"],["c5","Stopping times","ch5"]],
+"extedges":[["rwp","c4","made precise in"],["lim","c3","studied in"],["rwl","c3","modes of convergence"],["mn","c5","towards"]]}

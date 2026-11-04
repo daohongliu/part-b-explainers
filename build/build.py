@@ -321,6 +321,8 @@ def gauges(tot):
     return (f' · <span class="meter" data-tip="Overall difficulty, averaged over the sections by reading time: {["gentle", "steady", "demanding"][dd - 1]}.">difficulty <span class="dots dd">{DOTS(dd, "●", "○")}</span></span>'
             f' · <span class="meter" data-tip="Overall importance for the rest of the course: {["background", "useful", "core"][ii - 1]}.">importance <span class="dots di">{DOTS(ii, "★", "☆")}</span></span>')
 
+MAPS = []
+
 def build_course(cid, conf):
     global ROOT, P, CHNUM
     ROOT = REPO / 'courses' / cid; P = conf['prefix']
@@ -369,8 +371,18 @@ def build_course(cid, conf):
         header = (f'<header class="runhead"><span>{conf["code"]} · {cname}</span><span>Chapter&#160;{meta["num"]} · notes pp. {meta.get("pages", "")}</span></header>'
                   f'<header class="ch-head"><p class="eyebrow">Chapter&#160;{meta["num"]}</p><h1>{meta.get("titlehtml", meta["title"])}</h1><p class="dek">{meta.get("dek", "")}</p>'
                   f'<p class="ch-meta" data-tip="Estimated reading time and amount of content for the whole chapter.">{cm}</p></header>')
+        mp = ROOT / 'maps' / (name[len(P):] + '.json')
+        mm = ''
+        if mp.exists():
+            md = json.loads(mp.read_text())
+            fix = lambda t: t if t.startswith(P) else P + t
+            for n in md.get('nodes', []): n[2] = fix(n[2])
+            for n in md.get('ext', []): n[2] = fix(n[2])
+            md['num'] = meta['num']; md['title'] = meta['title']
+            mm = '<script type="application/json" class="mindmap-data">' + json.dumps(md, ensure_ascii=False).replace('</', '<\\/') + '</script>'
+            MAPS.append((name, md))
         views.append(f'<section class="view chapter" id="{name}" data-course="{cid}" data-short="{conf["short"]} {meta["num"]}" data-title="{meta["title"]}" hidden>{header}'
-                     + LLM_NOTE.format(course=cname, where=f'Chapter {meta["num"]} ({meta["title"]})') + f'\n{hb}\n{nav}</section>')
+                     + LLM_NOTE.format(course=cname, where=f'Chapter {meta["num"]} ({meta["title"]})') + f'\n{hb}\n{nav}{mm}</section>')
     for name, meta, hb in sheets:
         header = (f'<header class="runhead"><span>{conf["code"]} · {cname}</span><span>{meta.get("source", "")}</span></header>'
                   f'<header class="ch-head"><p class="eyebrow">Problem sheet</p><h1>Sheet {meta["num"]} <em>{meta.get("title", "")}</em></h1><p class="dek">{meta.get("dek", "")}</p></header>')
@@ -413,6 +425,9 @@ def main():
     print(f'wrote {OUT} ({len(out)//1024} KB)')
     if dup: print('DUPLICATE IDS:', dup[:20])
     if missing: print('MISSING TARGETS:', missing[:30])
+    for name, md in MAPS:
+        bad = [n[2] for n in md.get('nodes', []) + md.get('ext', []) if n[2] not in ids]
+        if bad: print('MAP', name, 'missing targets:', bad)
 
 if __name__ == '__main__':
     main()

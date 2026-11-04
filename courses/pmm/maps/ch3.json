@@ -1,0 +1,17 @@
+{"nodes":[
+["ls","lim sup and lim inf of events","r3-1",0],
+["bc1","Borel–Cantelli 1: summable ⇒ finitely often","r3-3",1],
+["bc2","Borel–Cantelli 2: independent, divergent ⇒ i.o.","r3-4",1],
+["modes","Modes of convergence","r3-7",0],
+["ce","Counterexamples for each arrow","fig3-3",1],
+["t310","In probability ⇒ a.s. along a subsequence","r3-10",1],
+["ineq","Inequalities","h3-inequalities",0],
+["mk","Markov and Chebyshev","r3-11",1],
+["wlln","Weak law of large numbers","r3-14",1],
+["jen","Jensen","r3-16",1],
+["lp","Lᵖ spaces","r3-18",0],
+["hm","Hölder and Minkowski","r3-20",1],
+["comp","Lᵖ is complete","r3-21",1]],
+"edges":[["ls","bc1","event of"],["ls","bc2","event of"],["bc1","t310","proves"],["modes","ce","separated by"],["modes","t310","partial converse"],["mk","wlln","proves"],["mk","modes","Lᵖ ⇒ probability"],["jen","lp","norms increase"],["hm","comp","norm"],["t310","comp","fast subsequence again"]],
+"ext":[["c2i","Independence","h2-independence"],["c2f","Fatou","r2-12"],["c2d","Dominated convergence","r2-14"],["c0","Law of the iterated logarithm","s0-3"],["c4","Conditional Jensen","r4-10"],["c4p","L² projection","s4-1"]],
+"extedges":[["c2i","bc2","assumption"],["c2f","ls","sets version"],["c2d","modes","a.s. ⇒ L¹ if dominated"],["c0","bc2","explained by"],["jen","c4","conditional version"],["comp","c4p","needed for"]]}

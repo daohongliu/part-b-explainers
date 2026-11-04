@@ -1,0 +1,15 @@
+{"nodes":[
+["dich","Dichotomies","s3-1",0],
+["sh","Shattering","r3-1",1],
+["vcd","VC dimension","r3-2",0],
+["exs","Intervals 2, rectangles 4, halfplanes 3","h3-3-1-1-examples",1],
+["gf","Growth function","r3-3",0],
+["ss","Sauer–Shelah: ≤ (em/d)ᵈ","r3-4",1],
+["phi","Φ(m, d) and Pascal","r3-6",1],
+["ub","Upper bound: d/ε log 1/ε","r3-8",0],
+["sym","ε-nets and symmetrisation","s3-3",1],
+["lb","Lower bound: d/ε","r3-9",0],
+["ltf","Halfspaces by linear programming","s3-5",0]],
+"edges":[["dich","sh","all of them"],["sh","vcd","largest"],["vcd","exs","examples"],["vcd","gf","controls"],["phi","ss","proves"],["gf","ss","bounded by"],["ss","sym","union bound in"],["sym","ub","proves"],["vcd","lb","necessary"],["ub","lb","match"],["ub","ltf","applied"]],
+"ext":[["c2","Occam: log |H|","r2-2"],["c1","Rectangles","s1-1"],["c4","Weighted votes","r4-3"],["c5","Statistics ≠ computation","ch5"]],
+"extedges":[["c2","ub","generalised"],["c1","exs","VC dim 4"],["ss","c4","bounds VC of"],["lb","c5","no help with time"]]}

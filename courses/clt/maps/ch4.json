@@ -1,0 +1,12 @@
+{"nodes":[
+["relax","Relaxing the definition","s4-1",0],
+["wl","γ-weak learning","r4-1",1],
+["ab","AdaBoost","alg4-1",0],
+["rew","Reweight the mistakes","s4-2",1],
+["alpha","αₜ minimises Zₜ₊₁","s4-2",1],
+["t42","Training error ≤ ∏ Z ≤ e^{−2Tγ²}","r4-2",0],
+["gen","Generalisation","h4-4-2-1-bounding-the-generalisation-error",0],
+["l43","VC of weighted votes","r4-3",1]],
+"edges":[["relax","wl","accuracy"],["wl","ab","booster for"],["ab","rew","idea"],["rew","alpha","weights"],["alpha","t42","greedy for"],["t42","gen","then"],["l43","gen","with"]],
+"ext":[["c1","PAC learning","r1-8"],["c3s","Sauer–Shelah","r3-4"],["c3u","VC upper bound","r3-8"]],
+"extedges":[["c1","relax","relaxes"],["c3s","l43","used in"],["c3u","gen","converts"]]}

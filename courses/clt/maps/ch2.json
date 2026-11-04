@@ -1,0 +1,13 @@
+{"nodes":[
+["oc","Occam’s razor","s2-1",0],
+["mem","Memorising is not learning","s2-1",1],
+["cl","Consistent learners","r2-1",0],
+["t22","Small H ⇒ consistent learner PAC learns","r2-2",0],
+["r23","H may grow slowly with m","r2-3",1],
+["fig","Version space shrinks","fig2-1",1],
+["imp","Improved sample sizes","s2-3",0],
+["cj","Conjunctions: n log 3 / ε","h2-learning-conjunctions",1],
+["tr","3-term DNF vs 3-CNF: time vs data","h2-learning-3-term-dnf",1]],
+"edges":[["mem","oc","motivates"],["oc","cl","formalised"],["cl","t22","plus small H"],["t22","r23","generalised"],["t22","fig","pictured"],["t22","imp","applied"],["imp","cj","example"],["imp","tr","example"]],
+"ext":[["c1a","Algorithm 1.1","alg1-1"],["c1h","Hardness of 3-term DNF","r1-6"],["c3","VC dimension replaces log |H|","r3-8"],["c3l","Lower bound for 3-CNF","s3-4"]],
+"extedges":[["c1a","cj","was consistent"],["c1h","tr","why the trade-off"],["t22","c3","infinite classes"],["tr","c3l","made rigorous"]]}

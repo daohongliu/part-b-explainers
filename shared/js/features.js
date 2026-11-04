@@ -615,3 +615,113 @@ window.addEventListener('resize', () => scheduleMinimap(200));
 if (window.ResizeObserver) new ResizeObserver(() => scheduleMinimap(250)).observe(document.querySelector('.page') || document.body);
 const _showViewMM = showView;
 showView = function (id) { const r = _showViewMM(id); MM = null; scheduleMinimap(60); r.then(() => scheduleMinimap(300)); return r; };
+
+/* ---------- chapter map: the main ideas and how they connect, between the text and the minimap ---------- */
+const cmap = h('aside', 'cmap'); cmap.setAttribute('aria-label', 'Map of this chapter'); cmap.hidden = true;
+const cmapHead = h('div', 'cmap-h'); cmapHead.appendChild(h('span', 'cmap-t', 'map of the chapter'));
+const cmapX = h('button', 'side-x cmap-x', '×'); cmapX.type = 'button'; cmapX.title = 'Close'; cmapHead.appendChild(cmapX);
+const cmapBody = h('div', 'cmap-b'); cmap.appendChild(cmapHead); cmap.appendChild(cmapBody);
+const cmapBtn = h('button', 'cmap-btn', 'map'); cmapBtn.type = 'button'; cmapBtn.title = 'Map of the chapter'; cmapBtn.hidden = true;
+document.body.appendChild(cmap); document.body.appendChild(cmapBtn);
+let CM = null, cmOpen = false;
+function chNum(id) { const m = /(?:^|-)(?:r|s|h|fig|alg|ch|eq)(\d+)/.exec(id.replace(/^clt-/, '')); return m ? +m[1] : null; }
+function wrapText(t, w, px) { const words = t.split(' '), lines = []; let cur = ''; const cw = px * .5; words.forEach(x => { const nx = cur ? cur + ' ' + x : x; if (nx.length * cw > w && cur) { lines.push(cur); cur = x; } else cur = nx; }); if (cur) lines.push(cur); return lines; }
+function placeCmap() {
+  const v = currentView && document.getElementById(currentView);
+  const data = v && v.querySelector('script.mindmap-data');
+  const wide = window.innerWidth >= 1300 && document.body.classList.contains('has-toc');
+  if (!data || !wide) { cmap.hidden = true; cmapBtn.hidden = true; return; }
+  const page = $('.page').getBoundingClientRect(), mmr = mm.getBoundingClientRect();
+  const free = (mmr.left || window.innerWidth) - page.right - 18;
+  const docked = free >= 175;
+  document.body.classList.toggle('cmap-docked', docked);
+  cmapBtn.hidden = docked;
+  cmap.hidden = !(docked || cmOpen);
+  cmap.classList.toggle('floating', !docked);
+  if (docked) { cmap.style.left = (page.right + 8) + 'px'; cmap.style.width = Math.min(300, free) + 'px'; }
+  else { cmap.style.left = ''; cmap.style.width = ''; }
+}
+function buildCmap() {
+  CM = null; cmapBody.innerHTML = '';
+  const v = currentView && document.getElementById(currentView);
+  const data = v && v.querySelector('script.mindmap-data');
+  placeCmap();
+  if (!data || cmap.hidden) return;
+  const d = JSON.parse(data.textContent), here = +d.num;
+  const W = Math.max(150, cmap.clientWidth - 14), FS = 11, LH = 13.5, PADX = 7, ARC = W < 230 ? 20 : 32;
+  const boxW = lvl => W - ARC - 8 - lvl * 12;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('width', W); svg.setAttribute('class', 'cmap-svg');
+  const gE = document.createElementNS(NS, 'g'), gN = document.createElementNS(NS, 'g'), gL = document.createElementNS(NS, 'g');
+  svg.appendChild(gE); svg.appendChild(gN); svg.appendChild(gL);
+  const mk = (tag, at, par) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); (par || gN).appendChild(e); return e; };
+  const nodes = {}; let y = 4;
+  const ext = (d.ext || []).map(e => ({ id: e[0], label: e[1], to: e[2], ch: chNum(e[2]), ext: true }));
+  const before = ext.filter(e => e.ch != null && e.ch < here), after = ext.filter(e => !(e.ch != null && e.ch < here));
+  const section = (label) => { const t = mk('text', { x: 2, y: y + 9, class: 'cmap-sec' }); t.textContent = label; y += 16; };
+  const drawNode = (n, lvl, cls) => {
+    const w = boxW(lvl), x = 2 + lvl * 12;
+    const lines = wrapText(n.label, w - 2 * PADX, FS);
+    const hh = lines.length * LH + 8;
+    const g = mk('g', { class: 'cmap-n ' + cls, tabindex: 0, role: 'link' });
+    mk('rect', { x, y, width: w, height: hh, rx: 5 }, g);
+    lines.forEach((l, i) => { const t = mk('text', { x: x + PADX, y: y + 4 + LH * (i + .78) }, g); t.textContent = l; });
+    if (n.ext) { const t = mk('text', { x: x + w - 4, y: y + 10, class: 'cmap-ch', 'text-anchor': 'end' }, g); t.textContent = 'Ch ' + n.ch; }
+    n.x = x; n.y = y; n.w = w; n.h = hh; n.cy = y + hh / 2; n.g = g; n.lvl = lvl;
+    g.addEventListener('click', () => { const t = document.getElementById(n.to); if (t) jump(n.to, null); });
+    g.addEventListener('keydown', e => { if (e.key === 'Enter') g.dispatchEvent(new Event('click')); });
+    g.addEventListener('mouseenter', () => focusNode(n.id)); g.addEventListener('mouseleave', () => focusNode(null));
+    g.addEventListener('focus', () => focusNode(n.id)); g.addEventListener('blur', () => focusNode(null));
+    const tt = mk('title', {}, g); tt.textContent = n.label + (n.ext ? ' (Chapter ' + n.ch + ')' : '') + ' · click to go there';
+    nodes[n.id] = n; y += hh + 5;
+  };
+  if (before.length) { section('builds on'); before.forEach(n => drawNode(n, 0, 'ext')); y += 6; }
+  section('this chapter');
+  let lastTop = null;
+  d.nodes.forEach(r => {
+    const n = { id: r[0], label: r[1], to: r[2], lvl: r[3] };
+    drawNode(n, n.lvl, n.lvl ? 'leaf' : 'hub');
+    if (n.lvl && lastTop) { const p = nodes[lastTop]; mk('path', { d: `M${p.x + 6} ${p.y + p.h}V${n.cy}H${n.x}`, class: 'cmap-tree' }, gE); }
+    if (!n.lvl) lastTop = n.id;
+  });
+  if (after.length) { y += 6; section('leads to'); after.forEach(n => drawNode(n, 0, 'ext')); }
+  svg.setAttribute('height', y + 4);
+  /* relations: arcs on the right-hand side */
+  const edges = (d.edges || []).concat(d.extedges || []).map(e => ({ a: nodes[e[0]], b: nodes[e[1]], label: e[2] })).filter(e => e.a && e.b);
+  edges.forEach(e => {
+    const x1 = e.a.x + e.a.w, x2 = e.b.x + e.b.w, y1 = e.a.cy, y2 = e.b.cy, bulge = Math.min(ARC + 4, 10 + Math.abs(y2 - y1) * .12);
+    const xm = Math.max(x1, x2) + bulge;
+    e.p = mk('path', { d: `M${x1} ${y1}C${xm} ${y1} ${xm} ${y2} ${x2} ${y2}`, class: 'cmap-e' + (e.a.ext || e.b.ext ? ' x' : '') }, gE);
+    const dir = y2 > y1 ? 1 : -1;
+    e.h = mk('path', { d: `M${x2 + 5} ${y2 - 3}L${x2} ${y2}L${x2 + 5} ${y2 + 3}`, class: 'cmap-ah' + (e.a.ext || e.b.ext ? ' x' : '') }, gE);
+    e.t = mk('text', { x: xm - 2, y: (y1 + y2) / 2 + 3, class: 'cmap-el', 'text-anchor': 'end' }, gL); e.t.textContent = e.label;
+    e.bg = null;
+  });
+  cmapBody.appendChild(svg);
+  CM = { nodes, edges, order: d.nodes.map(r => r[0]) };
+  updateCmap();
+}
+function focusNode(id) {
+  if (!CM) return;
+  svgClass(cmapBody.firstChild, 'focus', !!id);
+  const near = new Set(id ? [id] : []);
+  CM.edges.forEach(e => { const on = id && (e.a.id === id || e.b.id === id); e.p.classList.toggle('on', !!on); e.h.classList.toggle('on', !!on); e.t.classList.toggle('on', !!on); if (on) { near.add(e.a.id); near.add(e.b.id); } });
+  Object.values(CM.nodes).forEach(n => n.g.classList.toggle('near', near.has(n.id)));
+}
+function svgClass(el, c, on) { if (el && el.classList) el.classList.toggle(c, on); }
+function updateCmap() {
+  if (!CM) return;
+  let cur = null;
+  CM.order.forEach(id => { const n = CM.nodes[id], t = document.getElementById(n.to); if (t && t.getBoundingClientRect().top < window.innerHeight * .35) cur = id; });
+  Object.values(CM.nodes).forEach(n => n.g.classList.toggle('cur', n.id === cur));
+  if (cur && cmap.scrollHeight > cmap.clientHeight + 4) {
+    const n = CM.nodes[cur], top = cmapBody.offsetTop + n.y;
+    if (top < cmap.scrollTop + 30 || top > cmap.scrollTop + cmap.clientHeight - 60) cmap.scrollTop = top - cmap.clientHeight / 3;
+  }
+}
+cmapBtn.addEventListener('click', () => { cmOpen = !cmOpen; buildCmap(); });
+cmapX.addEventListener('click', () => { cmOpen = false; placeCmap(); });
+window.addEventListener('scroll', () => requestAnimationFrame(updateCmap), { passive: true });
+let cmT = 0; window.addEventListener('resize', () => { clearTimeout(cmT); cmT = setTimeout(buildCmap, 220); });
+const _showViewCM = showView;
+showView = function (id) { const r = _showViewCM(id); cmOpen = false; setTimeout(buildCmap, 80); r.then(() => setTimeout(buildCmap, 400)); return r; };

@@ -1,0 +1,16 @@
+{"nodes":[
+["rg","Rectangle game","s1-1",0],
+["tf","Tightest fit","s1-1",1],
+["strips","Four strips + union bound","h1-measuring-error-with-a-distribution",1],
+["fw","The framework","s1-2",0],
+["d11","PAC, take I","r1-1",1],
+["d13","PAC, take II: sizes","r1-3",1],
+["conj","Learning conjunctions","r1-4",0],
+["kcnf","k-CNF by reduction","r1-5",1],
+["hard","3-term DNF: proper learning is hard","r1-6",0],
+["col","Reduction from 3-colouring","h1-graph-3-colouring-reduces-to-learning-3-",1],
+["esc","Escape via 3-CNF","s1-5",1],
+["pac","PAC learning (final)","r1-8",0]],
+"edges":[["rg","tf","algorithm"],["tf","strips","analysed by"],["strips","d11","becomes"],["d11","d13","refined"],["d13","conj","applied to"],["conj","kcnf","extends by reduction"],["d13","hard","fails for"],["col","hard","proves"],["kcnf","esc","3-CNF ⊇ 3-term DNF"],["hard","esc","contrast"],["esc","pac","motivates"]],
+"ext":[["c2","Occam’s razor","s2-2"],["c3","VC dimension","s3-1"],["c4","Weak learning","s4-1"],["c5","Hardness even improperly","ch5"]],
+"extedges":[["conj","c2","consistent learner"],["rg","c3","VC dim 4"],["pac","c4","relaxed in"],["hard","c5","stronger version"]]}
