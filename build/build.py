@@ -175,12 +175,13 @@ def sidenotes(s):
         return f'<label for="sn{i}" class="sn-ref"></label><input type="checkbox" id="sn{i}" class="sn-toggle"><span class="sidenote">{m.group(1)}</span>'
     return re.sub(r'<sn>(.*?)</sn>', r, s, flags=re.S)
 
-KIND = r'(?:Theorem|Lemma|Definition|Corollary|Proposition|Example|Remark|Claim|Figure|Section)s?'
+KIND = r'(?:Theorem|Lemma|Definition|Corollary|Proposition|Example|Remark|Claim|Figure|Section|Algorithm)s?'
 XREF = re.compile(r'\b(' + KIND + r')(\s|&nbsp;)(\d+\.\d+)((?:(?:,\s*|\s+and\s+|\s+or\s+|–)\d+\.\d+)*)')
 def target_id(kind, num):
     a, b = num.split('.')
     if kind.startswith('Figure'): return f'{P}fig{a}-{b}'
     if kind.startswith('Section'): return f'{P}s{a}-{b}'
+    if kind.startswith('Algorithm'): return f'{P}alg{a}-{b}'
     return f'{P}r{a}-{b}'
 
 def autolink(s):
@@ -209,7 +210,7 @@ def autolink(s):
         out.append(t)
     return ''.join(out)
 
-GEN_ID = re.compile(r'^(ch\d|r\d|s\d|eq\d|fig\d|bg-|h\d+-|sheet\d)')
+GEN_ID = re.compile(r'^(ch\d|r\d|s\d|eq\d|fig\d|bg-|h\d+-|sheet\d|alg\d|ex-)')
 def prefix_ids(html_, p):
     if not p: return html_
     f = lambda pre: (lambda m: m.group(1) + (m.group(2) if m.group(2).startswith(p) or not GEN_ID.match(m.group(2)) else p + m.group(2)) + '"')

@@ -1,0 +1,13 @@
+{
+ "prefix": "clt-",
+ "code": "CS · MT26",
+ "short": "CLT",
+ "title": "Computational Learning Theory",
+ "titlehtml": "Computational <em>Learning</em> Theory",
+ "eyebrow": "Michaelmas Term 2026",
+ "after": "after Varun Kanade’s lecture notes",
+ "dek": "What it means for a machine to learn from examples, how much data that takes, and when it is computationally out of reach. Written for someone who has seen probability and complexity classes, and nothing else.",
+ "blurb": "PAC learning, Occam’s razor, VC dimension, boosting, and why some classes are cryptographically hard to learn.",
+ "motif": "points",
+ "colophon": "<p>Based on Varun Kanade’s lecture notes for <em>Computational Learning Theory</em> (Michaelmas Term 2026), which draw on Kearns and Vazirani’s <em>An Introduction to Computational Learning Theory</em>. Numbering follows the notes. Chapters 1 to 5 are here; exact learning, noise, real-valued learning and online learning are not written yet. The background boxes, figures and exercises are additions; errors in them are new.</p>"
+}

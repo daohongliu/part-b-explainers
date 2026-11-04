@@ -15,7 +15,8 @@ window.MathJax = {
       Pow: '{\\mathcal P}', T: '{\\mathcal T}', D: '{\\mathcal D}', M: '{\\mathcal M}', C: '{\\mathcal C}',
       R: '{\\mathbb R}', N: '{\\mathbb N}', Q: '{\\mathbb Q}', Z: '{\\mathbb Z}', E: '{\\mathbb E}', PP: '{\\mathbb P}',
       eps: '\\varepsilon', Rbar: '{\\overline{\\mathbb R}}', ind: '{\\mathbf 1}', as: '\\text{ a.s.}',
-      Lp: ['{\\mathcal L}^{#1}', 1], dto: '\\xrightarrow{d}', pto: '\\xrightarrow{\\PP}'
+      Lp: ['{\\mathcal L}^{#1}', 1], dto: '\\xrightarrow{d}', pto: '\\xrightarrow{\\PP}',
+      X: '{\\mathcal X}', err: '\\operatorname{err}', EX: '\\mathrm{EX}', VCD: '\\operatorname{VCD}', size: '\\operatorname{size}', poly: '\\operatorname{poly}', sgn: '\\operatorname{sgn}', bit: ['\\overline{#1}', 1]
     }
   },
   svg: { fontCache: 'global' },
@@ -558,6 +559,40 @@ mark.unote { background: linear-gradient(transparent 0 58%, var(--ochre-wash) 58
   background: var(--ink); color: var(--paper); padding: .45rem .9rem; border-radius: 4px; font-size: .9rem; max-width: calc(100vw - 32px); }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 640px) { .tool-btn { padding: .15rem .45rem; } }
+
+
+/* algorithms */
+.algo { margin: 1.6rem 0; padding: .7rem 1rem .6rem; border: 1.2px solid var(--ink-soft); border-radius: 3px 12px 4px 10px / 10px 4px 12px 3px; background: var(--paper-2); font-size: 1.02rem; }
+.algo-h { font-family: var(--sc); letter-spacing: .04em; margin-bottom: .35rem; }
+.algo-k { font-weight: 700; margin-right: .4rem; }
+.algo-l { list-style: none; counter-reset: al; padding: 0 !important; margin: 0; }
+.algo-l li { counter-increment: al; position: relative; padding-left: 2rem; line-height: 1.55; }
+.algo-l li::before { content: counter(al); position: absolute; left: 0; width: 1.3rem; text-align: right; font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: .7rem; color: var(--ink-soft); top: .3em; }
+.algo-l li.in1 { padding-left: 3.4rem; } .algo-l li.in2 { padding-left: 4.8rem; } .algo-l li.in3 { padding-left: 6.2rem; }
+.algo-c { font-style: italic; color: var(--ink-soft); font-size: .9em; margin-left: .5rem; }
+.algo-c::before { content: "▹ "; font-style: normal; }
+@media (max-width: 640px) { .algo-l li.in1 { padding-left: 2.8rem; } .algo-l li.in2 { padding-left: 3.6rem; } .algo-l li.in3 { padding-left: 4.4rem; } }
+.ov { text-decoration: overline; text-decoration-thickness: 1px; }
+/* CLT figure parts */
+.cj-target, .cj-lits { font-size: 1.05rem; margin-bottom: .55rem; display: flex; flex-wrap: wrap; gap: .3rem .35rem; align-items: baseline; }
+.cj-lab { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: .72rem; color: var(--ink-soft); margin-right: .4rem; }
+.cj-l { display: inline-block; min-width: 2.2rem; text-align: center; padding: .05rem .3rem; border: 1px solid var(--rule); border-radius: 8px 3px 8px 3px; transition: opacity .3s, color .3s; font-style: italic; }
+.cj-l.tg { border-color: var(--blue); }
+.cj-l.off { opacity: .35; text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 1.5px; }
+.cj-log { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" .6; font-size: .78rem; min-height: 7.5rem; }
+.cj-row { display: grid; grid-template-columns: 5.6rem 1.2rem minmax(0, 1fr); gap: .5rem; padding: .08rem 0; }
+.cj-row.neg { opacity: .45; }
+.cj-x { letter-spacing: .12em; } .cj-y { color: var(--blue); } .cj-row.neg .cj-y { color: var(--ochre); }
+.cj-k { font-family: var(--serif); font-size: .92rem; }
+.col-grid { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1rem 1.4rem; align-items: start; }
+.col-grid > svg { width: 100%; height: auto; display: block; }
+.col-v { cursor: pointer; } .col-v:focus { outline: none; } .col-v:focus-visible circle { opacity: .45; }
+.col-tables { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; font-size: .86rem; }
+.col-terms { flex-basis: 100%; font-size: .95rem; line-height: 1.5; }
+.col-t { border-collapse: collapse; } .col-t th { font-family: var(--sc); font-weight: 500; font-size: .8rem; text-align: left; color: var(--ink-soft); padding-bottom: .2rem; }
+.col-t td { padding: .05rem .5rem .05rem 0; } .col-t td.mono { letter-spacing: .1em; font-size: .8rem; }
+.col-t .ok { color: var(--green); } .col-t .bad { color: var(--red); }
+@media (max-width: 640px) { .col-grid { grid-template-columns: minmax(0, 1fr); } .col-grid > svg { max-width: 15rem; margin: 0 auto; } }
 
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */

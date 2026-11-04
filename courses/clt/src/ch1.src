@@ -1,0 +1,247 @@
+@num 1
+@title Probably approximately correct learning
+@titlehtml Probably <em>approximately</em> correct
+@pages 1–19
+@dek A learner sees labelled examples and must guess the rule behind them. This chapter turns that into mathematics: what counts as success, what it may cost, and a first example of a rule that is easy to state but hard to learn.
+---
+This course asks what it means for a computer to learn from examples, and when learning is possible. The answers have to be robust. If a small change to the definitions turned a learnable problem into an unlearnable one, the definitions would be telling us about themselves rather than about learning. So we build the framework slowly, one choice at a time, and come back later to check that the choices didn't matter much.
+
+## 1.1 A Rectangle Learning Game {1} [d1 i3]
+
+Here is a game. Some points in the plane are labelled positive ($+$) or negative ($-$). We are promised that there is an axis-aligned rectangle (one whose sides are horizontal and vertical) such that the points inside it are exactly the positive ones. The rectangle itself is hidden. Our task is to produce a rectangle that is "close" to the hidden one.
+
+Why would anyone care? The notes suggest bananas. Measure each banana's curvature and length. A banana passes the regulations if both numbers are "medium", which means they lie between some lower and upper limits. The regulator knows the limits; we don't. We only see which of our bananas passed. From that we want a rule good enough to predict whether the next banana will pass.
+
+Write $R$ for the hidden rectangle and $c_R:\R^2\to\{+,-\}$ for its labelling rule: $c_R(x)=+$ if $x$ lies in $R$ and $c_R(x)=-$ otherwise.[[A function whose range has at most two values is called <em>boolean</em>. Which two values doesn't matter, so the notes switch freely between $\{+,-\}$, $\{0,1\}$ and $\{-1,+1\}$.]]
+
+The obvious strategy is to draw the smallest axis-aligned rectangle containing every positive point. Call it $R'$ and predict $+$ inside it, $-$ outside. This is the **tightest fit** algorithm.
+
+@@clt-fig1-1@@
+
+Since every positive point lies in $R$, and $R'$ is the smallest rectangle containing them, $R'$ sits inside $R$. So the tightest fit never calls a negative point positive. Its only mistakes are on the strip of $R$ that $R'$ doesn't reach. If the points we are asked about later tend to fall in that strip, we will do badly. That observation forces a choice: the data we learn from should look like the data we are tested on.
+
+### Measuring error with a distribution
+
+Let $\D$ be a probability distribution on $\R^2$. For now assume $\D$ has a continuous density that is positive everywhere; Exercise 1.1 in the notes, and Sheet 1, remove this assumption. The training data are $m$ points drawn independently from $\D$, each labelled by $c_R$. The **error** of a hypothesis $h$ is the chance that it disagrees with the truth on a fresh point from the same distribution:
+
+$$#eq1-1 \err(h;c_R,\D)=\PP_{x\sim\D}\big[h(x)\neq c_R(x)\big]. \tag{1.1}$$
+
+When $c_R$ and $\D$ are clear we just write $\err(h)$.
+
+<bg id="bg-ml-split" t="Training and test data" lead="For machine learners">
+In applied machine learning the data are split into a training set, used to fit the model, and a test set, used to estimate its error. Done properly, the error on the test set is an unbiased estimate of $\err(h)$ in (1.1). People also hold out a validation set to choose between several trained models. In this course choosing between models counts as part of the learning algorithm, so no separate validation set appears.
+</bg>
+
+We now show that the tightest fit is good: for any target accuracy $\eps>0$ and confidence $1-\delta$, enough data makes $\err(h_{R'})\le\eps$ with probability at least $1-\delta$.
+
+The trick is to look at four strips $T_1,T_2,T_3,T_4$ running along the inside of the four sides of $R$, each chosen so that a point drawn from $\D$ lands in it with probability exactly $\eps/4$. (The continuous density guarantees that strips of exactly this mass exist.) The strips may overlap at the corners, which only helps.
+
+Suppose the sample contains at least one point in each strip. Those points are positive, so $R'$ must reach into every strip, and everything $R'$ misses lies in $T_1\cup T_2\cup T_3\cup T_4$. That union has probability at most $\eps/4+\eps/4+\eps/4+\eps/4=\eps$, so $\err(h_{R'})\le\eps$. Tick *show strips* in Figure 1.1 to watch this happen. When a strip is empty, the missed region can reach well beyond it, and its mass is no longer controlled.
+
+<bg id="bg-union" t="The union bound" lead="Background">
+For any events $A_1,\dots,A_k$, $$\PP[A_1\cup\dots\cup A_k]\le\PP[A_1]+\dots+\PP[A_k].$$ The right side counts outcomes in several $A_i$ more than once, so it can only be too big. The bound needs no independence at all, which is why it appears in almost every proof in this course: when you want to show that *none* of several bad things happens, bound each one separately and add.
+</bg>
+
+<bg id="bg-exp" t="The inequality $1-x\le e^{-x}$" lead="Background">
+The curve $y=e^{-x}$ is convex and its tangent line at $x=0$ is $y=1-x$. A convex function lies above its tangent lines, so $1-x\le e^{-x}$ for every real $x$. Raising both sides to the power $m$ (both are non-negative when $0\le x\le1$) gives $(1-x)^m\le e^{-mx}$. This turns "$m$ independent misses" into an exponential that is easy to solve for $m$.
+</bg>
+
+So the only way to fail is to miss a strip entirely. Let $A_i$ be the event that none of the $m$ sample points lands in $T_i$. One point misses $T_1$ with probability $1-\eps/4$, and the points are independent, so $\PP[A_1]=(1-\eps/4)^m$, and the same holds for each $A_i$. By the union bound,
+
+$$#eq1-2 \PP[A_1\cup A_2\cup A_3\cup A_4]\le4\Big(1-\frac\eps4\Big)^m\le4\exp\Big(-\frac{m\eps}4\Big). \tag{1.2}$$
+
+The right side is at most $\delta$ as soon as
+
+$$#eq1-3 m\ge\frac4\eps\log\frac4\delta. \tag{1.3}$$
+
+With that many examples, the tightest fit has error at most $\eps$ with probability at least $1-\delta$. (Here and throughout, $\log$ is the natural logarithm.)
+
+Read $\eps$ as an **accuracy** parameter and $\delta$ as a **confidence** parameter. The bound (1.3) asks for more data as either gets smaller, which is reasonable, and the price is modest. Halving the error, from $\eps=0.02$ to $\eps=0.01$ say, only doubles the data the bound asks for, and the dependence on $\delta$ is logarithmic.[[So far this is only an upper bound for one algorithm. Chapter 3 proves lower bounds that hold for every algorithm, and shows the $1/\eps$ scaling can't be beaten.]]
+
+<pause n="One percent, ninety-nine times out of a hundred" q="How many examples does (1.3) ask for if we want error at most $1\%$ with probability at least $99\%$?">
+Take $\eps=\delta=0.01$. Then $\frac4\eps=400$ and $\log\frac4\delta=\log400\approx5.99$, so $m\ge400\times5.99\approx2397$ examples suffice. Notice that $\delta$ enters only through the logarithm: asking for $99.99\%$ confidence instead would raise $\log(4/\delta)$ to about $10.6$, less than doubling the sample.
+</pause>
+
+One corner case: what if we see no positive points at all, or only one? Allow degenerate rectangles (the empty set, single points, and segments parallel to an axis). Then the tightest fit is always defined, and the argument above goes through unchanged. If after $m\ge\frac4\eps\log\frac4\delta$ draws we have still seen no positive point, predicting "negative" everywhere has error at most $\eps$ with probability at least $1-\delta$. Later corner cases of this kind will be left to you.
+
+## 1.2 Key Components of the PAC Learning Framework {4} [d2 i3]
+
+The rectangle game already contains the main features of a mathematical theory of learning.
+
+<ol class="summary-list"><li>The learner does not know the target, otherwise there would be nothing to learn. It does know the set of possible targets: in the game, the target is always an axis-aligned rectangle.</li><li>The learner sees data drawn independently from a distribution $\D$, and we assume *nothing* about $\D$. Real environments are complicated, and pretending the data come from some tidy distribution would be unrealistic.</li><li>The learner's output is judged on the same distribution $\D$ that produced the training data.</li><li>Learning should be efficient in two senses. It should be *statistically* efficient, needing few examples, and *computationally* efficient, running in reasonable time. Usually "efficient" will mean polynomial in the relevant size parameters.</li></ol>
+
+Here is the vocabulary that makes these precise.
+
+The **instance space** $\X$ is the set of possible inputs. In the game it was $\R^2$. For image classification it might be arrays of pixel colours. In this course $\X$ will almost always be $\{0,1\}^n$ or $\R^n$.
+
+A **concept** over $\X$ is a boolean function $c:\X\to\{0,1\}$, and a **concept class** $\C$ is a set of concepts. In the game, $\C$ is the set of indicator functions of axis-aligned rectangles. The learner knows $\C$ but not which $c\in\C$ is labelling the data. A class that is too small may not describe the real process; one that is too large, such as all boolean functions, leaves no hope of efficient learning.
+
+**Data** come from an **example oracle** $\EX(c,\D)$. Each call draws $x\sim\D$ independently and returns the labelled example $(x,c(x))$. Each call costs one unit of time.
+
+### 1.2.1 PAC learning: take I
+
+The function a learner outputs is called a **hypothesis**, to tell it apart from the target. Its error is defined just as in (1.1):
+
+$$#eq1-4 \err(h;c,\D)=\PP_{x\sim\D}\big[h(x)\neq c(x)\big]. \tag{1.4}$$
+
+<thm k="Definition 1.1" nm="PAC learning, take I" pg="6">
+Let $\C$ be a concept class over $\X$. We say $\C$ is **PAC learnable (take I)** if there is a learning algorithm $L$ with the following property. For every concept $c\in\C$, every distribution $\D$ over $\X$, and every $0<\eps<\frac12$ and $0<\delta<\frac12$, if $L$ has access to $\EX(c,\D)$ and is given $\eps$ and $\delta$, then with probability at least $1-\delta$ it outputs a hypothesis $h\in\C$ with $\err(h)\le\eps$. The probability is over the random examples and any internal randomness of $L$. The number of calls to $\EX(c,\D)$, the **sample complexity**, must be bounded by a polynomial in $1/\eps$ and $1/\delta$.
+
+If moreover the running time of $L$ is polynomial in $1/\eps$ and $1/\delta$, then $\C$ is **efficiently PAC learnable (take I)**.
+</thm>
+
+PAC stands for *probably approximately correct*. "Approximately correct" because we only ask for error at most $\eps$: two concepts may differ on a single point that $\D$ almost never produces, and no finite sample can tell them apart. "Probably" because the sample might be unrepresentative, a rare but real possibility, and then the algorithm is allowed to fail.
+
+<thm k="Theorem 1.2" pg="6" it>
+The concept class of axis-aligned rectangles in $\R^2$ is efficiently PAC learnable (take I).
+</thm>
+
+The proof is the analysis of Section 1.1: the tightest fit runs in time linear in $m$, and (1.3) gives $m$ polynomial in $1/\eps$ and $\log(1/\delta)$.
+
+### 1.2.2 PAC learning: take II
+
+Take I ignores how complicated the targets are. Learning a rectangle should be easier than learning a blobby region with a long wiggly boundary, and a fair definition should give the harder class more resources. A rectangle is described by four numbers; a complicated shape needs many more.
+
+@@clt-fig1-2@@
+
+The point is clearest for boolean functions on the **hypercube** $\{0,1\}^n$, the set of bit strings of length $n$. One function can be written down in many ways: as its truth table with $2^n$ entries, as a circuit of $\wedge$ (and), $\vee$ (or) and $\neg$ (not) gates, or in **disjunctive normal form** (DNF), an "or" of "and"s of literals, like $$(z_1\wedge\bit{z_3}\wedge z_7)\vee(z_2\wedge z_4\wedge\bit{z_8})\vee(z_1\wedge z_3).$$ Here $\bit{z_3}$ means "not $z_3$". The choice can change the length of the description enormously: the parity function $z_1\oplus\dots\oplus z_n$ has a circuit of size $O(n)$ but needs at least $2^{n-1}$ terms in DNF (Exercise 1.2 in the notes).
+
+A **representation scheme** for $\C$ is an onto map $R:\Sigma^*\to\C$, where $\Sigma$ is a finite alphabet and $\Sigma^*$ is the set of finite strings over it. Any string $\sigma$ with $R(\sigma)=c$ is a representation of $c$. A size function on strings then gives each concept a size, $$\size(c)=\min\{\size(\sigma):R(\sigma)=c\},$$ the length of its shortest description.[[For classes like rectangles that need real numbers, allow strings over $\Sigma\cup\R$, and count each real number as one unit of storage and each arithmetic operation on reals as one unit of time.]]
+
+**Instances** have sizes too. A $10\times10$ black-and-white image is 100 bits; a $1024\times1024$ colour image is over three million numbers. Bigger instances should be allowed more time, if only to read them. So we let $\X_n$ be $\{0,1\}^n$ or $\R^n$, let $\C_n$ be a concept class over $\X_n$, and consider all sizes at once: $\X=\bigcup_{n\ge1}\X_n$ and $\C=\bigcup_{n\ge1}\C_n$.
+
+<thm k="Definition 1.3" nm="PAC learning, take II" pg="8">
+For $n\ge1$ let $\C_n$ be a concept class over $\X_n$, and let $\C=\bigcup_n\C_n$ and $\X=\bigcup_n\X_n$. We say $\C$ is **PAC learnable (take II)** if there is an algorithm $L$ such that for every $n$, every $c\in\C_n$, every distribution $\D$ over $\X_n$ and every $0<\eps,\delta<\frac12$: given access to $\EX(c,\D)$ and inputs $n$, $\size(c)$, $\eps$ and $\delta$, $L$ outputs $h\in\C_n$ that with probability at least $1-\delta$ satisfies $\err(h)\le\eps$. The sample complexity must be bounded by a polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$.
+
+If moreover the running time is polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$, then $\C$ is **efficiently PAC learnable (take II)**.
+</thm>
+
+In most examples every $c\in\C_n$ has size bounded by a fixed polynomial in $n$, and then efficiency simply means polynomial in $n$, $1/\eps$ and $1/\delta$. But the definition is sensitive to the representation. If every boolean function is written as a truth table, then $\size(c)=2^n$ and the class of all boolean functions becomes "efficiently" learnable, because the algorithm is allowed time polynomial in $2^n$. With decision trees, circuits or DNF formulas as the representation, it is widely believed that all boolean functions are *not* efficiently learnable, and later chapters give evidence from cryptography.
+
+## 1.3 Learning Conjunctions {9} [d2 i3]
+
+Our second problem is on the hypercube. An instance $x\in\{0,1\}^n$ is an assignment of values to $n$ boolean variables $z_1,\dots,z_n$. A **literal** is a variable $z_i$ or its negation $\bit{z_i}$. A **conjunction** (or **term**) is an "and" of literals, for instance with $n=10$:
+
+$$#eq1-5 \varphi=z_1\wedge\bit{z_3}\wedge\bit{z_8}\wedge z_9. \tag{1.5}$$
+
+So $\varphi(x)=1$ exactly when $x_1=1$, $x_3=0$, $x_8=0$ and $x_9=1$; the other six bits are free. Formally a conjunction is given by two sets $P,N\subseteq[n]=\{1,\dots,n\}$, the indices of its positive and negative literals:
+
+$$#eq1-6 \varphi_{P,N}=\bigwedge_{i\in P}z_i\wedge\bigwedge_{i\in N}\bit{z_i}. \tag{1.6}$$
+
+We allow $P\cap N\neq\emptyset$, so that $z_1\wedge\bit{z_1}$, which is false everywhere, is a conjunction. With $P=N=\emptyset$ we get the empty conjunction, true everywhere. Let $\mathrm{CONJUNCTIONS}_n=\{\varphi_{P,N}:P,N\subseteq[n]\}$. Each of $P$ and $N$ is a bit string of length $n$, so every conjunction has a representation of size $2n$.
+
+<pause n="How many conjunctions?" q="How many different <em>functions</em> $\{0,1\}^n\to\{0,1\}$ are conjunctions?">
+A conjunction with $P\cap N=\emptyset$ is determined by choosing, for each variable, whether it appears positively, negatively, or not at all, and different choices give different functions (each one has a different set of satisfying assignments, a "subcube"). That gives $3^n$ functions. Every conjunction with $P\cap N\neq\emptyset$ is the constant $0$, which is one more function. So there are $3^n+1$. In particular at least $2^n$, so any representation needs at least $n$ bits for some conjunctions, and $2n$ is not wasteful.
+</pause>
+
+The oracle $\EX(c,\D)$ returns pairs $(x,y)$ with $y=c(x)$: $y=1$ when $x$ satisfies the target conjunction $c$. Algorithm 1.1 starts with the most cautious hypothesis, the conjunction of all $2n$ literals, which is false everywhere. Every positive example then tells it some literals that cannot be in the target, and it deletes them. Negative examples are ignored.
+
+<div class="algo" id="alg1-1" data-label="Algorithm 1.1" data-name="CONJUNCTIONS learner"><div class="algo-h"><span class="algo-k">Algorithm 1.1</span> CONJUNCTIONS learner</div><ol class="algo-l"><li><b>Input:</b> $n$, $m$, access to $\EX(c,\D)$</li><li>set $h=z_1\wedge\bit{z_1}\wedge z_2\wedge\bit{z_2}\wedge\dots\wedge z_n\wedge\bit{z_n}$ <span class="algo-c">all $2n$ literals</span></li><li><b>for</b> $i=1,\dots,m$:</li><li class="in1">draw $(x_i,y_i)$ from $\EX(c,\D)$</li><li class="in1"><b>if</b> $y_i=1$: <span class="algo-c">ignore negative examples</span></li><li class="in2"><b>for</b> $j=1,\dots,n$:</li><li class="in3"><b>if</b> $x_{i,j}=0$, drop $z_j$ from $h$; <b>else</b> drop $\bit{z_j}$ from $h$</li><li><b>Output:</b> $h$</li></ol></div>
+
+The output is the *longest* conjunction consistent with the data: a literal is removed only when some positive example proves it can't be in the target. In particular the literals of $c$ are never removed, so $h$ only ever says $1$ where $c$ does. Figure 1.3 lets you run it.
+
+@@clt-fig1-3@@
+
+<thm k="Theorem 1.4" pg="10" it>
+If $m\ge\frac{2n}\eps\log\frac{2n}\delta$, Algorithm 1.1 efficiently PAC (take II) learns CONJUNCTIONS.
+</thm>
+
+<pf>
+Fix the target $c$ and the distribution $\D$ on $\{0,1\}^n$. Think of a literal $\ell$ as a one-literal conjunction, so $\ell(x)=x_i$ if $\ell=z_i$ and $\ell(x)=1-x_i$ if $\ell=\bit{z_i}$. Let $$p(\ell)=\PP_{x\sim\D}\big[c(x)=1\text{ and }\ell(x)=0\big],$$ the chance that a fresh example would knock $\ell$ out of $h$. If $p(\ell)>0$ then $\ell$ is not in $c$, since a literal of $c$ is $1$ wherever $c$ is.
+
+Call $\ell$ **harmful** if $p(\ell)\ge\eps/2n$. Harmful literals are the ones that would cost us if they survived, so we show that with high probability they all get removed. Let $A_\ell$ be the event that the harmful literal $\ell$ survives all $m$ draws. That needs every draw to avoid $\{c=1,\ell=0\}$, so $\PP[A_\ell]\le(1-\eps/2n)^m$. There are at most $2n$ harmful literals, so by the union bound the event $E$ that some harmful literal survives has $$\PP[E]\le2n\Big(1-\frac\eps{2n}\Big)^m\le2n\exp\Big(-\frac{m\eps}{2n}\Big),$$ which is at most $\delta$ when $m\ge\frac{2n}\eps\log\frac{2n}\delta$.
+
+Now suppose $E$ does not happen, so every literal left in $h$ is harmless. Since $h$ is never $1$ where $c$ is $0$, an error on $x$ means $c(x)=1$ and $h(x)=0$, and then some literal $\ell$ of $h$ has $\ell(x)=0$. Each such $\ell$ is harmless and there are at most $2n$ of them, so $$\err(h)=\PP[c(x)=1\wedge h(x)=0]\le\sum_{\ell\in h}\PP[c(x)=1\wedge\ell(x)=0]\le2n\cdot\frac\eps{2n}=\eps.$$ The algorithm does $O(n)$ work per example, so it runs in time polynomial in $n$, $1/\eps$ and $\log(1/\delta)$.
+</pf>
+
+The algorithm uses only positive examples. If it sees none at all, it outputs the always-false conjunction, and that is fine: if positives are rare enough never to show up in $m$ draws, predicting $0$ everywhere has small error.
+
+### 1.3.1 Learning k-CNF
+
+The same idea learns a richer class. A **clause** is an "or" of literals, and its **length** is the number of literals in it, counted with repetition: $z_1\vee\bit{z_7}\vee\bit{z_{15}}$ is a clause of length 3. A **k-CNF formula** is an "and" of clauses of length $k$ (conjunctive normal form), and $k\text{-CNF}_n$ is the class of functions they represent. For the rest of this section let the order of literals in a clause matter and allow repeats, so there are exactly $(2n)^k$ clauses of length $k$ on $n$ variables, and a $k$-CNF formula has at most that many.
+
+One could rerun the proof of Theorem 1.4 with clauses in place of literals. The notes instead show a **reduction**, a way to convert one learning problem into another, which is a useful tool in its own right.
+
+Introduce a new boolean variable $z'_{\ell_1,\dots,\ell_k}$ for each tuple of literals, $(2n)^k$ of them, meant to stand for the clause $\ell_1\vee\dots\vee\ell_k$. An assignment $x\in\{0,1\}^n$ to the old variables determines an assignment to the new ones: set $z'_{\ell_1,\dots,\ell_k}=1$ exactly when $x$ satisfies $\ell_1\vee\dots\vee\ell_k$. This defines an injective map $f:\{0,1\}^n\to\{0,1\}^{(2n)^k}$. Now a $k$-CNF formula $\varphi$ corresponds to the **monotone** conjunction (one with no negated literals) $g(\varphi)$ of the new variables for its clauses, and $\varphi(x)=g(\varphi)(f(x))$.[[The map $g$ is purely syntactic: it sees $(z_1\vee z_2)$ and $(z_2\vee z_1)$ as different clauses, so it sends them to different new variables even though they are the same function.]] So for any $c,h\in k\text{-CNF}_n$, $$\err(h;c,\D)=\err\big(g(h);g(c),f(\D)\big),$$ where $f(\D)$ is the distribution of $f(x)$ for $x\sim\D$.
+
+So: draw examples $(x,y)$ from $\EX(c,\D)$, feed $(f(x),y)$, which are exactly examples from $\EX(g(c),f(\D))$, to Algorithm 1.1 started from the conjunction of all positive literals (which learns monotone conjunctions), and translate the answer back with $g^{-1}$. For fixed $k$, $f$, $g$ and $g^{-1}$ are computable in polynomial time.
+
+<thm k="Theorem 1.5" pg="12" it>
+For every fixed $k$, the concept class $k$-CNF is efficiently PAC (take II) learnable.
+</thm>
+
+## 1.4 Hardness of Learning 3-term DNF {13} [d3 i2]
+
+Now the bad news. A class only slightly richer than conjunctions turns out not to be efficiently learnable (take II), assuming a widely believed conjecture from complexity theory. The class is DNF formulas with exactly three terms:
+
+$$#eq1-7 3\text{-TERM-DNF}_n=\{T_1\vee T_2\vee T_3:T_i\in\mathrm{CONJUNCTIONS}_n\}. \tag{1.7}$$
+
+Each term takes $2n$ bits, so each formula has size at most $6n$, and an efficient learner must run in time polynomial in $n$, $1/\eps$ and $1/\delta$.
+
+<bg id="bg-np" t="NP-completeness and RP" lead="Background">
+A **language** is a set $L$ of strings, and its decision problem asks, given $\sigma$, whether $\sigma\in L$. **NP** is the class of languages where membership has short proofs that can be checked in polynomial time. A language is **NP-complete** if it is in NP and every NP language reduces to it in polynomial time, so a polynomial-time algorithm for it would put all of NP in P. Deciding whether a graph can be properly coloured with three colours is NP-complete.
+
+**RP** (randomised polynomial time) is the class of languages $L$ with a polynomial-time randomised algorithm $A$ that never wrongly accepts and usually rightly accepts: $A(\sigma)=0$ whenever $\sigma\notin L$, and $\PP[A(\sigma)=1]\ge\frac12$ whenever $\sigma\in L$. Running $A$ a hundred times and accepting if any run accepts drives the error below $2^{-100}$. It is known that $\mathrm{P}\subseteq\mathrm{RP}\subseteq\mathrm{NP}$, and it is widely believed that $\mathrm{RP}\neq\mathrm{NP}$: randomness is not thought to make NP-complete problems easy.
+</bg>
+
+<thm k="Theorem 1.6" pg="13" it>
+3-TERM-DNF is not efficiently PAC (take II) learnable unless $\mathrm{RP}=\mathrm{NP}$.
+</thm>
+
+The plan is to show that a fast learner would give a fast randomised algorithm for an NP-complete problem. Take an NP-complete language $L$. Given a string $\sigma$, we will build, in polynomial time, two disjoint sets of examples, positives $S_+$ and negatives $S_-$, such that
+
+$$\sigma\in L\iff\text{some 3-term DNF formula is 1 on all of }S_+\text{ and 0 on all of }S_-.$$
+
+**Why this suffices.** Let $S=S_+\cup S_-$ and let $\D$ be uniform on $S$. Run the supposed learner with $\eps=\frac1{2|S|}$ and $\delta=\frac12$, answering its oracle calls by picking $x$ uniformly from $S$ and labelling it $1$ if $x\in S_+$. If $\sigma\in L$, a consistent formula $\varphi$ exists and we are faithfully simulating $\EX(\varphi,\D)$, so with probability at least $\frac12$ the learner returns $h$ with $\err(h)\le\frac1{2|S|}$. Each point of $S$ has mass $\frac1{|S|}$, so an error below that means $h$ gets every point of $S$ right. If $\sigma\notin L$, no 3-term DNF is consistent with $S$, so whatever the learner returns gets some point wrong. Checking $h$ against $S$ takes polynomial time. Accepting exactly when $h$ is consistent therefore never accepts wrongly and accepts correctly with probability at least $\frac12$. That puts $L$ in RP, and since $L$ is NP-complete, $\mathrm{RP}=\mathrm{NP}$.
+
+### Graph 3-colouring reduces to learning 3-TERM-DNF
+
+A graph is **3-colourable** if its vertices can be coloured red, green and blue so that no edge joins two vertices of the same colour. We build $S_+$ and $S_-$ from a graph $G$ on vertices $1,\dots,n$:
+
+<ul><li>for each vertex $i$, the positive example $v(i)\in\{0,1\}^n$ has a $0$ in position $i$ and $1$ everywhere else;</li><li>for each edge $\{i,j\}$, the negative example $e(\{i,j\})$ has $0$ in positions $i$ and $j$ and $1$ everywhere else.</li></ul>
+
+Figure 1.4 shows the construction for a small graph. Recolour the vertices and watch which examples the formula gets right.
+
+@@clt-fig1-4@@
+
+**If $G$ is 3-colourable, a consistent formula exists.** Fix a proper colouring and let $V_r,V_g,V_b$ be the red, green and blue vertices. Let $T_r=\bigwedge_{i\notin V_r}z_i$, the "and" of the variables of all *non-red* vertices, and define $T_g,T_b$ likewise; put $\varphi=T_r\vee T_g\vee T_b$. If vertex $i$ is red, $T_r$ doesn't mention $z_i$ and every other bit of $v(i)$ is $1$, so $v(i)$ satisfies $T_r$, hence $\varphi$. For an edge $\{i,j\}$ and any colour, at least one endpoint, say $i$, is not that colour, so the colour's term contains $z_i$ while $e(\{i,j\})$ has a $0$ there. No term is satisfied, so $\varphi(e(\{i,j\}))=0$.
+
+**If a consistent formula exists, $G$ is 3-colourable.** Let $\varphi=T_r\vee T_g\vee T_b$ be 1 on $S_+$ and 0 on $S_-$. Colour each vertex $i$ by a term that $v(i)$ satisfies (there is one, since $\varphi(v(i))=1$). Suppose an edge $\{i,j\}$ had both ends red. Since $v(i)$ satisfies $T_r$ and has a $0$ only at position $i$, $T_r$ can't contain $z_i$, and it can't contain $\bit{z_k}$ for any $k\neq i$. Likewise from $v(j)$: no $z_j$, and no $\bit{z_k}$ for $k\neq j$. So $T_r$ has no negated literals at all and contains neither $z_i$ nor $z_j$. But then $e(\{i,j\})$, which is $1$ outside positions $i,j$, satisfies $T_r$, contradicting $\varphi(e(\{i,j\}))=0$. So the colouring is proper. This proves Theorem 1.6.
+
+<pause n="Why not 2-term DNF?" q="The same construction with two terms would show that learning 2-TERM-DNF properly is hard unless RP = NP, provided some problem is NP-complete. Which problem, and why does the argument fall apart?">
+The construction with two terms reduces *graph 2-colouring* to learning 2-term DNF, and the argument goes through word for word. But 2-colouring is easy: a graph is 2-colourable exactly when it has no odd cycle, which breadth-first search checks in linear time. So the reduction shows nothing. Proper learning of 2-term DNF is in fact also hard (Pitt and Valiant proved this for every fixed number of terms from 2 up), but the proof needs a different NP-complete problem.
+</pause>
+
+## 1.5 Learning 3-CNF vs 3-TERM-DNF {15} [d2 i2]
+
+There is something odd about Theorem 1.6. Boolean "or" distributes over "and":
+
+$$#eq1-8 (a\wedge b)\vee(c\wedge d)\equiv(a\vee c)\wedge(a\vee d)\wedge(b\vee c)\wedge(b\vee d). \tag{1.8}$$
+
+Applying this repeatedly turns any 3-term DNF into a 3-CNF formula, one clause for each way of picking a literal from each term:
+
+$$\varphi=T_1\vee T_2\vee T_3\equiv\bigwedge_{\ell_1\in T_1,\ \ell_2\in T_2,\ \ell_3\in T_3}(\ell_1\vee\ell_2\vee\ell_3)=\psi.$$
+
+$\varphi$ and $\psi$ are the same function, so the oracles $\EX(\varphi,\D)$ and $\EX(\psi,\D)$ produce identical data. Run the 3-CNF learner of Theorem 1.5 on it: with probability at least $1-\delta$ it returns $h\in3\text{-CNF}$ with $$\err(h;\varphi,\D)=\err(h;\psi,\D)\le\eps.$$
+
+So if the goal is to *predict* as well as the 3-term DNF target, nothing stands in the way, statistically or computationally. The difficulty in Theorem 1.6 comes entirely from insisting that the output be written as a 3-term DNF. Predicting labels correctly matters more than the form of the rule that does it, so the final definition will let the output come from a different class.[[Whether the computational saving costs extra data is a subtler question. According to the upper bounds of Chapter 2, the 3-CNF route uses more examples than an (inefficient) proper learner would, but no matching lower bound for efficient algorithms is known.]]
+
+## 1.6 PAC Learning {16} [d2 i3]
+
+The final definition drops the requirement that the hypothesis lie in $\C$. It must lie in some **hypothesis class** $\H=\bigcup_n\H_n$, with $\H_n$ a class of functions on $\X_n$, again with a representation scheme and sizes. Some restriction on $\H$ is needed, as Exercise 2.4 in the notes shows (Sheet 1, question 5). The one we impose is that hypotheses can be run quickly.
+
+<thm k="Definition 1.7" nm="Polynomially evaluatable hypothesis class" pg="16">
+A hypothesis class $\H$ is **polynomially evaluatable** if there is an algorithm that, given an instance $x\in\X_n$ and a representation of $h\in\H_n$, outputs $h(x)$ in time polynomial in $n$ and $\size(h)$.
+</thm>
+
+In words: given the "program" $h$ and an input $x$, we can run the program on the input in reasonable time.
+
+<thm k="Definition 1.8" nm="PAC learning" pg="17">
+For $n\ge1$ let $\C_n$ be a concept class over $\X_n$, $\C=\bigcup_n\C_n$, $\X=\bigcup_n\X_n$. We say $\C$ is **PAC learnable using the hypothesis class $\H$** if there is an algorithm $L$ such that for every $n$, every $c\in\C_n$, every distribution $\D$ over $\X_n$ and every $0<\eps,\delta<\frac12$: given access to $\EX(c,\D)$ and inputs $n$, $\size(c)$, $\eps$ and $\delta$, $L$ outputs $h\in\H_n$ that with probability at least $1-\delta$ satisfies $\err(h)\le\eps$. The sample complexity must be bounded by a polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$, and $\H$ must be polynomially evaluatable.
+
+If moreover the running time of $L$ is polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$, then $\C$ is **efficiently PAC learnable using $\H$**.
+</thm>
+
+A few remarks on the definition.
+
+<ol class="summary-list"><li>Nothing explicitly bounds $\size(h)$, but an efficient learner has to write $h$ down, so $\size(h)$ is automatically polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$.</li><li>When $\H$ isn't mentioned, "$\C$ is efficiently PAC learnable" means: for *some* polynomially evaluatable $\H$.</li><li>PAC (take II) learning is PAC learning using $\H=\C$. It is called **proper** learning, and the general kind is sometimes called **improper**. So Theorem 1.6 says 3-TERM-DNF is not efficiently properly learnable unless $\mathrm{RP}=\mathrm{NP}$, while Section 1.5 says it is efficiently learnable using 3-CNF.</li><li>Even when we don't care about running time, the number of examples must be polynomial. Learning is about getting by on a modest amount of data; with unlimited computation, extra data buys little (Exercise 2.4 in the notes).</li></ol>

@@ -1,0 +1,15 @@
+<figure class="wide" id="fig1-3">
+  <div class="fig-body">
+    <div class="cj-target" id="clt-cj-target"></div>
+    <div class="cj-lits" id="clt-cj-lits" aria-label="Literals still in the hypothesis"></div>
+    <div class="cj-log" id="clt-cj-log" aria-live="polite"></div>
+    <div class="controls">
+      <button type="button" id="clt-cj-one">draw 1 example</button>
+      <button type="button" id="clt-cj-ten">draw 10</button>
+      <button type="button" id="clt-cj-reset">start again</button>
+      <button type="button" id="clt-cj-new">new target</button>
+    </div>
+    <div class="readout" id="clt-cj-out"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.3</span>Algorithm 1.1 on \(n=8\) variables, with \(\D\) uniform on \(\{0,1\}^8\). The hypothesis starts with all sixteen literals. Each positive example strikes out the literals it falsifies; negative examples are drawn greyed out and ignored. The literals of the target are never struck. The error is exact: with \(\D\) uniform, a satisfiable conjunction of \(k\) distinct literals is true with probability \(2^{-k}\).</figcaption>
+</figure>
