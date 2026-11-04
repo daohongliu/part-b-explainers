@@ -54,6 +54,8 @@ The theorem lets $\H_n$ depend only on $n$ (and $\C_n$). A more general version 
 The left side grows linearly in $m$ and the right side grows like $m^\beta$ with $\beta<1$, so the left side eventually wins. Concretely, it is enough to have both $m\ge\frac2\eps p\,m^\beta$ and $m\ge\frac2\eps\log\frac1\delta$. The first holds once $m^{1-\beta}\ge\frac{2p}\eps$, that is $m\ge(2p/\eps)^{1/(1-\beta)}$. For a fixed $\beta<1$ the exponent $\frac1{1-\beta}$ is a constant, so this is still a polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$. If $\beta=1$ the inequality could fail for every $m$, which is the memorisation case.
 </pause>
 
+<sheet n="1" qs="4,5">With Occam’s razor in hand, Sheet 1 is complete.</sheet>
+
 ## 2.3 Improved Sample Complexity {24} [d2 i2]
 
 ### Learning conjunctions
@@ -73,3 +75,5 @@ So, with $\delta$ fixed:
 This suggests a trade-off between running time and data. It doesn't prove one: some other efficient algorithm might learn 3-term DNF with fewer examples. Whether it can is an open question.
 
 @@clt-fig2-2@@
+
+<sheet n="2" qs="1"></sheet>

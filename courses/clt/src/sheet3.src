@@ -1,0 +1,32 @@
+@num 3
+@title VC dimension of halfspaces, and boosting
+@source Problem Sheet 3 · MT26
+@dek Why halfspaces in Rⁿ have VC dimension n + 1 (via Radon’s theorem), three small facts about AdaBoost, and weak learners built from single bits.
+---
+<qn n="1" t="Halfspaces in Rⁿ have VC dimension n + 1">
+We show that linear halfspaces in $\R^n$ have VC dimension $n+1$.
+<ol class="parts"><li>Give a set of $n+1$ points in $\R^n$ that is shattered by linear halfspaces.</li><li>Show that no set of $m=n+2$ points in $\R^n$ is shattered by linear halfspaces. You may use Radon's theorem, below.</li><li>(Optional) Prove Radon's theorem.</li></ol>
+The **convex hull** of $S=\{x_1,\dots,x_m\}\subseteq\R^n$ is $\{z:z=\sum_i\lambda_ix_i\text{ for some }\lambda_i\in[0,1]\text{ with }\sum_i\lambda_i=1\}$. **Radon's theorem:** if $m\ge n+2$, then $S$ has two disjoint subsets $S_1,S_2$ whose convex hulls intersect.
+
+<details class="hint"><summary>hints</summary>1. Try the origin and the standard basis vectors (Figure 3.3 does $n=3$). 2. Show that if a set of points lies in a halfspace, so does its convex hull. 3. When $m\ge n+2$, argue that $\sum_i\mu_ix_i=0$, $\sum_i\mu_i=0$ has a non-trivial solution $\mu\in\R^m$.</details>
+
+<p class="uses">Uses Definition 3.2; Section 3.5 relies on the answer.</p>
+</qn>
+
+<qn n="2" t="Properties of AdaBoost">
+Consider AdaBoost as in Algorithm 4.1, and assume the weak learner succeeds with probability 1 in every round.
+<ol class="parts"><li>Show that the error of $h_t$ with respect to $D_{t+1}$ is exactly $\frac12$.</li><li>What is the largest possible value of $D_t(i)$, for $1\le t\le T$ and $1\le i\le m$?</li><li>Fix an example $i$ and let $t_i$ be the first round with $h_{t_i}(x_i)=y_i$. How large can $t_i$ be?</li></ol>
+
+<details class="hint"><summary>hints</summary>1. Use the definition of $\alpha_t$ and calculate. 2. What is the largest $D_t(i)$ for which $h_t$ could still be wrong on $x_i$? Then follow the calculation from part 1. 3. By how much must $D_t(i)$ grow when $h_t$ is wrong on $x_i$? Combine with part 2.</details>
+
+<p class="uses">Uses Theorem 4.2 and its proof.</p>
+</qn>
+
+<qn n="3" t="Weak learning with dictators">
+On $\X_n=\{0,1\}^n$ let $\H_n=\{0,1,z_1,\bit{z_1},\dots,z_n,\bit{z_n}\}$: the two constant functions and the $2n$ **dictator** functions, where $z_i$ is $1$ exactly when $x_i=1$ and $\bit{z_i}$ exactly when $x_i=0$.
+<ol class="parts"><li>Show that CONJUNCTIONS is $\frac1{10n}$-weak learnable using $\H$.</li><li>Let $\mathrm{CONJUNCTIONS}_k$ be the conjunctions of at most $k$ literals. Give an algorithm that PAC learns $\mathrm{CONJUNCTIONS}_k$ with sample complexity polynomial in $k$, $\log n$, $1/\eps$ and $1/\delta$. What would the sample complexity be with the conjunction learner from lectures?</li><li>Show that there is no weak learning algorithm for PARITIES using $\H$.</li></ol>
+
+<details class="hint"><summary>hints</summary>1. The 10 isn't important, just a large enough constant. 2. First modify part 1 into a $\frac1{10k}$-weak learner. 3. Consider the uniform distribution on $\{0,1\}^n$ and see whether any hypothesis in $\H_n$ could work.</details>
+
+<p class="uses">Uses Definition 4.1 and Theorem 4.2; compare the exercise after Definition 4.1.</p>
+</qn>

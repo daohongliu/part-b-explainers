@@ -64,6 +64,8 @@ Take $\eps=\delta=0.01$. Then $\frac4\eps=400$ and $\log\frac4\delta=\log400\app
 
 One corner case: what if we see no positive points at all, or only one? Allow degenerate rectangles (the empty set, single points, and segments parallel to an axis). Then the tightest fit is always defined, and the argument above goes through unchanged. If after $m\ge\frac4\eps\log\frac4\delta$ draws we have still seen no positive point, predicting "negative" everywhere has error at most $\eps$ with probability at least $1-\delta$. Later corner cases of this kind will be left to you.
 
+<sheet n="1" qs="1">The non-optional part needs only the argument above.</sheet>
+
 ## 1.2 Key Components of the PAC Learning Framework {4} [d2 i3]
 
 The rectangle game already contains the main features of a mathematical theory of learning.
@@ -212,6 +214,8 @@ Figure 1.4 shows the construction for a small graph. Recolour the vertices and w
 The construction with two terms reduces *graph 2-colouring* to learning 2-term DNF, and the argument goes through word for word. But 2-colouring is easy: a graph is 2-colourable exactly when it has no odd cycle, which breadth-first search checks in linear time. So the reduction shows nothing. Proper learning of 2-term DNF is in fact also hard (Pitt and Valiant proved this for every fixed number of terms from 2 up), but the proof needs a different NP-complete problem.
 </pause>
 
+<sheet n="1" qs="3">Model your reduction on the 3-colouring one.</sheet>
+
 ## 1.5 Learning 3-CNF vs 3-TERM-DNF {15} [d2 i2]
 
 There is something odd about Theorem 1.6. Boolean "or" distributes over "and":
@@ -225,6 +229,8 @@ $$\varphi=T_1\vee T_2\vee T_3\equiv\bigwedge_{\ell_1\in T_1,\ \ell_2\in T_2,\ \e
 $\varphi$ and $\psi$ are the same function, so the oracles $\EX(\varphi,\D)$ and $\EX(\psi,\D)$ produce identical data. Run the 3-CNF learner of Theorem 1.5 on it: with probability at least $1-\delta$ it returns $h\in3\text{-CNF}$ with $$\err(h;\varphi,\D)=\err(h;\psi,\D)\le\eps.$$
 
 So if the goal is to *predict* as well as the 3-term DNF target, nothing stands in the way, statistically or computationally. The difficulty in Theorem 1.6 comes entirely from insisting that the output be written as a 3-term DNF. Predicting labels correctly matters more than the form of the rule that does it, so the final definition will let the output come from a different class.[[Whether the computational saving costs extra data is a subtler question. According to the upper bounds of Chapter 2, the 3-CNF route uses more examples than an (inefficient) proper learner would, but no matching lower bound for efficient algorithms is known.]]
+
+<sheet n="4" qs="2">It is a reduction between learning problems, like the one in Section 1.3.1.</sheet>
 
 ## 1.6 PAC Learning {16} [d2 i3]
 
@@ -245,3 +251,5 @@ If moreover the running time of $L$ is polynomial in $n$, $\size(c)$, $1/\eps$ a
 A few remarks on the definition.
 
 <ol class="summary-list"><li>Nothing explicitly bounds $\size(h)$, but an efficient learner has to write $h$ down, so $\size(h)$ is automatically polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$.</li><li>When $\H$ isn't mentioned, "$\C$ is efficiently PAC learnable" means: for *some* polynomially evaluatable $\H$.</li><li>PAC (take II) learning is PAC learning using $\H=\C$. It is called **proper** learning, and the general kind is sometimes called **improper**. So Theorem 1.6 says 3-TERM-DNF is not efficiently properly learnable unless $\mathrm{RP}=\mathrm{NP}$, while Section 1.5 says it is efficiently learnable using 3-CNF.</li><li>Even when we don't care about running time, the number of examples must be polynomial. Learning is about getting by on a modest amount of data; with unlimited computation, extra data buys little (Exercise 2.4 in the notes).</li></ol>
+
+<sheet n="1" qs="2">You will want a Chernoff bound, stated in Section 3.3.</sheet>

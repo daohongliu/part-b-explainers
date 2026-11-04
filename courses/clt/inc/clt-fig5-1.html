@@ -1,0 +1,17 @@
+<figure class="wide" id="fig5-1">
+  <div class="fig-body">
+    <div class="btn-row" role="group" aria-label="Choose the primes">
+      <button type="button" data-cr-n="5,11" aria-pressed="false">5 × 11</button>
+      <button type="button" data-cr-n="11,17" aria-pressed="false">11 × 17</button>
+      <button type="button" data-cr-n="17,23" aria-pressed="false">17 × 23</button>
+      <button type="button" data-cr-n="29,41" aria-pressed="true">29 × 41</button>
+    </div>
+    <canvas id="clt-cr-canvas" width="720" height="330" aria-label="Top: each x in Z_N star plotted against its cube root. Bottom: the chosen bit of the cube root, as a strip of cells in order of x."></canvas>
+    <div class="controls">
+      <label class="grow" for="clt-cr-i">bit i <input type="range" id="clt-cr-i" min="1" max="11" step="1" value="1"> <output id="clt-cr-iv"></output></label>
+      <label class="grow" for="clt-cr-x">x <input type="range" id="clt-cr-x" min="1" max="100" step="1" value="40"> <output id="clt-cr-xv"></output></label>
+    </div>
+    <div class="readout cr-steps" id="clt-cr-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 5.1</span>The concept that can’t be learned, at toy size. Top: every \(x\in\Z_N^*\) against its cube root \(f_N^{-1}(x)\). Bottom: the target concept \(f^{-1}_{N,i}\), the \(i\)th bit of the cube root (counting from the least significant), coloured cell by cell along \(x\). Even with a few hundred points the strip has no visible pattern, and at cryptographic sizes no efficient algorithm is believed to find one. The readout decodes the selected \(x\) the way the secret circuit does: repeated squaring, then a product picked out by the bits of \(d\).</figcaption>
+</figure>

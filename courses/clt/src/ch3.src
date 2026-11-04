@@ -44,6 +44,10 @@ Figure 3.1 lets you test sets of points against all three classes. The grid list
 A single point can be labelled either way, so $\VCD(\C)\ge1$. For two points $x_1<x_2$, the labelling $x_1\mapsto1$, $x_2\mapsto0$ is impossible, since $x_1\ge t$ forces $x_2\ge t$. So $\VCD(\C)=1$, although $\C$ is uncountable. With thresholds in both directions, two points are shattered ($c_t$ handles three labellings and $\ind[x\le t]$ handles $1,0$). Three points $x_1<x_2<x_3$ are not: $+,-,+$ is impossible for either kind. So the VC dimension is $2$.
 </pause>
 
+<sheet n="2" qs="2">Part 1 only needs the definition of shattering.</sheet>
+
+<sheet n="4" qs="1"></sheet>
+
 ## 3.2 Growth Function {30} [d3 i3]
 
 How many dichotomies can $\C$ produce on $m$ points, at most? For $m\le\VCD(\C)$ the answer is $2^m$. The surprise is what happens after that: the count stops growing exponentially and grows only polynomially, with degree $\VCD(\C)$.
@@ -87,6 +91,8 @@ Now take $S$ with $|S|=m$ and a point $x\in S$. Every dichotomy of $S$ restricts
 
 For the second term, let $\C'$ be the class (on $S\setminus\{x\}$) of dichotomies that extend both ways. If $\C'$ shatters a set $S'\subseteq S\setminus\{x\}$, then $\C$ shatters $S'\cup\{x\}$: any labelling of $S'$ comes from $\C'$, and both labels of $x$ are then available. So $|S'|+1\le d$, which means $\VCD(\C')\le d-1$, and by induction the second term is at most $\Phi(m-1,d-1)$. Adding and using (3.4) gives $|\Pi_\C(S)|\le\Phi(m,d)$.
 </pf>
+
+<sheet n="2" qs="3"></sheet>
 
 @@clt-fig3-2@@
 
@@ -173,5 +179,7 @@ $$#eq3-10 -w_0-w_1x_{i1}-\dots-w_nx_{in}\ge1\qquad\text{for each }i\text{ with }
 A negative example needs $w\cdot x+w_0<0$, but a linear program can't use strict inequalities, since its feasible set has to be closed. Asking for $\le-1$ instead costs nothing, because the inequalities can be rescaled. If the target is $(w^*,w_0^*)$, let $\alpha=\min\{-(w^*\cdot x_i+w_0^*):y_i=0\}$, which is positive. Then $(w^*/\alpha,w_0^*/\alpha)$ satisfies every constraint: positives keep their sign, and negatives now have $-(w\cdot x_i+w_0)\ge1$. So the program is feasible, any feasible point is a consistent halfspace (after rescaling $w$ to unit length), and LTFs are efficiently PAC learnable.
 
 Figure 3.3 shows $n+1=4$ points in $\R^3$ in general position. Every one of the $2^4$ labellings is cut out by a plane, so the four points are shattered.
+
+<sheet n="3" qs="1">Figure 3.3 is part 1 for $n=3$.</sheet>
 
 @@clt-fig3-3@@

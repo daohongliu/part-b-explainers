@@ -1,0 +1,25 @@
+@num 4
+@title Teaching, reductions and queries
+@source Problem Sheet 4 · MT26
+@dek Teaching dimension against VC dimension, why learning monotone DNF is as hard as learning DNF, and a question on membership queries. The last question needs the notes’ Chapter 6, which isn’t written here yet.
+---
+<qn n="1" t="Teaching dimension">
+Here is a model of learning with a teacher, who picks the most helpful examples instead of drawing them at random. Let $\X$ be finite. For a concept class $\C$ and target $c\in\C$, a sequence $T$ of labelled examples is a **teaching sequence** for $c$ if $c$ is the only concept in $\C$ consistent with $T$. Let $\mathcal T(c)$ be the set of teaching sequences for $c$. The **teaching dimension** of $\C$ is $$\mathrm{TD}(\C)=\max_{c\in\C}\ \min_{T\in\mathcal T(c)}|T|.$$
+<ol class="parts"><li>Give a concept class with $\mathrm{TD}(\C)>\VCD(\C)$.</li><li>Give a concept class with $\mathrm{TD}(\C)<\VCD(\C)$.</li><li>Show that $\mathrm{TD}(\C)\le|\C|-1$ for every $\C$.</li><li>Show that $\mathrm{TD}(\C)\le\VCD(\C)+|\C|-2^{\VCD(\C)}$ for every $\C$.</li></ol>
+
+<p class="uses">Uses Definition 3.1 and Definition 3.2.</p>
+</qn>
+
+<qn n="2" t="Monotone DNF is as hard as DNF">
+$\mathrm{MONOTONE\text{-}DNF}_{n,s}$ is the class of boolean functions on $\{0,1\}^n$ given by DNF formulas with at most $s$ terms, each containing only positive literals; $\mathrm{MONOTONE\text{-}DNF}=\bigcup_{n,s}\mathrm{MONOTONE\text{-}DNF}_{n,s}$. DNF is defined the same way but negative literals are allowed. An efficient learner may take time polynomial in $n$, $s$, $1/\eps$ and $1/\delta$. Show that if MONOTONE-DNF is efficiently PAC learnable, then so is DNF.
+
+*Remark.* Monotone DNF is efficiently learnable exactly with membership and equivalence queries, and hence PAC learnable with membership queries. No algorithm is known for PAC learning DNF even with membership queries, and under a cryptographic assumption, PAC learning DNF with and without membership queries are equivalent (Angluin and Kharitonov, 1991).
+
+<p class="uses">Use a reduction in the style of Section 1.3.1: change the instance, not the learner.</p>
+</qn>
+
+<qn n="3" t="From exact learning to PAC learning with membership queries">
+Let $\C$ be efficiently exactly learnable with membership and equivalence queries. Prove that if, besides $\EX(c,\D)$, the learner may make membership queries, then $\C$ is efficiently PAC learnable. Formally, show there is an algorithm that for all $n\ge1$, $c\in\C_n$, $\D$ over $\X_n$ and $0<\eps,\delta<\frac12$, with access to $\EX(c,\D)$ and a membership oracle for $c$ and inputs $\eps$, $\delta$, $\size(c)$, outputs $h$ that with probability at least $1-\delta$ satisfies $\err(h)\le\eps$, runs in time polynomial in $n$, $\size(c)$, $1/\eps$, $1/\delta$, and outputs $h$ from a polynomially evaluatable class.
+
+<p class="uses">Needs the notes’ Chapter 6 (exact learning), not yet written here.</p>
+</qn>

@@ -1,0 +1,83 @@
+@num 5
+@title Cryptographic hardness of learning
+@titlehtml Cryptographic <em>hardness</em> of learning
+@pages 45–49
+@dek The VC dimension settles how much data learning needs. It says nothing about time. Here we meet a class with small VC dimension that no efficient algorithm can learn, however it represents its answer, unless a standard piece of cryptography is broken.
+---
+Where do we stand? Occam's razor and the VC dimension say that a consistent hypothesis from a class of small capacity generalises, and Chapter 3's lower bound says the VC dimension is essentially the whole story *if sample complexity is all we care about*. Computation is a different matter. Proper learning of 3-term DNF is hard unless $\mathrm{RP}=\mathrm{NP}$, but we escaped by outputting 3-CNF instead. Can we always escape like that, by choosing a larger hypothesis class in which consistent hypotheses are easy to find?
+
+This chapter says no, under a widely believed cryptographic assumption. There are classes that can't be learned efficiently even improperly, when the output may be any polynomially evaluatable hypothesis. The idea is simple to state. If examples of a function are easy to generate but the function is hard to compute, the examples can't help, so learning it must be hard.
+
+## 5.1 The Discrete Cube Root Problem {45} [d2 i2]
+
+<bg id="bg-modular" t="Arithmetic modulo $N$" lead="Background">
+For a positive integer $N$, $\Z_N^*=\{i:0<i<N,\ \gcd(i,N)=1\}$ is the set of residues with a multiplicative inverse modulo $N$. It is a group under multiplication mod $N$, and its size is **Euler's totient** $\varphi(N)$. For $N=pq$ with $p,q$ distinct primes, $\varphi(N)=(p-1)(q-1)$: of the $N$ residues, we remove the multiples of $p$ and of $q$. **Euler's theorem** says $y^{\varphi(N)}\equiv1\pmod N$ for every $y\in\Z_N^*$ (it is Lagrange's theorem for this group). And if $\gcd(a,b)=1$, the extended Euclidean algorithm finds integers with $ad-bd'=1$ in time polynomial in the number of digits.
+</bg>
+
+Let $p$ and $q$ be large primes of roughly the same bit length, both of the form $3k+2$, and let $N=pq$. It is widely believed that no algorithm can factor such an $N$ in time polynomial in $n$ when $p$ and $q$ are random $n$-bit primes.[[Polynomial in $n$, the number of bits, not in $N$ itself. Trial division factors $N$ in about $\sqrt N=2^n$ steps, which is polynomial in $N$ but exponential in the length of the input.]] Since $p\equiv2\pmod3$, $p-1\equiv1\pmod3$, and likewise for $q$, so $3$ does not divide $\varphi(N)=(p-1)(q-1)$.
+
+Consider cubing, $f_N:\Z_N^*\to\Z_N^*$, $f_N(y)=y^3\bmod N$. Because $\gcd(3,\varphi(N))=1$, there are $d,d'\ge1$ with $3d=\varphi(N)d'+1$. Then for every $y\in\Z_N^*$,
+
+$$(f_N(y))^d\equiv y^{3d}=y^{\varphi(N)d'+1}=\big(y^{\varphi(N)}\big)^{d'}y\equiv y\pmod N,$$
+
+by Euler's theorem. So $f_N$ is a bijection, and raising to the power $d$ undoes it: $f_N^{-1}(x)=x^d\bmod N$.
+
+<thm k="Definition 5.1" nm="Discrete cube root problem" pg="46">
+Let $p,q$ be $n$-bit primes of the form $3k+2$ and $N=pq$. Given $N$ and $x\in\Z_N^*$, output $y\in\Z_N^*$ with $y^3\equiv x\pmod N$.
+</thm>
+
+If you can factor $N$ this is easy: compute $\varphi(N)$, find $d$ with $3d\equiv1\pmod{\varphi(N)}$ by Euclid's algorithm, and output $x^d\bmod N$. Without the factors no polynomial-time method is known, and the problem is believed to be intractable.
+
+<thm k="Definition 5.2" nm="Discrete cube root assumption (DCRA)" pg="46">
+For every polynomial $P$, there is no (possibly randomised) algorithm $A$ running in time $P(n)$ such that, on input $N$ and $x$, where $N$ is the product of two random $n$-bit primes of the form $3k+2$ and $x$ is uniform on $\Z_N^*$, $A$ outputs $y$ with $y^3\equiv x\pmod N$ with probability at least $1/P(n)$. The probability is over $p$, $q$, $x$ and the randomness of $A$.
+</thm>
+
+Note how weak a success the assumption rules out: not just always finding cube roots, but finding them for even a $1/P(n)$ fraction of inputs.
+
+This is the RSA cryptosystem with encryption exponent $3$. $N$ is the public key; anyone can encrypt a message $y\in\Z_N^*$ as $y^3\bmod N$. Decrypting needs $d$, the private key, which the owner computes from $p$ and $q$ and never publishes. Under the DCRA nobody else can decrypt.
+
+<pause n="Cube roots by hand" q="Take $p=5$ and $q=11$, both of the form $3k+2$, so $N=55$. Find the decryption exponent $d$, and use it to find the cube root of $x=8$ modulo 55, and of $x=13$.">
+$\varphi(55)=4\cdot10=40$, and $3d\equiv1\pmod{40}$ gives $d=27$ (since $81=2\cdot40+1$). The cube root of $8$ is $2$, of course, and indeed $8^{27}\bmod55=2$, which you can check by repeated squaring: $8^2=64\equiv9$, $8^4\equiv81\equiv26$, $8^8\equiv676\equiv16$, $8^{16}\equiv256\equiv36$, and $27=16+8+2+1$ gives $36\cdot16\cdot9\cdot8=41472\equiv2\pmod{55}$. For $x=13$: $13^{27}\bmod55=7$, and check: $7^3=343=6\cdot55+13$. Without knowing $p$ and $q$, finding the 7 means trying cubes until one hits 13, which is hopeless once $N$ has hundreds of digits.
+</pause>
+
+## 5.2 A learning problem based on the DCRA {47} [d3 i3]
+
+Let's phrase cube roots as a learning problem. Suppose we are given a training sample $$S=\big((x_1,y_1),\dots,(x_m,y_m)\big),\qquad y_i^3\equiv x_i\pmod N,$$ with the $x_i$ uniform on $\Z_N^*$. Can we produce $h:\Z_N^*\to\Z_N^*$ such that, with probability at least $1-\delta$, $\PP_x[h(x)^3\not\equiv x]\le\eps$?
+
+The examples can't help, because we could have made them ourselves. Cubing is easy even though cube roots are hard. Choose $y_i$ uniformly from $\Z_N^*$ and set $x_i=y_i^3\bmod N$. Since $f_N$ is a bijection, $x_i$ is uniform on $\Z_N^*$, so these pairs have exactly the distribution of the training sample. A learner that succeeded from examples could therefore be run on self-made examples and would find cube roots of a $1-\eps$ fraction of inputs, contradicting the DCRA.
+
+One gap remains: PAC learning is about boolean concepts, and $f_N^{-1}$ outputs a number. Write $f_N^{-1}(x)$ in binary with $2n$ bits and let $f_{N,i}^{-1}$ be its $i$th bit, for $i=1,\dots,2n$. If we could learn every $f_{N,i}^{-1}$ to accuracy $\frac\eps{2n}$, then by the union bound the bits would all be right except on an $\eps$ fraction of inputs, and we would have $f_N^{-1}$ to accuracy $\eps$. So if $f_N^{-1}$ is hard to learn, at least one of the $2n$ bit functions is hard to learn.
+
+@@clt-fig5-1@@
+
+### 5.2.1 A hard-to-learn concept class
+
+So far: for random $p,q$ of the right form, some bit function $f_{N,i}^{-1}$ can't be learned to accuracy $\frac\eps{2n}$ from examples drawn uniformly from (the binary representations of) $\Z_N^*$, with any polynomially evaluatable hypothesis. If a class $\C$ contains all these bit functions, $\C$ is not efficiently PAC learnable. What class could that be?
+
+The functions are easy to compute *if you know $d$*: $f_N^{-1}(x)=x^d\bmod N$. Computing $x^d$ naively is hopeless, since $d$ can be as large as $\varphi(N)$, a $2n$-bit number. Two tricks fix this. Reduce modulo $N$ after every multiplication, so numbers never grow beyond $2n$ bits. And use **repeated squaring**: compute $x,\ x^2,\ x^4,\ x^8,\dots,x^{2^k}\pmod N$ for $k=\lfloor\log\varphi(N)\rfloor$, each by squaring the previous one, then multiply together the $x^{2^j}$ for which the $j$th bit of $d$ is $1$. That is $O(n)$ multiplications of $2n$-bit numbers, so a circuit of polynomial size computes $f_N^{-1}$ with $d$ wired in, and so does a circuit for each bit $f_{N,i}^{-1}$.
+
+<thm k="Theorem 5.3" pg="48" it>
+There is a polynomial $P$ such that, under the discrete cube root assumption, the class $\C$ with $\C_n$ the boolean circuits of size at most $P(n)$ is not efficiently PAC learnable.
+</thm>
+
+Notice what the theorem does *not* say. These circuits have size $P(n)$, so the class has VC dimension polynomial in $n$, and a polynomial number of examples suffices to learn it statistically. The obstacle is purely computational. This is the gap between the two halves of the course so far: the VC dimension measures how much information the data carry, and here that information is present but locked.
+
+### 5.2.2 Reducing the depth
+
+Polynomial-size circuits are about the most expressive class one could hope to learn, so Theorem 5.3 is in a sense the weakest result of its kind. Are much smaller classes also hard? The notes sketch why circuits of only **logarithmic depth** are hard too. The full proof needs low-depth circuits for iterated multiplication and division, which are involved, so here is the idea.
+
+The repeated-squaring circuit has depth $\Theta(n)$, because $x^{2^{j+1}}$ can only be computed after $x^{2^j}$. But that chain of squarings doesn't use $d$ at all. So change the learning problem: instead of $x$, the instance is the string of length $(2n)^2$ $$\big(x,\ x^2,\ x^4,\ \dots,\ x^{2^k}\big)\bmod N.$$ This can't make learning easier, because the learner could have computed the extra coordinates itself in polynomial time; the problem stays hard under the DCRA. But now the target only has to multiply together the coordinates picked out by the bits of $d$: at most $2n$ numbers, multiplied in pairs in a balanced tree of depth $O(\log n)$, each multiplication itself a circuit of depth $O(\log n)$. That gives depth $O((\log n)^2)$, and with the constructions of Beame, Cook and Hoover the depth comes down to $O(\log n)$.
+
+<thm k="Theorem 5.4" pg="48" it>
+There is a constant $\kappa_0>0$ such that, under the DCRA, the class $\C$ with $\C_n$ the circuits on $n$ inputs of depth at most $\kappa_0\log n$ is not efficiently PAC learnable.
+</thm>
+
+<pause n="Why the extra inputs are fair" q="The hard distribution in 5.2.2 is over strings $(x,x^2,\dots,x^{2^k})\bmod N$ rather than over $x$. Spell out why a learner for this new problem would give a learner for the old one.">
+Suppose $L'$ learns the bit $f^{-1}_{N,i}$ from examples $\big((x,x^2,\dots,x^{2^k}),b\big)$. Given an ordinary example $(x,b)$, we can compute $x^2,x^4,\dots$ mod $N$ ourselves in polynomial time, so we can feed $L'$ exactly the examples it expects, with exactly the right distribution. When $L'$ outputs a hypothesis $h'$ on long strings, define $h(x)=h'(x,x^2,\dots,x^{2^k})$, which is still polynomially evaluatable. Its error on $x$ is the error of $h'$ on the long string. So learning the new problem would let us learn the old one, which is hard under the DCRA.
+</pause>
+
+## Chapter notes {48} [d1 i1]
+
+Kearns and Vazirani, Chapter 6, covers this material in more detail, and Kearns and Valiant's original paper proves cryptographic hardness for further classes, such as finite automata. Goldreich, Goldwasser and Micali showed that polynomial-size circuits can't be learned efficiently if **one-way functions** exist, even when the learner may ask for labels of points of its choice (the membership queries of the notes' Chapter 6). That assumption is far weaker than the DCRA: without one-way functions there would be hardly any cryptography at all, whereas if the DCRA failed, it would only cast doubt on RSA.
+
+Stronger assumptions give stronger hardness results. Recent work uses assumptions not directly tied to cryptography to show hardness of learning much smaller classes, such as DNF. Not all such assumptions have been tested as thoroughly as factoring, though; one used by Daniely and coauthors was later shown to be false.

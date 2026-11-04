@@ -1,0 +1,46 @@
+@num 1
+@title PAC learning
+@source Problem Sheet 1 · MT26
+@dek Rectangles in many dimensions, why the confidence parameter is cheap, a proper-learning hardness proof of your own, parities, and a loophole in the definition. Needs Chapter 1, and Chapter 2 for the last two questions.
+---
+<qn n="1" t="Learning hyper-rectangles">
+The class of hyper-rectangles over $\R^n$ is $$\C_n=\{[a_1,b_1]\times\dots\times[a_n,b_n]:a_i,b_i\in\R,\ a_i<b_i\}.$$ Generalise the algorithm discussed in class for rectangles in $\R^2$ and show that it efficiently PAC learns the class of hyper-rectangles. Give bounds on the number of samples required to guarantee error at most $\eps$ with probability at least $1-\delta$.
+
+You may assume that the distribution $\D$ over $\R^n$ has a continuous density defined on all of $\R^n$. *Optional:* argue why the algorithm still works without this assumption.
+
+<details class="hint"><summary>hint for the optional part</summary>Allow $a_i\le b_i$. Let $R$ be the target and $p=\PP_{x\sim\D}[x\in R]$; if $p\le\eps$ the algorithm is always fine. Otherwise define $v_1=\min\{v\ge a_1:\PP_{x\sim\D}[x\in[a_1,v]\times[a_2,b_2]\times\dots\times[a_n,b_n]]\ge\frac\eps{2n}\}$; argue that the minimum (not just an infimum) exists, and let $T_1=[a_1,v_1]\times[a_2,b_2]\times\dots\times[a_n,b_n]$, and similarly $T_2,\dots,T_{2n}$. With the half-open versions $T_i'=[a_1,v_1)\times\dots$, show carefully that $\PP[x\in T_i']\le\frac\eps{2n}$, and that if $R'$ is the output then $R\setminus R'\subseteq\bigcup_iT_i'$.</details>
+
+<p class="uses">Extends Section 1.1 and Theorem 1.2.</p>
+</qn>
+
+<qn n="2" t="The confidence parameter is cheap">
+Say that an algorithm $L$ *perhaps learns* $\C$ using $\H$ if for every $n$, every $c\in\C_n$, every $\D$ over $\X_n$ and every $0<\eps<\frac12$, given access to $\EX(c,\D)$ and inputs $\eps$ and $\size(c)$, $L$ runs in time polynomial in $n$, $\size(c)$ and $1/\eps$ and outputs a polynomially evaluatable $h\in\H_n$ that with probability at least $\frac34$ satisfies $\err(h)\le\eps$. In other words, $\delta=\frac14$ is fixed. Show that if $\C$ is perhaps learnable using $\H$, then $\C$ is efficiently PAC learnable using $\H$.
+
+<details class="hint"><summary>hint</summary>You will need the Chernoff–Hoeffding bound. Your proof should not rely on $\delta<\frac12$; it should work for $\delta=\frac34$, even though the definition of PAC learning asks for $0<\delta<\frac12$.</details>
+
+<p class="uses">Uses Definition 1.8. The Chernoff bound is stated in a background box in Section 3.3.</p>
+</qn>
+
+<qn n="3" t="Proper learning of threshold functions is hard">
+On $\X_n=\{0,1\}^n$, for $w\in\{0,1\}^n$ and $k\in\N$ let $f_{w,k}(x)=1$ if $\sum_{i=1}^nw_ix_i\ge k$ and $0$ otherwise. Let $\mathrm{TH}_n=\{f_{w,k}:w\in\{0,1\}^n,\ 0\le k\le n\}$ and $\mathrm{TH}=\bigcup_n\mathrm{TH}_n$. Show that unless $\mathrm{RP}=\mathrm{NP}$ there is no efficient proper PAC learning algorithm for TH.
+
+<details class="hint"><summary>hint</summary>Reduce from Zero-One Integer Programming (ZIP), which is NP-complete. An instance is an $s\times n$ matrix $A$ with entries in $\{0,1\}$, a vector $b\in\{0,1\}^s$, and an objective $(c,B)$ with $c\in\{0,1\}^n$ and $B\in\Z$. The question is whether there are $z_1,\dots,z_n\in\{0,1\}$ with $\sum_jA_{ij}z_j\le b_i$ for every $1\le i\le s$ and $\sum_jc_jz_j\ge B$.</details>
+
+<p class="uses">Follow the template of Theorem 1.6.</p>
+</qn>
+
+<qn n="4" t="Learning parities">
+A parity function $\chi_S$ on $\X_n=\{0,1\}^n$ is given by a subset $S\subseteq\{1,\dots,n\}$ and is $1$ when an odd number of the bits $\{x_i:i\in S\}$ are $1$, and $0$ otherwise. For example, $S=\{1,3,4\}$ gives $\chi_S(x)=x_1\oplus x_3\oplus x_4$. Each parity is described by an $n$-bit string, so $\mathrm{PARITIES}_n$, the class of all $2^n$ parities, has representation size at most $n$. Show that $\mathrm{PARITIES}=\bigcup_n\mathrm{PARITIES}_n$ is efficiently proper PAC learnable. Describe the algorithm clearly, analyse its running time and prove its correctness.
+
+<details class="hint"><summary>hint</summary>Parity is addition modulo 2, and $\{0,1\}$ with addition and multiplication modulo 2 is a field.</details>
+
+<p class="uses">Uses Theorem 2.2.</p>
+</qn>
+
+<qn n="5" t="Hypotheses as Turing machines (optional)">
+The definition of efficient PAC learning requires hypotheses to be evaluatable in polynomial time. Suppose we drop this, and let $\H$ be the class of all Turing machines, not necessarily polynomial-time, so the learner may output any program. Let $\C_n$ be the boolean circuits of size at most $p(n)$ on $n$ inputs, for a fixed polynomial $p$. Show that $\C=\bigcup_n\C_n$ is "efficiently" PAC learnable using $\H$ under this modified definition, and argue that this shows the relaxed definition trivialises learning.
+
+<details class="hint"><summary>hint</summary>Outsource the hard work of finding a consistent classifier to the hypothesis $h$ itself. The learner only needs to decide what input to hand to the Turing machine $h$.</details>
+
+<p class="uses">This is the "Exercise 2.4" mentioned after Definition 1.8; it uses Theorem 2.2.</p>
+</qn>

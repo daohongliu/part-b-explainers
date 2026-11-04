@@ -1,0 +1,33 @@
+@num 2
+@title Occam and VC dimension
+@source Problem Sheet 2 · MT26
+@dek Decision lists via Occam’s razor, convex sets (infinite VC dimension, yet learnable under the uniform distribution), and a class whose growth function meets the Sauer–Shelah bound exactly.
+---
+<qn n="1" t="Learning decision lists">
+A **$k$-decision list** over $z_1,\dots,z_n$ is an ordered list $L=(t_1,b_1),(t_2,b_2),\dots,(t_l,b_l)$ together with a default bit $b$, where each $t_i$ is a conjunction of at most $k$ literals and each $b_i\in\{0,1\}$. For $x\in\{0,1\}^n$, $L(x)=b_j$ for the smallest $j$ with $t_j(x)=1$, and $L(x)=b$ if there is none. So reading left to right, the first satisfied term decides the output:
+
+$$(z_1\wedge\bit{z_3},b_1)\to(z_4,b_2)\to(\bit{z_2}\wedge z_3,b_3)\to(z_1\wedge\bit{z_5},b_4)\to(\bit{z_4}\wedge z_6,b_5)\to(z_1\wedge\bit{z_6},b_6)\to b.$$
+
+Give an efficient PAC learning algorithm for decision lists. As a first step, argue that it is enough to consider the case where every term has length 1, i.e. is a single literal.
+
+<details class="hint"><summary>hint</summary>For the first part, use the reduction that turned learning $k$-CNF into learning conjunctions. For the second, find an efficient consistent learner, count the functions decision lists can represent, and apply Occam's razor.</details>
+
+<p class="uses">Uses Theorem 1.5's reduction and Theorem 2.2.</p>
+</qn>
+
+<qn n="2" t="Convex sets in the unit square">
+Let $\X=[0,1]^2$. For a convex $S\subseteq\X$ let $c_S(x)=1$ if $x\in S$ and $0$ otherwise, and let $\C=\{c_S:S\text{ a convex subset of }\X\}$.
+<ol class="parts"><li>Show that $\VCD(\C)=\infty$. This shows that convex sets can't be learned (efficiently or not) from a sample whose size is bounded by a polynomial in $1/\eps$ and $1/\delta$ alone.</li><li>Now require the learner to work only for one specific distribution. Show that if $\D$ is uniform on $[0,1]^2$, convex sets are efficiently PAC learnable in this restricted sense, with running time and sample complexity polynomial in $1/\eps$ and $1/\delta$.</li></ol>
+
+<details class="hint"><summary>hints</summary>1. Find an arrangement of $d$ points, for any $d$, such that whichever subset is labelled 1, some convex set contains exactly that subset. 2. Output the convex hull of the positive points (you may assume it can be computed in polynomial time, and that a convex set in the unit square has perimeter at most 4). For the analysis, cut the square into a $k\times k$ grid with $k$ chosen carefully as a function of $\eps$, and argue that the boundary of a convex set meets only $\Theta(k)$ of the small squares.</details>
+
+<p class="uses">Part 1 uses Definition 3.2; part 2 is the restricted model mentioned at the start of Chapter 4.</p>
+</qn>
+
+<qn n="3" t="Meeting the Sauer–Shelah bound">
+Prove that for every $d\in\N$ there is a concept class $\C$ with $\VCD(\C)=d$ and $\Pi_\C(m)=\Phi(m,d)$ for every $m\in\N$.
+
+<details class="hint"><summary>hint</summary>$\Phi(m,d)=\sum_{i=0}^d\binom mi$. Think about what each term of the sum counts, and make sure your class realises all of them.</details>
+
+<p class="uses">Uses Definition 3.3, Definition 3.5 and Lemma 3.7.</p>
+</qn>

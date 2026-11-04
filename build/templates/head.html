@@ -608,6 +608,15 @@ mark.unote { background: linear-gradient(transparent 0 58%, var(--ochre-wash) 58
 .three-note { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: .8rem; color: var(--ink-soft); pointer-events: none; text-align: center; padding: 1rem; }
 @media (max-width: 640px) { .sh-grid { grid-template-columns: minmax(0, 1fr); } }
 
+.cr-steps { line-height: 1.9; }
+.cr-on { color: var(--blue); font-weight: 600; } .cr-off { opacity: .5; }
+
+details.hint { margin: .5rem 0 .2rem; font-size: .98rem; }
+details.hint > summary { cursor: pointer; list-style: none; display: inline-block; font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: .74rem; color: var(--ochre); border-bottom: 1px dotted var(--ochre); }
+details.hint > summary::-webkit-details-marker { display: none; }
+details.hint[open] > summary { color: var(--ink-soft); border-color: transparent; }
+details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-wash); }
+
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {
