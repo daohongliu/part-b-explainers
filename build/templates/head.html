@@ -104,8 +104,9 @@ a { color: var(--blue); text-decoration-thickness: .06em; text-underline-offset:
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 1.6rem 5rem;
 }
-.view > *, .hero > * { max-width: var(--col); }
-.view > figure.wide, .hero > figure.wide, .view > .wide { max-width: 100%; }
+.view > *, .hero > *, .sec-block > *, .sub-block > * { max-width: var(--col); }
+.view > figure.wide, .hero > figure.wide, .view > .wide, .sec-block > figure.wide, .sub-block > figure.wide, .sec-block > .wide { max-width: 100%; }
+.view > .sec-block, .sec-block > .sub-block { max-width: none; }
 .view { counter-reset: sn; }
 
 .runhead {
@@ -173,7 +174,8 @@ aside.bg > *:last-child { margin-bottom: .2rem; }
   .sn-ref { cursor: default; }
   .pg { position: absolute; left: -5rem; top: .45em; margin: 0; width: 4.2rem; text-align: right; vertical-align: 0; }
   .thm .pg { top: .3em; }
-  .view > figure.wide, .hero > figure.wide, .view > .wide { clear: right; max-width: 57rem; }
+  .view > figure.wide, .hero > figure.wide, .view > .wide, .sec-block > figure.wide, .sec-block > .wide { clear: right; max-width: 57rem; }
+  .sub-block > figure.wide { clear: right; max-width: calc(57rem - 1.3rem); }
 }
 
 /* cross-references */
@@ -528,7 +530,7 @@ details.pause summary::before { flex: none; }
 .side-ib .thm, .side-ib aside.bg, .side-ib figure, .side-ib .disp { margin: .3rem 0; max-width: 100%; }
 .side-ib .pg, .side-ib .qed { display: none; }
 .side-ib figure .fig-body { display: none; }
-@media (min-width: 1300px) { body.side-open .page { margin-right: min(30rem, 40vw); margin-left: max(15.5rem, calc(50vw - 32rem - 15rem)); } body.side-open .sidenote { display: none; } body.side-open .view > figure.wide { max-width: var(--col); } }
+@media (min-width: 1300px) { body.side-open .page { margin-right: min(30rem, 40vw); margin-left: max(15.5rem, calc(50vw - 32rem - 15rem)); } body.side-open .sidenote { display: none; } body.side-open .view figure.wide { max-width: var(--col); } }
 .nd-where { font-size: .88rem; color: var(--ink-soft); font-style: italic; margin: .6rem 0 .4rem; }
 .nd-empty { font-size: .95rem; color: var(--ink-soft); }
 .nd-g { font-family: var(--sc); letter-spacing: .05em; font-size: .85rem; color: var(--ink-soft); margin: 1.1rem 0 .3rem; }
@@ -633,6 +635,41 @@ details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-w
 .ch-meta .meter .dots, .cmeta .dots { font-size: .7rem; }
 .cmeta .dd { color: var(--ochre); } .cmeta .di { color: var(--blue); }
 
+
+/* ===== hierarchy: sections, subsections, results and proofs ===== */
+.sec-block { margin-top: 3.4rem; padding-top: .2rem; border-top: 1px solid var(--rule); position: relative; }
+.sec-block > h2 { margin-top: 1.5rem; }
+.sec-block > h2:first-child::before { content: ""; position: absolute; left: 0; top: -2px; width: 3.2rem; height: 3px; background: var(--ink); border-radius: 2px; }
+.sub-block { position: relative; margin: 2rem 0 1.6rem; padding-left: 1.15rem; border-left: 1px solid var(--rule); }
+.sub-block > h3 { margin-top: 0; padding-top: .1rem; }
+.sub-block > h3::before { content: ""; position: absolute; left: -5px; top: .55rem; width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink-soft); }
+.sub-block .pg { left: -6.15rem; }
+
+/* results get a ruled box whose colour says what kind they are */
+.thm { padding: .7rem .95rem .75rem 1.05rem; border-left: 3px solid var(--blue); background: color-mix(in srgb, var(--blue-wash) 45%, transparent); border-radius: 0 10px 10px 0; }
+.thm.k-def { border-left-color: var(--ochre); background: color-mix(in srgb, var(--ochre-wash) 40%, transparent); }
+.thm.k-ex { border-left: 2px dashed var(--ink-soft); background: transparent; padding-top: .35rem; padding-bottom: .4rem; }
+.thm .pg { left: calc(-5rem - 1.05rem - 3px); }
+.sub-block .thm .pg { left: calc(-6.15rem - 1.05rem - 3px); }
+.xcard .thm, .side-ib .thm { padding: .4rem .7rem; }
+
+/* a proof hangs off the result it proves: indented, ruled, opened by "Proof." and closed by ∎ */
+.proof { margin: .1rem 0 1.8rem 1.1rem; padding: .55rem .9rem .5rem 1rem; border-left: 1.5px solid color-mix(in srgb, var(--blue) 55%, transparent); position: relative; }
+.thm + .proof::before { content: ""; position: absolute; left: -1.15rem; top: -.15rem; width: 1rem; height: 1.05rem; border-left: 1.5px solid color-mix(in srgb, var(--blue) 55%, transparent); border-bottom: 1.5px solid color-mix(in srgb, var(--blue) 55%, transparent); border-bottom-left-radius: 6px; }
+.thm:has(+ .proof) { margin-bottom: .1rem; }
+.thm + .proof { margin-top: 0; }
+.proof .phead { font-family: var(--sc); font-style: normal; font-weight: 700; letter-spacing: .03em; color: var(--blue); margin-right: .4rem; }
+.proof > p + p, .proof > p + .disp, .proof > .disp + p { margin-top: .55rem; }
+.proof > p:last-child { margin-bottom: .1rem; }
+.proof .qed { color: var(--blue); }
+.proof .phead a.xref { color: inherit; text-decoration-color: color-mix(in srgb, var(--blue) 40%, transparent); }
+@media (max-width: 640px) {
+  .sub-block { padding-left: .75rem; }
+  .thm { padding: .6rem .7rem .65rem .8rem; }
+  .proof { margin-left: .55rem; padding: .45rem .5rem .45rem .75rem; }
+  .thm + .proof::before { left: -.6rem; width: .5rem; }
+}
+
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {
@@ -651,5 +688,4 @@ body[data-course="clt"] .ch-head h1, body[data-course="clt"] .course-home h1 { f
 body[data-course="clt"] .ch-head h1 em, body[data-course="clt"] .course-home h1 em { font-family: var(--serif); font-weight: 400; letter-spacing: 0; }
 body[data-course="clt"] .fig-body { background-image: radial-gradient(var(--dot) 1px, transparent 1.3px); background-size: 14px 14px; }
 body[data-course="clt"] h2 .sec { color: var(--ochre); }
-body[data-course="clt"] .thm { border-left-style: dotted; }
 </style>
