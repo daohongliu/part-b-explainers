@@ -1,0 +1,97 @@
+@num 4
+@title Martingales
+@source Problem Sheet 4 · MT25
+@dek Stopping times, optional stopping and martingale convergence. Question A2 needs only Chapter 5; the rest leans on the martingale chapters, which are not written here yet.
+---
+## Section A · Warm-up
+
+<qn n="A1">
+Let $(Y_n)_{n\ge0}$ be a supermartingale on a filtered probability space $(\Omega,\F,(\F_n)_{n\ge0},\PP)$, let $(V_n)_{n\ge1}$ be a non-negative predictable process, and let $X_0=0$ and $$X_n=\sum_{k=1}^nV_k(Y_k-Y_{k-1}),\qquad n\ge1.$$ Show that if each $X_n$ is integrable, then $(X_n)_{n\ge0}$ is a supermartingale. What happens when $V$ is negative? And/or $Y$ is a submartingale?
+</qn>
+
+<qn n="A2">
+Suppose $\tau,\rho$ are stopping times on some $(\Omega,\F,(\F_n)_{n\ge0},\PP)$.
+<ol class="parts"><li>Show that $\tau+\rho$, $\tau\wedge\rho$ and $\tau\vee\rho$ are also stopping times. If $\tau\le\rho$, is $\rho-\tau$ a stopping time?</li><li>Now suppose that for some $K\ge1$ and some $\eps>0$ we have, for every $n\ge0$, $$\PP[\tau\le n+K\mid\F_n]\ge\eps\quad\text{a.s.}$$ Prove that $\PP[\tau>mK]\le(1-\eps)^m$ and deduce that $\E[\tau]<\infty$.</li></ol>
+
+<p class="uses">Part 1 uses Definition 5.4 and Proposition 5.5; part 2 uses the tower property, Proposition 4.9.</p>
+</qn>
+
+<qn n="A3">
+On a filtered probability space $(\Omega,\F,(\F_n)_{n\ge0},\PP)$, let $(M_n)_{n\ge0}$ be an adapted, integrable process. Show that $M$ is a martingale if and only if $\E[M_\tau]=\E[M_0]$ for all bounded stopping times $\tau$. [Hint: consider $A\in\F_n$ and the two stopping times $\tau=n+1$ and $\tau=n+\ind_{A^c}$.]
+</qn>
+
+<qn n="A4">
+Let $(M_n)_{n\ge0}$ be a martingale with $M_0=0$. Which of the following are possible?
+<ol class="parts"><li>For some $n$, $\E[M_n]>0$.</li><li>For some almost surely finite stopping time $\tau$, $\E[M_\tau]>0$.</li><li>$M_n\to\infty$ as $n\to\infty$ with probability 1.</li></ol>
+What if, in addition, $M$ is bounded in $\Lp1$? What if $M$ is uniformly integrable?
+</qn>
+
+## Section B · To be handed in
+
+<qn n="B1">
+Suppose $X_n$, $n\ge1$, are i.i.d. with finite mean, and $N$ is a stopping time for the natural filtration of $(X_n)_{n\ge1}$ with $\E[N]<\infty$. Show Wald's equation: $$\E\Big[\sum_{n=1}^NX_n\Big]=\E[N]\,\E[X_1].$$
+</qn>
+
+<qn n="B2">
+(Martingale formulation of Bellman's optimality principle.) Your winnings per unit stake on a game are $\eps_n$ in round $n$, where $(\eps_n)_{n\ge1}$ are i.i.d. with $\PP[\eps_n=+1]=p$, $\PP[\eps_n=-1]=q$ and $\frac12<p=1-q<1$. Let $\F_n:=\sigma(\eps_1,\dots,\eps_n)$. Your stake $V_n$ on game $n$ is $\F_{n-1}$-measurable and lies strictly between 0 and $Z_{n-1}$, your fortune at time $n-1$. Assume $\E[|\log Z_n|]<\infty$ for all $n\ge0$. You want to maximise the expected "interest rate" $\E[\log(Z_N/Z_0)]$ at a fixed horizon $N$, given the constant $Z_0>0$.
+
+Prove that, if $Z_n>0$, $$\E\big[\log(Z_{n+1}/Z_n)\mid\F_n\big]=f(V_{n+1}/Z_n),\qquad f(x):=p\log(1+x)+q\log(1-x).$$ Deduce that for any predictable strategy $(V_n)$, the process $(\log Z_n-n\alpha)_{n\ge0}$ is a supermartingale, where $\alpha:=p\log p+q\log q+\log2$ (sometimes called the "entropy"). Conclude that $\E[\log(Z_N/Z_0)]\le N\alpha$. Describe explicitly the strategy for which $(\log Z_n-n\alpha)$ is a martingale and the inequality is an equality.
+</qn>
+
+<qn n="B3">
+Let $(Z_n)$ be a Galton–Watson branching process with offspring distribution $X$, with $\mu=\E[X]>1$ and $\sigma^2=\mathrm{Var}[X]<\infty$. Set $\F_n=\sigma(Z_k:k\le n)$ and $M_n=Z_n/\mu^n$, an $(\F_n)$-martingale. Compute $\E[Z_{n+1}^2\mid\F_n]$ (you may reason conditionally on $\{Z_n=k\}$, since these events form a countable partition of $\Omega$). Using induction, find a formula for $\E[Z_n^2]$ in terms of $n$, $\mu$ and $\sigma$. Deduce that $(M_n)$ is bounded in $\Lp2$, and converges in $\Lp2$ and in $\Lp1$.
+
+<p class="uses">The process is the one from Section 0.5; conditioning on a partition is Example 4.1.</p>
+</qn>
+
+<qn n="B4">
+Let $A\subset\Z^2$ be a finite set of lattice points, and let $B$ (the boundary of $A$) be the set of points of $\Z^2\setminus A$ with at least one horizontal or vertical neighbour in $A$. Given any $g:B\to\R$, construct $f:A\cup B\to\R$ with $f|_B=g$ and, for every $v\in A$, $$f(v)=\frac14\sum_{w\sim v}f(w),$$ the sum running over the four neighbours of $v$; $f$ is a discrete harmonic function with boundary condition $g$. Let $(X_n)_{n\ge0}$ be a simple symmetric random walk on $\Z^2$ with $X_0\in A$, and let $h_B=\inf\{n\ge0:X_n\in B\}$. Show that $f(X_{n\wedge h_B})$, $n\ge0$, is a martingale for the natural filtration of $X$. [Hint: for $v\in A$, start a walk at $v$ and consider $g(X_{h_B})$.]
+
+<p class="uses">$X_{n\wedge h_B}$ is the stopped process of Proposition 5.9.</p>
+</qn>
+
+<qn n="B5">
+(Gambler's ruin.) Let $(X_n)_{n\ge1}$ be i.i.d. with $\PP[X_1=1]=p$, $\PP[X_1=-1]=q$, $0<p=1-q<1$ and $p\ne q$. For integers $0<a<b$ define $S_n:=a+X_1+\dots+X_n$ and $\tau:=\inf\{n:S_n=0\text{ or }S_n=b\}$. Let $\F_n:=\sigma(X_1,\dots,X_n)$ and check that $\tau$ is a stopping time. Prove that $$M_n:=\Big(\frac qp\Big)^{S_n}\quad\text{and}\quad N_n:=S_n-n(p-q)$$ are martingales for $(\F_n)$. Deduce the values of $\PP[S_\tau=0]$ and $\E[\tau]$. [Argue the use of the optional stopping theorem carefully: you could use $\tau\wedge m$ and let $m\to\infty$.]
+
+<p class="uses">That $\tau$ is a stopping time follows from Definition 5.4; compare Figure 5.1.</p>
+</qn>
+
+<qn n="B6">
+Toss a coin repeatedly, with $X_i$ the outcome of the $i$th toss, on a space $(\Omega,\F)$ carrying two probability measures $\PP_A$ and $\PP_B$: under hypothesis A the probability of heads is $a$, under hypothesis B it is $b$, for some $a,b\in(0,1)$. Write $\PP_A(x_1,\dots,x_n)=\PP_A(X_1=x_1,\dots,X_n=x_n)$, and similarly for $\PP_B$. Show that $$Z_n=\frac{\PP_A(X_1,\dots,X_n)}{\PP_B(X_1,\dots,X_n)}$$ is a martingale under $\PP_B$ for the filtration $\F_n=\sigma(X_k:k\le n)$. Conclude that $Z_\infty:=\lim_nZ_n$ exists with probability 1. If $b\ne a$, what is the distribution of $Z_\infty$? Deduce that $1/Z_n$ is a $\PP_A$-martingale and comment on its convergence. (This is a special case of the consistency of the likelihood ratio test.)
+</qn>
+
+<qn n="B7">
+(Pólya's urn.) At time 0 an urn holds one white ball and one black ball. At each step we draw a ball uniformly at random and return it together with another ball of the same colour. So at time $n$ there are $n+2$ balls, of which $B_n$ are black and $W_n=n+2-B_n$ white, with $B_n\in\{1,\dots,n+1\}$. Show that $\PP(B_n=k)=\frac1{n+1}$ for $k=1,\dots,n+1$. Show that $M_n=B_n/(n+2)$ is a martingale for a filtration you should specify. Conclude that $M_n$ converges to some $M_\infty$, say in what sense, and find the distribution of $M_\infty$.
+</qn>
+
+<qn n="B8">
+Let $(M_n)_{n\ge0}$ be a martingale on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$.
+<ol class="parts"><li>Show that $(M_n)$ is bounded in $\Lp2$ if and only if $$\E[M_0^2]<\infty\quad\text{and}\quad\sum_{k\ge1}\E\big[(M_k-M_{k-1})^2\big]<\infty.$$</li><li>Assume $(M_n)$ is bounded in $\Lp2$. Show that there is a random variable $M_\infty$ with $M_n\to M_\infty$ a.s. and $\lim_n\E[(M_n-M_\infty)^2]=0$, that is, $M_n\to M_\infty$ in $\Lp2$. [Hint: use Doob's forward convergence theorem for the a.s. limit and part 1 for the $\Lp2$ convergence.]</li></ol>
+</qn>
+
+## Section C · Extra practice
+
+<qn n="C1">
+For a Galton–Watson process with offspring generating function $f(\theta)=\E[\theta^X]$, show that $W_n=q^{Z_n}$ is a martingale (specify the filtration), where $q$ is the smallest root of $\theta=f(\theta)$ in $[0,1]$.
+</qn>
+
+<qn n="C2">
+Flip a fair coin repeatedly. What is the expected number of tosses until the pattern HTHTHT first appears? What are the largest and smallest expected waiting times for patterns of length 6? Give a pattern attaining each.
+</qn>
+
+<qn n="C3">
+Show that the probability that the fraction of white balls in Pólya's urn is ever as large as $3/4$ is at most $2/3$. Is it equal to $2/3$, or smaller?
+</qn>
+
+<qn n="C4">
+Show that if $(\F_n)$ is a filtration with $\F_\infty=\sigma\big(\bigcup_n\F_n\big)$ and $Y_n\to Y$ in $\Lp1$, then $\E[Y_n\mid\F_n]\to\E[Y\mid\F_\infty]$ in $\Lp1$.
+</qn>
+
+<qn n="C5">
+Let $(Y_n)_{n\ge1}$ be i.i.d. and $t\in\R$ with $\psi(t)=\E[e^{tY_1}]<\infty$. Let $S_0=0$, $S_n=\sum_{k=1}^nY_k$ and $M_n=e^{tS_n}/\psi(t)^n$. Show that $(M_n)$ is a martingale (an exponential martingale). Must $M_n$ converge as $n\to\infty$?
+</qn>
+
+<qn n="C6">
+Let $(X_n)_{n\ge0}$ be a Markov chain on a finite state space $S$, let $g:S\to\R$ and $M_n=g(X_n)$.
+<ol class="parts"><li>If the chain is irreducible, show that $M$ is a martingale only when $g$ is constant.</li><li>In general, which $g$ give martingales? (Consider how $g$ behaves on each closed communicating class.)</li><li>Show that part 1 can fail on a countably infinite state space.</li></ol>
+</qn>

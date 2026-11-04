@@ -105,7 +105,7 @@ function buildToc(v) {
     const li = h('li', 'tl-sec'), a = h('a');
     a.href = '#' + hd.id;
     if (isSheet) {
-      a.appendChild(h('span', 'tl-n', 'Q' + hd.querySelector('.sq-n').textContent.trim()));
+      a.appendChild(h('span', 'tl-n', hd.querySelector('.sq-n').textContent.trim()));
       const first = (hd.querySelector('.sq-b').textContent || '').replace(/\s+/g, ' ').trim();
       a.appendChild(h('span', 'tl-t', first.length > 54 ? first.slice(0, 52) + '…' : first));
     } else {
@@ -215,7 +215,7 @@ function openBeside(id) {
     body.appendChild(src.cloneNode(true));
     /* a result travels with its proof */
     const nx = t.nextElementSibling;
-    if (nx && nx.matches('details.pf')) { const c = nx.cloneNode(true); c.open = false; body.appendChild(c); }
+    if (nx && nx.matches('.proof, details.pf')) body.appendChild(nx.cloneNode(true));
   }
   scrub(body); $$('[id]', body).forEach(n => n.removeAttribute('id'));
   $$('.sec-meta', body).forEach(n => n.remove());

@@ -4,8 +4,7 @@
 @pages 22–31
 @dek “Random variables converge” can mean four different things. This chapter sorts them out, with two lemmas that decide whether events happen infinitely often, a handful of inequalities that do most of the day-to-day work, and the spaces L<sup>p</sup>.
 ---
-## 3.1 The Borel–Cantelli Lemmas {22}
-
+## 3.1 The Borel–Cantelli Lemmas {22} [d2 i3]
 We'll return to independence, or more importantly the lack of it, later. First we look at some consequences of our theory of integration for probability. Throughout, $(\Omega,\F,\PP)$ is a probability space.
 
 The first question: given a sequence of events $A_1,A_2,\dots$, which outcomes $\omega$ are in *infinitely many* of them? And which are in *all but finitely many*?
@@ -13,6 +12,14 @@ The first question: given a sequence of events $A_1,A_2,\dots$, which outcomes $
 <thm k="Definition 3.1" pg="22">
 Let $(A_n)$ be a sequence of sets from $\F$. We define $$\begin{aligned}\limsup_{n\to\infty}A_n&=\bigcap_{n=1}^\infty\bigcup_{m\ge n}A_m\\&=\{\omega\in\Omega:\omega\in A_m\text{ for infinitely many }m\}\\&=\{A_m\text{ occurs infinitely often}\}=\{A_m\text{ i.o.}\}\end{aligned}$$ and $$\begin{aligned}\liminf_{n\to\infty}A_n&=\bigcup_{n=1}^\infty\bigcap_{m\ge n}A_m\\&=\{\omega:\exists\,m_0(\omega)\text{ with }\omega\in A_m\text{ for all }m\ge m_0(\omega)\}\\&=\{A_m\text{ eventually}\}=\{A_m^c\text{ infinitely often}\}^c.\end{aligned}$$
 </thm>
+
+<pf>
+First recall that if $X$ is exponential with parameter 1 then $\PP[X\le x]=1-e^{-x}$ for $x\ge0$ (and $0$ for $x<0$). Fix $0<\eps<1$. Then $$\begin{aligned}\PP[M_n\le(1-\eps)\log n]&=\PP\Big[\bigcap_{i=1}^n\{X_i\le(1-\eps)\log n\}\Big]\\&=\prod_{i=1}^n\PP[X_i\le(1-\eps)\log n]\\&=\Big(1-\frac1{n^{1-\eps}}\Big)^n\le\exp(-n^\eps),\end{aligned}$$ using independence and then $1-a\le e^{-a}$. Thus $\sum_n\PP[M_n\le(1-\eps)\log n]<\infty$, and so by BC1, $\PP[M_n\le(1-\eps)\log n\text{ i.o.}]=0$. Since $\eps$ was arbitrary, take $\eps=\frac1j$ for $j=1,2,\dots$: a countable union of null events is null, so $$\PP\Big[\liminf_{n\to\infty}\frac{M_n}{\log n}<1\Big]=0.$$
+
+The reverse bound is similar. $\PP[X_n\ge(1+\eps)\log n]=n^{-(1+\eps)}$ is summable, so by BC1, $\PP[X_n\ge(1+\eps)\log n\text{ i.o.}]=0$. And $\{M_n\ge(1+\eps)\log n\text{ i.o.}\}$ is contained in that event up to a null set: if $M_n\ge(1+\eps)\log n$ then some $k\le n$ has $X_k\ge(1+\eps)\log n\ge(1+\eps)\log k$, and if this happens for infinitely many $n$ then, since each $X_k$ is finite, infinitely many different $k$ must be involved. Hence $\limsup_nM_n/\log n\le1$ almost surely as well.
+</pf>
+
+<sheet n="3" qs="A1"></sheet>
 
 Read the formulas slowly once. $\omega\in\bigcup_{m\ge n}A_m$ says "$\omega$ is in some $A_m$ at or after time $n$". Requiring this for *every* $n$ (the outer intersection) says that however late you start looking, $\omega$ shows up again: infinitely often. Similarly $\omega\in\bigcap_{m\ge n}A_m$ says "from time $n$ on, $\omega$ is in every $A_m$", and the outer union asks for this to hold from *some* $n$ on: eventually. Both sets are in $\F$, being built from countably many unions and intersections.
 
@@ -56,6 +63,10 @@ Without independence BC2 fails badly: take $A_n=A$ for every $n$ with $\PP[A]=\f
 A monkey is provided with a typewriter. At each time step it has probability $1/26$ of typing any of the 26 letters, independently of other times. What is the probability that it will type ABRACADABRA at least once? Infinitely often?
 </thm>
 
+<pause n="Sixes forever" q="Roll a fair die again and again. Is it certain that you see infinitely many sixes? Infinitely many runs of ten sixes in a row?">
+Let $A_n$ be the event that roll $n$ is a six. The $A_n$ are independent with $\sum_n\PP[A_n]=\sum_n\frac16=\infty$, so the second Borel–Cantelli lemma says $\PP[A_n\text{ i.o.}]=1$. For runs, let $B_k$ be the event that rolls $10k+1,\dots,10k+10$ are all sixes. These blocks don't overlap, so the $B_k$ are independent, each with probability $6^{-10}$. That is tiny, but the sum of infinitely many copies of it is still infinite, so again infinitely many $B_k$ happen, almost surely. Any fixed finite pattern turns up infinitely often.
+</pause>
+
 *Solution.* Consider the events $$A_k=\{\text{ABRACADABRA is typed at times }11k+1,\dots,11k+11\}$$ for each $k$. These use disjoint blocks of keystrokes, so they are independent, and $\PP[A_k]=(1/26)^{11}>0$. So $\sum_k\PP[A_k]=\infty$, and BC2 says that with probability 1, $A_k$ happens infinitely often. (We only looked at blocks starting at multiples of 11, which is enough: finding infinitely many occurrences there certainly gives infinitely many occurrences overall.)
 
 Later in the course, with the help of a suitable martingale, we'll be able to work out how long we must wait, on average, before we see patterns like this. We'll see many applications of BC1 and BC2. Here is one more.
@@ -64,11 +75,9 @@ Later in the course, with the help of a suitable martingale, we'll be able to wo
 Let $(X_n)_{n\ge1}$ be independent exponentially distributed random variables with mean 1 and let $M_n=\max\{X_1,\dots,X_n\}$. Then $$\PP\Big[\lim_{n\to\infty}\frac{M_n}{\log n}=1\Big]=1.$$
 </thm>
 
-<pf>
-First recall that if $X$ is exponential with parameter 1 then $\PP[X\le x]=1-e^{-x}$ for $x\ge0$ (and $0$ for $x<0$). Fix $0<\eps<1$. Then $$\begin{aligned}\PP[M_n\le(1-\eps)\log n]&=\PP\Big[\bigcap_{i=1}^n\{X_i\le(1-\eps)\log n\}\Big]\\&=\prod_{i=1}^n\PP[X_i\le(1-\eps)\log n]\\&=\Big(1-\frac1{n^{1-\eps}}\Big)^n\le\exp(-n^\eps),\end{aligned}$$ using independence and then $1-a\le e^{-a}$. Thus $\sum_n\PP[M_n\le(1-\eps)\log n]<\infty$, and so by BC1, $\PP[M_n\le(1-\eps)\log n\text{ i.o.}]=0$. Since $\eps$ was arbitrary, take $\eps=\frac1j$ for $j=1,2,\dots$: a countable union of null events is null, so $$\PP\Big[\liminf_{n\to\infty}\frac{M_n}{\log n}<1\Big]=0.$$
+<sheet n="2" qs="B4,B5,B6,B7,C1">With both Borel–Cantelli lemmas in hand, Sheet 2 is complete.</sheet>
 
-The reverse bound is similar. $\PP[X_n\ge(1+\eps)\log n]=n^{-(1+\eps)}$ is summable, so by BC1, $\PP[X_n\ge(1+\eps)\log n\text{ i.o.}]=0$. And $\{M_n\ge(1+\eps)\log n\text{ i.o.}\}$ is contained in that event up to a null set: if $M_n\ge(1+\eps)\log n$ then some $k\le n$ has $X_k\ge(1+\eps)\log n\ge(1+\eps)\log k$, and if this happens for infinitely many $n$ then, since each $X_k$ is finite, infinitely many different $k$ must be involved. Hence $\limsup_nM_n/\log n\le1$ almost surely as well.
-</pf>
+<sheet n="3" qs="A2"></sheet>
 
 At first sight BC1 and BC2 might not look very powerful: they only tell us when certain events have probability zero or one. But for many applications, in particular when the events are independent, many interesting events can *only* have probability zero or one, because they are tail events (Theorem 2.31).
 
@@ -83,6 +92,8 @@ You may at this point be feeling a little confused. In Prelims Statistics or Par
 $$#eq10 \PP\Big[\frac{S_n}{\sqrt n}\le a\Big]\xrightarrow{n\to\infty}\int_{-\infty}^a\frac{e^{-x^2/2}}{\sqrt{2\pi}}\,dx. \tag{10}$$
 
 This is the **Central Limit Theorem**, without which statistics would be a very different subject. How does it fit with <a class="xref" href="#eq9">(9)</a>? <a class="xref" href="#eq10">(10)</a> says $S_n/\sqrt n$ is typically of size 1, while <a class="xref" href="#eq9">(9)</a> says that along every path $S_n/\sqrt n$ is unbounded (it reaches $\sqrt{2\log\log n}\to\infty$ infinitely often). There's no contradiction: they describe different *modes of convergence*. Figure 0.1 shows both at once.
+
+### Modes of convergence
 
 <thm k="Definition 3.7" nm="Modes of convergence" pg="25">
 Let $X_1,X_2,\dots$ and $X$ be random variables on a probability space $(\Omega,\F,\PP)$.
@@ -143,6 +154,8 @@ For $\eps>0$ and $n\in\N$ let $A_{n,\eps}=\{|X_n-X|>\eps\}$.
 2. This is the more interesting direction. Suppose that $X_n\pto X$. Then for each $k\ge1$ we have $\PP[A_{n,1/k}]\to0$ as $n\to\infty$, so there is some $n_k$ such that $\PP[A_{n_k,1/k}]<1/k^2$, and we can choose $n_k>n_{k-1}$ for $k\ge2$. Setting $B_k=A_{n_k,1/k}$, we have $$\sum_{k=1}^\infty\PP[B_k]\le\sum_{k=1}^\infty k^{-2}<\infty.$$ Hence, by BC1, $\PP[B_k\text{ i.o.}]=0$. But if only finitely many $B_k$ hold, then $|X_{n_k}-X|\le1/k$ for all large $k$, and certainly $X_{n_k}\to X$. So $X_{n_k}\to X$ a.s.
 </pf>
 
+<sheet n="3" qs="B1"></sheet>
+
 The trick in part 2 is to go fast enough along the subsequence that the probabilities of being far away become *summable*, and then BC1 turns "unlikely at each time" into "eventually never". In Example 3.9 the subsequence $X_{2^n}$ does exactly this.
 
 ### Inequalities
@@ -152,6 +165,10 @@ The First Borel–Cantelli Lemma is a powerful tool for proving almost sure conv
 <thm k="Lemma 3.11" nm="Markov’s inequality" pg="27" it>
 Let $(\Omega,\F,\PP)$ be a probability space and $X$ a non-negative random variable. Then, for each $\lambda>0$, $$\PP[X\ge\lambda]\le\frac1\lambda\E[X].$$
 </thm>
+
+<pause n="Markov is sharp" q="Find a non-negative random variable $X$ with $\E[X]=1$ and $\PP[X\ge10]=\frac1{10}$, so that Markov's inequality holds with equality.">
+Let $X=10$ with probability $\frac1{10}$ and $X=0$ otherwise. Then $\E[X]=10\cdot\frac1{10}=1$ and $\PP[X\ge10]=\frac1{10}=\E[X]/10$. Equality needs all the mass of $X$ to sit either at $0$ or exactly at the threshold: any mass strictly between them, or above, would make $\E[X]$ count for more than the bound uses.
+</pause>
 
 <pf>
 For each $\omega\in\Omega$ we have $X(\omega)\ge\lambda\ind_{\{X\ge\lambda\}}(\omega)$: where $X\ge\lambda$ the right side is $\lambda$, and elsewhere it is 0. Hence $\E[X]\ge\E[\lambda\ind_{\{X\ge\lambda\}}]=\lambda\PP[X\ge\lambda]$.
@@ -185,6 +202,8 @@ Let $(X_n)_{n\ge1}$ be i.i.d. random variables (on some probability space $(\Ome
 We have $\E[\bar X(n)]=n^{-1}\sum_{i=1}^n\E[X_i]=\mu$ and, since the $X_i$ are independent (so variances add), $$\mathrm{Var}[\bar X(n)]=n^{-2}\,\mathrm{Var}\Big[\sum_{i=1}^nX_i\Big]=n^{-2}\sum_{i=1}^n\mathrm{Var}[X_i]=\sigma^2/n.$$ Hence, by Chebyshev's inequality, $\PP[|\bar X(n)-\mu|>\eps]\le\frac{\mathrm{Var}[\bar X(n)]}{\eps^2}=\frac{\sigma^2}{\eps^2n}\to0$.
 </pf>
 
+<sheet n="3" qs="B2"></sheet>
+
 The next inequality is about convex functions, which bend upwards.
 
 <thm k="Definition 3.15" nm="Convex function" pg="29">
@@ -215,8 +234,7 @@ If $\E[X]$ is not an interior point of $I$ then it is an endpoint, and $X$ must 
 
 <strong>Remark.</strong> Jensen's inequality only works for probability measures, but one can often exploit it to prove results for finite measures by first normalising. For example, suppose that $\mu$ is a finite measure on $(\Omega,\F)$, and define $\nu(A)=\mu(A)/\mu(\Omega)$, a probability measure. Then $$\int|f|^3\,d\mu=\mu(\Omega)\int|f|^3\,d\nu\ge\mu(\Omega)\Big|\int f\,d\nu\Big|^3=\mu(\Omega)^{-2}\Big|\int f\,d\mu\Big|^3.$$
 
-## 3.2 L<sup>p</sup> spaces {30}
-
+## 3.2 L<sup>p</sup> spaces {30} [d3 i2]
 The set of all random variables on a probability space is a large set. It is useful to organise it by how integrable its members are.
 
 <thm k="Definition 3.18" pg="30">
@@ -274,3 +292,5 @@ Let $p\ge1$. The vector space $\Lp p$ is complete, i.e., for any sequence $(X_n)
 The proof is a recipe worth remembering: Cauchy in norm → choose a subsequence with summable gaps → almost sure limit → Fatou to upgrade back to norm convergence. Theorem 3.10 used the same idea.
 
 <strong>Remark.</strong> The above shows that $(\Lp p,\|\cdot\|_p)$ is almost a normed space; the only nuisance is that $\|X\|_p=0$ implies only $X=0$ a.s., not $X=0$. To get rid of this, we can quotient by the equivalence relation of a.s. equality. This gives the space $L^p$, whose elements are not random variables any more but equivalence classes of them. It is a complete normed space, a **Banach space**; courses on functional analysis study these systematically. From the probabilistic point of view, however, we prefer to work with actual functions, i.e. with random variables and not equivalence classes. One reason: when we have a large family $(X_t)_{t\ge0}$ of random variables, changing each of them on a null set may do a lot of harm, since uncountably many null sets can add up to something that isn't null.
+
+<sheet n="3" qs="C1,C2,C3"></sheet>

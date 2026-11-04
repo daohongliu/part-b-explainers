@@ -1,0 +1,94 @@
+@num 2
+@title Integration and independence
+@source Problem Sheet 2 · MT25
+@dek The convergence theorems at work, product measures, independence, and the Borel–Cantelli lemmas. Needs Chapter 2 and the start of Chapter 3.
+---
+## Section A · Warm-up
+
+<qn n="A1">
+Convince yourself that the proofs of the convergence theorems for Part A Integration carry over to the general measure spaces that we have introduced.
+
+<p class="uses">Here "the convergence theorems" are Theorem 2.13, Theorem 2.12 and Theorem 2.14, whose proofs Chapter 2 gives in full for a general measure space.</p>
+</qn>
+
+<qn n="A2">
+Let $(\Omega_1,\F_1)$ and $(\Omega_2,\F_2)$ be measurable spaces, and $(\Omega,\F)$ their product. Check carefully that the set $\A$ of finite disjoint unions of measurable rectangles is indeed an algebra on $\Omega$. [Thinking about atoms may help arrive at a clean answer.]
+
+<p class="uses">Uses Definition 2.16.</p>
+</qn>
+
+<qn n="A3">
+Prove Lemma 2.17. [Hint: for any $A\in\A$ and $\omega_2\in\Omega_2$, define the section $$A_{\omega_2}=\{\omega_1:(\omega_1,\omega_2)\in A\}\subseteq\Omega_1,$$ and consider $f(\omega_2)=\PP_1[A_{\omega_2}]$.]
+</qn>
+
+<qn n="A4">
+Show that if $f$ and $g$ are measurable functions on $(\Omega,\F,\mu)$ that are either both non-negative or both integrable, and $c\in\R$, then $$\int(f+g)\,d\mu=\int f\,d\mu+\int g\,d\mu,\qquad \int cf\,d\mu=c\int f\,d\mu.$$ [Hint: use the MCT.]
+
+<p class="uses">Uses Definition 2.6, Definition 2.7 and Theorem 2.13.</p>
+</qn>
+
+## Section B · To be handed in
+
+<qn n="B1">
+Let $(A_n)$ be a sequence of independent events. Show that if $I,J$ are disjoint (finite or countable) sets of indices, then $$\PP\Big[\bigcap_{i\in I}A_i\cap\bigcap_{j\in J}A_j^c\Big]=\prod_{i\in I}\PP[A_i]\prod_{j\in J}\big(1-\PP[A_j]\big).$$ (You may wish to use induction on $|J|$.)
+
+<p class="uses">Uses Definition 2.22 and Lemma 1.4.</p>
+</qn>
+
+<qn n="B2">
+Prove Scheffé's Lemma: let $(f_n)$ be a sequence of non-negative integrable functions on $(\Omega,\F,\mu)$ and suppose that $f_n(x)\to f(x)$ for $\mu$-almost every $x\in\Omega$, where $f$ is also integrable. Then $$\int|f_n-f|\,d\mu\to0\quad\text{if and only if}\quad\int f_n\,d\mu\to\int f\,d\mu.$$
+
+<p class="uses">One direction is a one-liner; for the other, $(f-f_n)^+\le f$ and Theorem 2.14 do the work.</p>
+</qn>
+
+<qn n="B3">
+Let $F:\R\to[0,1]$ be an increasing, right-continuous function with $\lim_{x\to\infty}F(x)=1$ and $\lim_{x\to-\infty}F(x)=0$. The goal of this exercise is to give an alternative proof that there exists a unique probability measure $\mu$ on $(\R,\B(\R))$ such that, for all $x$, $$\mu((-\infty,x])=F(x).$$
+<ol class="parts"><li>Show that, if $\mu$ exists, it is unique.</li><li>Define $G:(0,1)\to\R$ by $G(y):=\inf\{x\in\R:F(x)\ge y\}$. Show that $G$ is increasing, that $F(x)\ge y\iff x\ge G(y)$, and deduce that $G$ is left-continuous ($G(y)\to G(x)$ as $y\uparrow x$).</li><li>Let $\Omega:=(0,1)$, $\F:=\B((0,1))$ the Borel σ-algebra on $(0,1)$, and $\PP$ the restriction of Lebesgue measure to $\F$. Show that $X:=G$ is a random variable on $(\Omega,\F,\PP)$, and that the induced measure $\mu_X:=\PP\circ X^{-1}$ satisfies $\mu_X((-\infty,x])=\PP[X\le x]=F(x)$.</li></ol>
+
+<p class="uses">This reproves Theorem 1.15; part 1 is Theorem 1.11 again.</p>
+</qn>
+
+<qn n="B4">
+Let $X_1,X_2,\dots$ be independent random variables, each uniformly distributed on $[0,1]$. Let $A_n$ be the event that a record occurs at time $n$: $$A_n=\{X_n>X_m\text{ for all }m<n\}.$$ Find the probability of $A_n$ and show that $A_1,A_2,\dots$ are independent. Deduce that, with probability one, infinitely many records occur. Now consider double records, that is, two records in a row. What is the probability of infinitely many double records?
+
+<p class="uses">Uses Lemma 3.3 and Lemma 3.4.</p>
+</qn>
+
+<qn n="B5">
+Let $(X_n)_{n\ge1}$ be independent, identically distributed random variables with $\PP[X_n=1]=p$ and $\PP[X_n=-1]=1-p$, where $p\neq\frac12$. Let $S_0:=0$ and $S_n:=\sum_{k=1}^nX_k$ for $n\ge1$. Show that $\PP[S_n=0\text{ i.o.}]=0$. [You might, or might not, find Stirling's formula useful: $n!\sim\sqrt{2\pi n}\,n^ne^{-n}$.]
+
+<p class="uses">Uses Lemma 3.3. Compare Section 0.3, where $p=\frac12$.</p>
+</qn>
+
+<qn n="B6">
+Let $(X_n)_{n\ge1}$ be independent with $\PP[X_n=1]=\PP[X_n=-1]=\frac12$. Let $S_0:=0$ and $S_n:=\sum_{k=1}^nX_k$. For $x\in\Z$ let $A_x:=\{S_n=x\text{ for infinitely many }n\}$, and $$B_-:=\Big\{\liminf_{n\to\infty}S_n=-\infty\Big\},\qquad B_+:=\Big\{\limsup_{n\to\infty}S_n=\infty\Big\}.$$
+<ol class="parts"><li>Using Kolmogorov's 0-1 law, prove that $\PP[B_-]\in\{0,1\}$ and $\PP[B_+]\in\{0,1\}$.</li><li>Prove that $\PP[B_-]=\PP[B_+]$.</li><li>Using a Borel–Cantelli lemma, show that for all $k\ge1$, $\limsup_{n\to\infty}(S_{n+k}-S_n)=k$ almost surely.</li><li>Deduce from part 3 that $\PP[B_-^c\cap B_+^c]=0$, and therefore that $\PP[B_-]=\PP[B_+]=1$. Conclude that $\PP[A_x]=1$ for all $x\in\Z$.</li></ol>
+
+<p class="uses">Uses Theorem 2.31 and Lemma 3.4.</p>
+</qn>
+
+<qn n="B7">
+Let $Z$ be a random variable taking non-negative integer values. Show that $\E[Z]=\sum_{n\ge1}\PP[Z\ge n]$.
+
+Let $X$ be an integrable random variable ($\E[|X|]<\infty$). Show that for any $\eps>0$, $$\sum_{n=1}^\infty\PP[|X|\ge\eps n]<\infty.$$
+
+Now let $(X_i)_{i\ge1}$ be identically distributed random variables and let $M_n=\max\{|X_j|:1\le j\le n\}$. If $\E[|X_1|^\alpha]<\infty$ for some $\alpha\in(0,\infty)$, show that $M_n/n^{1/\alpha}\to0$ with probability 1. [Hint: fix $\eps>0$, let $A_n=\{|X_n|\ge\eps n^{1/\alpha}\}$ and apply the first Borel–Cantelli lemma.]
+</qn>
+
+## Section C · Extra practice
+
+<qn n="C1">
+Let $(X_n)$ be independent, identically distributed random variables taking values in $\{R,G\}$ (red and green), with $\PP[X_n=R]=1-\PP[X_n=G]=\alpha$ for some $\alpha\in(0,1)$. Show that, almost surely, the sequence has no one-colour arithmetic subsequence: for all $a,b\in\N$ with $a\neq0$, $\{X_{an+b}:n\in\N\}=\{R,G\}$. Now find a deterministic sequence $(x_n)$ with the same property.
+</qn>
+
+<qn n="C2">
+Let $X_1,X_2$ be independent exponential random variables with parameter one. Let $Y_1=\min\{X_1,X_2\}$ and $Y_2=\max\{X_1,X_2\}-Y_1$. Show that $Y_1$ and $Y_2$ are independent. Generalise to three independent exponential random variables with parameter one.
+</qn>
+
+<qn n="C3">
+Let $\Omega$ be the probability space $([0,1],\B([0,1]),\PP)$, with $\PP$ Lebesgue measure. Show that there is a sequence $(X_n)$ of independent random variables on $\Omega$ with $\PP[X_n=0]=\PP[X_n=1]=\frac12$ for every $n$. Show also that for any such sequence on any probability space, $Y=\sum_{n\ge1}X_n/2^n$ is uniformly distributed on $[0,1]$.
+
+Deduce that there is a sequence $(Y_n)$ of independent random variables on $\Omega$, each uniform on $[0,1]$. Hence show that there is a product probability measure $\PP$ on the countable product of $([0,1],\B([0,1]))$ with itself such that $\PP[\omega_i\le x]=x$ for all $i\ge1$ and $x\in[0,1]$, where $\omega_i$ is the $i$th coordinate of $\omega=(\omega_i)_{i\ge1}$.
+
+<p class="uses">Compare Remark 2.20.</p>
+</qn>

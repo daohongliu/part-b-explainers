@@ -1,0 +1,86 @@
+@num 1
+@title σ-algebras and measures
+@source Problem Sheet 1 · MT25
+@dek Algebras and σ-algebras, generated σ-algebras, π-systems and uniqueness, and a first look at Lebesgue measurable sets. Everything here needs only Chapter 1.
+---
+## Section A · Warm-up
+
+<qn n="A1">
+Let $\Omega$ be a set.
+<ol class="parts"><li>Show that the collection of all sets $A\in\Pow(\Omega)$ such that either $A$ or $A^c$ is countable is a σ-algebra.</li><li>Give an example of two algebras $\F_1$ and $\F_2$ on $\Omega=\{1,2,3\}$ whose union $\F_1\cup\F_2$ is not an algebra.</li><li>Suppose that $\{\F_j\}_{j\in J}$ is a non-empty family of σ-algebras on $\Omega$. Prove that the intersection $\bigcap_{j\in J}\F_j$ is a σ-algebra on $\Omega$.</li></ol>
+<p class="uses">Uses Definition 1.1.</p>
+</qn>
+
+<qn n="A2">
+Let $(f_n)$ be a sequence of measurable functions on $(\Omega,\F)$ taking values in $\R$. Show that $f_1+f_2$, $\max\{f_1,f_2\}$ and $\sup_nf_n$ are all measurable functions.
+
+<p class="uses">Uses Definition 2.1 and Proposition 2.2, so this one is best left until Chapter 2.</p>
+</qn>
+
+<qn n="A3">
+On $\R$ consider the σ-algebra $\A$ of sets which are either countable or have a countable complement. Let $\mu(A)=0$ for countable $A$ and $\mu(A)=1$ otherwise, for $A\in\A$. Show that $\mu$ is a probability measure on $\A$.
+
+<p class="uses">Uses Definition 1.3 and part 1 of question A1.</p>
+</qn>
+
+## Section B · To be handed in
+
+<qn n="B1">
+Let $P=\{P_j\}_{j\in J}$ be a partition of a set $\Omega$ (a collection of disjoint non-empty sets with union $\Omega$). Show that the set $U(P)$ consisting of all possible unions of sets $P_j$ is a σ-algebra on $\Omega$. Conversely, show that any σ-algebra $\F$ on a countable set $\Omega$ is of the form $U(P)$ for some partition $P$ of $\Omega$. [Warning: the converse is very far from true when $\Omega$ is uncountable.]
+</qn>
+
+<qn n="B2">
+Let $\T$ be the set of all open subsets of $\R$, and let $\pi(\R)$ be the π-system $$\pi(\R):=\{(-\infty,x]:x\in\R\}.$$ Prove that $\B(\R)$ (defined to be $\sigma(\T)$) is equal to $\sigma(\pi(\R))$. [Hint: recall that every open subset of $\R$ is a countable disjoint union of (finite or infinite) open intervals.]
+
+<p class="uses">This is the exercise left open in Example 1.10.</p>
+</qn>
+
+<qn n="B3">
+Let $\mu:\A\to[0,\infty)$ be an additive set function on an algebra $\A$ taking only finite values. Show that $\mu$ is countably additive if and only if for every sequence $(A_n)$ of sets in $\A$ with $A_n\downarrow\emptyset$ we have $\mu(A_n)\to0$.
+
+<p class="uses">This is Lemma 1.5.</p>
+</qn>
+
+<qn n="B4">
+Let $\Omega$ be a set and $\I$ a π-system on $\Omega$. Let $\F=\sigma(\I)$. Suppose that $\mu_1$ and $\mu_2$ are two measures on $(\Omega,\F)$ with $\mu_1(\Omega)=\mu_2(\Omega)<\infty$ and $\mu_1=\mu_2$ on $\I$. Then a theorem in lectures shows that $\mu_1=\mu_2$ on $\F$. Find an example on $\Omega=\{1,2,3,4\}$ where this fails if we drop the assumption that $\I$ is a π-system.
+
+<p class="uses">The theorem is Theorem 1.11.</p>
+</qn>
+
+<qn n="B5">
+Revise the definition of Lebesgue outer measure $m^*(A)$ and the σ-algebra $\M_{\mathrm{Leb}}$ of Lebesgue-measurable sets. (The Lebesgue outer measure of any $A\subseteq\R$ is $m^*(A)=\inf\{\sum_{i\ge1}|J_i|: J_1,J_2,\dots\text{ intervals with }\bigcup_iJ_i\supseteq A\}$, and $A$ is Lebesgue measurable if $m^*(F\cap A)+m^*(F\cap A^c)=m^*(F)$ for every $F\subseteq\R$.) Show that $A\subseteq[0,1]$ is Lebesgue measurable if and only if there exist a Borel set $B$ and a null set $N$ such that $A=B\,\Delta\,N$, where $\Delta$ denotes symmetric difference. Extend this to any $A\subseteq\R$.
+
+<p class="uses">The outer measure is the one sketched after Theorem 1.12, and the aside after Corollary 1.13 compares $\M_{\mathrm{Leb}}$ with $\B(\R)$.</p>
+</qn>
+
+<qn n="B6">
+Show that if $\Omega$ is countable then there is a bijection between measures on $(\Omega,\Pow(\Omega))$ and mass functions on $\Omega$.
+
+<p class="uses">Uses Example 1.6.</p>
+</qn>
+
+## Section C · Extra practice
+
+<qn n="C1">
+Show that the following sets of subsets of $\R$ all generate the same σ-algebra: $$\{(a,b):a<b\},\qquad\{(a,b]:a<b\},\qquad\{(-\infty,b]:b\in\R\}.$$
+</qn>
+
+<qn n="C2">
+Given $\alpha<\beta$, let $\A$ be the family of finite unions of disjoint intervals of the form $$A=(a_1,b_1]\cup\dots\cup(a_n,b_n],\qquad \alpha\le a_i<b_i\le\beta,\ 1\le i\le n.$$ Show that $\A$ is an algebra.
+</qn>
+
+<qn n="C3">
+Let $\A$ be a collection of subsets of a non-empty set $\Omega$. Show that the three conditions
+
+<ol class="parts"><li>$\Omega\in\A$,</li><li>$A,B\in\A$ and $A\subseteq B$ imply $B\setminus A\in\A$,</li><li>$A_n\in\A$ and $A_n\uparrow A$ imply $A\in\A$</li></ol>
+
+hold (jointly) if and only if the three conditions
+
+<ol class="parts"><li>$\Omega\in\A$,</li><li>$A\in\A$ implies $A^c\in\A$,</li><li>$\A$ is closed under countable disjoint unions</li></ol>
+
+hold. Either set of conditions defines what is variously called a d-system, λ-system, or Dynkin system.
+
+<ul><li>Show that if $\mu_1,\mu_2$ are measures on $(\Omega,\F)$ with $\mu_1(\Omega)=\mu_2(\Omega)<\infty$, then $\{A:\mu_1(A)=\mu_2(A)\}$ is a Dynkin system.</li><li>Show that if $\A$ is a Dynkin system and a π-system, then it is a σ-algebra.</li><li>(Very hard) Show that the Dynkin system generated by a π-system $\A$ (the intersection of all Dynkin systems containing $\A$) is a π-system and so a σ-algebra.</li></ul>
+
+<p class="uses">Together these prove Theorem 1.11; compare with its proof.</p>
+</qn>

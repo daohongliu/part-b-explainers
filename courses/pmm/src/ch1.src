@@ -6,8 +6,7 @@
 ---
 @@fig-hero@@
 
-## Sizes that add up {8}
-
+## Sizes that add up {8} [d1 i3]
 We want to assign a *mass*, or *size*, to subsets of a space in a consistent way. For us the subsets will be *events*, collections of outcomes in a sample space $\Omega$, and the mass will be a probability: a number saying how likely the event is to occur.
 
 The obvious wish is to give every subset a size. Write $\Pow(\Omega)$ for the **power set** of $\Omega$, the set of all its subsets. For a finite or countable $\Omega$ the wish can be granted (Example 1.6). For $\Omega=\R$ it can't. There is no way to give *every* subset of $\R$ a "length" that is *translation invariant* (sliding a set along doesn't change its length) and *countably additive* (the length of a countable union of disjoint pieces is the sum of their lengths). The background box below explains why. So we settle for less: we pick out a collection of well-behaved subsets, and ask only that it be closed under the operations we actually perform on events, namely complements ("not $A$") and unions ("$A$ or $B$").
@@ -31,12 +30,11 @@ Every σ-algebra is an algebra: to get $A\cup B$, use the sequence $A,B,\emptyse
 
 @@fig1-1@@
 
-<pause q="Check that this $\A$ really is an algebra.">
+<pause n="Finite or cofinite" q="Check that this $\A$ really is an algebra.">
 $\emptyset$ is finite. Taking complements swaps "finite" and "cofinite" (a set is *cofinite* if its complement is finite). If $A$ and $B$ are both finite, so is $A\cup B$; if one of them, say $B$, is cofinite, then $(A\cup B)^c\subseteq B^c$ is finite. So $\A$ is an algebra, and Figure 1.1 shows that it is not a σ-algebra.
 </pause>
 
-## Weighing sets {9}
-
+## Weighing sets {9} [d2 i3]
 <thm k="Definition 1.2" nm="Set functions" pg="9">
 Let $\A$ be any set of subsets of $\Omega$ containing $\emptyset$. A <strong>set function</strong> on $\A$ is a function $\mu:\A\to[0,\infty]$ with $\mu(\emptyset)=0$. We say that $\mu$ is
 
@@ -64,7 +62,7 @@ The sets in $\F$ are called **measurable sets**; they are the ones $\mu$ is defi
 <li><span>Counting measure on $\Pow(\R)$</span><span class="pill n">not σ-finite</span></li>
 </ul>
 
-<pause q="Why is counting measure on $\R$ not σ-finite?">
+<pause n="Counting is not σ-finite" q="Why is counting measure on $\R$ not σ-finite?">
 A set has finite counting measure only if it is finite, and a countable union of finite sets is countable. $\R$ is not.
 </pause>
 
@@ -95,17 +93,21 @@ Let $\mu:\A\to[0,\infty)$ be an additive set function on an algebra $\A$ taking 
 
 In words: to check countable additivity, it is enough to check that sets shrinking to nothing have measures shrinking to zero.
 
-<pause lead="Exercise." q="Prove Lemma 1.5.">
+<pause n="Continuity at the empty set" q="Prove Lemma 1.5.">
 (⇒) Suppose $A_n\downarrow\emptyset$. Every point of $A_n$ leaves the sequence at some finite stage, so $A_n$ is the disjoint union of the sets $A_k\setminus A_{k+1}$, $k\ge n$, all of which lie in $\A$. Countable additivity gives $\mu(A_n)=\sum_{k\ge n}\mu(A_k\setminus A_{k+1})$. For $n=1$ this series converges (to $\mu(A_1)<\infty$), and $\mu(A_n)$ is its tail, so $\mu(A_n)\to0$.
 
 (⇐) Let $A_1,A_2,\dots\in\A$ be disjoint with $A=\bigcup_nA_n\in\A$. Put $R_N=A\setminus(A_1\cup\dots\cup A_N)$. Then $R_N\in\A$ because $\A$ is an algebra, and $R_N\downarrow\emptyset$. Finite additivity gives $\mu(A)=\sum_{n\le N}\mu(A_n)+\mu(R_N)$, and $\mu(R_N)\to0$.
 </pause>
+
+<sheet n="1" qs="B3">You have just seen one solution; try writing it out without looking.</sheet>
 
 There are lots of measure spaces out there, several of which you already know. The simplest are the discrete ones.
 
 <thm k="Example 1.6" nm="Discrete measure theory" pg="10">
 Let $\Omega$ be a countable set. A <strong>mass function</strong> on $\Omega$ is any function $\bar\mu:\Omega\to[0,\infty]$. Given such a $\bar\mu$ we can define a measure on $(\Omega,\Pow(\Omega))$ by setting $\mu(A)=\sum_{x\in A}\bar\mu(x)$. Equally, given a measure $\mu$ on $(\Omega,\Pow(\Omega))$ we can define a corresponding mass function by $\bar\mu(x)=\mu(\{x\})$. For countable $\Omega$ there is a one-to-one correspondence between measures on $(\Omega,\Pow(\Omega))$ and mass functions.
 </thm>
+
+<sheet n="1" qs="A1,A3,B1,B6">They need nothing beyond σ-algebras and measures.</sheet>
 
 Countable additivity is what makes the correspondence one-to-one: every $A\subseteq\Omega$ is the countable disjoint union of its singletons, so $\mu(A)$ is forced to equal $\sum_{x\in A}\mu(\{x\})$. A probability mass function from Prelims is exactly a mass function with total mass 1.
 
@@ -115,8 +117,7 @@ Discrete measure spaces are a toy version of the general theory, and essentially
 
 The *construction problem* is usually handled by <span data-tip="Constantin Carathéodory (1873–1950), who also axiomatised thermodynamics.">Carathéodory</span>’s Extension Theorem (Theorem 1.12). The *uniqueness problem* can usually be settled by a corollary of <span data-tip="Eugene Dynkin (1924–2014), of Dynkin diagrams fame.">Dynkin</span>’s π-system Lemma (Theorem 1.11). First we need more vocabulary.
 
-## Generating σ-algebras {10}
-
+## Generating σ-algebras {10} [d2 i3]
 <thm k="Definition 1.7" nm="Generated σ-algebras" pg="10">
 Let $\A$ be a collection of subsets of $\Omega$. Define $$\sigma(\A)=\{A\subseteq\Omega : A\in\F\text{ for all }\sigma\text{-algebras }\F\text{ on }\Omega\text{ containing }\A\}.$$ Then $\sigma(\A)$ is a σ-algebra (exercise), called the σ-algebra <strong>generated</strong> by $\A$. It is the smallest σ-algebra containing $\A$: if $\F\supseteq\A$ is a σ-algebra then $\F\supseteq\sigma(\A)$.
 </thm>
@@ -125,7 +126,7 @@ This definition works from the top down: intersect everything that could possibl
 
 @@fig1-4@@
 
-<pause lead="Exercise." q="Why is $\sigma(\A)$ a σ-algebra, and why the smallest one containing $\A$?">
+<pause n="The smallest σ-algebra" q="Why is $\sigma(\A)$ a σ-algebra, and why the smallest one containing $\A$?">
 The family of σ-algebras containing $\A$ is non-empty, since $\Pow(\Omega)$ belongs to it. Each defining property survives intersection: $\emptyset$ lies in every member; if $A$ lies in every member, so does $A^c$; if every $A_n$ lies in every member, so does $\bigcup_nA_n$. So $\sigma(\A)$ is a σ-algebra and it contains $\A$. If $\F\supseteq\A$ is any σ-algebra, it is one of the sets being intersected, so $\F\supseteq\sigma(\A)$.
 </pause>
 
@@ -157,13 +158,14 @@ Rays are about the dullest sets imaginable, so it is worth seeing how much they 
 
 @@fig1-5@@
 
-## Uniqueness, and why intersections matter {11}
-
+## Uniqueness, and why intersections matter {11} [d3 i2]
 Here's why we care about π-systems.
 
 <thm k="Theorem 1.11" nm="Uniqueness of extension" pg="11" it>
 Let $\mu_1$ and $\mu_2$ be measures on the same measurable space $(\Omega,\F)$, and let $\I\subseteq\F$ be a π-system. If $\mu_1(\Omega)=\mu_2(\Omega)<\infty$ and $\mu_1=\mu_2$ on $\I$, then $\mu_1=\mu_2$ on $\sigma(\I)$.
 </thm>
+
+<sheet n="1" qs="B2,B4,C3"></sheet>
 
 We will often apply the theorem to a π-system with $\sigma(\I)=\F$, and then $\mu_1$ and $\mu_2$ agree everywhere. A very important special case: *if two probability measures agree on a π-system, they agree on the σ-algebra it generates.* The notes refer to Williams, Appendix A.1 for the proof; here is how it goes.
 
@@ -181,8 +183,7 @@ The six sets on which the two measures in Figure 1.6 agree form a d-system that 
 
 The finiteness condition can't be dropped either. On $\R$, let $\mu_1(A)$ count the rationals in $A$ and let $\mu_2=2\mu_1$. Both give every interval $(a,b]$ with $a<b$ measure $\infty$ (each such interval contains infinitely many rationals), so they agree on the π-system of such intervals together with $\emptyset$, which generates $\B(\R)$. And $\mu_1(\R)=\mu_2(\R)=\infty$. Yet $\mu_1(\{0\})=1\ne2=\mu_2(\{0\})$. In the proof above, the step $B\setminus A\in\D$ needed to subtract, and $\infty-\infty$ is meaningless.
 
-## Existence: Carathéodory {11}
-
+## Existence: Carathéodory {11} [d3 i2]
 That deals with uniqueness. What about existence?
 
 <thm k="Theorem 1.12" nm="Carathéodory Extension Theorem" pg="11" it>
@@ -205,6 +206,8 @@ Watch the red part as the number of intervals grows. Each rational is eventually
 There exists a unique Borel measure $\mu$ on $\R$ such that for all $a,b\in\R$ with $a<b$, $\mu((a,b])=b-a$. The measure $\mu$ is the <span data-tip="Named for Henri Lebesgue, whose 1902 thesis was called Intégrale, longueur, aire.">Lebesgue measure</span> on $\B(\R)$.
 </thm>
 
+<sheet n="1" qs="B5"></sheet>
+
 The proof is an exercise. The hard part is checking countable additivity on a suitable algebra, and the proof of Theorem 1.15 below does exactly this in a closely related case (take $F(x)=x$ there, ignoring that it isn't bounded). Uniqueness needs an extra step since $\mu(\R)=\infty$: for each $n$ the **restriction** $\mu_n(A)=\mu(A\cap(-n,n])$ is a finite measure, two candidates' restrictions agree on intervals and hence everywhere by Theorem 1.11, and $\mu(A)=\lim_n\mu_n(A)$ by Lemma 1.4.
 
 <bg id="bg-null" t="Null sets, and the Lebesgue σ-algebra" lead="From Part A">
@@ -215,8 +218,7 @@ In Part A Integration, Lebesgue measure was defined on a σ-algebra $\M_{\mathrm
 
 <strong>Remark.</strong> In this course we work with $\B(\R)$ rather than $\M_{\mathrm{Leb}}$. The Borel σ-algebra is large enough for us, and its definition doesn't depend on a measure, whereas which sets are null does.<sn>Most Lebesgue measurable sets are not Borel. There are only as many Borel sets as real numbers. But the Cantor set (see below) is null and has as many points as $\R$, so every one of its subsets is null, hence Lebesgue measurable, and there are strictly more of those than there are real numbers.</sn> (This changes later, when studying continuous-time martingales.)
 
-## Measures on the line are increasing functions {12}
-
+## Measures on the line are increasing functions {12} [d2 i3]
 In discrete measure theory there was a one-to-one correspondence between measures and mass functions. Is there something similar for Borel measures on $\R$, that is, measures on $(\R,\B(\R))$?
 
 <thm k="Definition 1.14" pg="12">
@@ -267,15 +269,14 @@ The sets in $\A$ are unions of half-open intervals, which are not compact. The p
 
 @@fig1-10@@
 
-## A zoo of distribution functions {13}
-
+## A zoo of distribution functions {13} [d2 i2]
 The integral $\int f\,d\mu$ against a general measure is built in Chapter 2. For this section, read $\int_A f(x)\,dx$ as the familiar integral of $f$ over $A$; for continuous $f$ and intervals $A$ it is the Riemann integral from Prelims.
 
 When $F$ is continuously differentiable, say, it is precisely the cumulative distribution function of a continuous random variable with probability density function $f(x)=F'(x)$, as in Prelims. More generally, if $f\ge0$ is measurable and Lebesgue integrable with $\int_{-\infty}^\infty f(x)\,dx=1$ (both words are defined in Chapter 2), we can use $f$ as a **density** to construct a measure $\mu$ on $(\R,\B(\R))$ by setting $$\mu(A)=\int_Af(x)\,dx.$$ This measure has distribution function $F(x)=\int_{-\infty}^xf(y)\,dy$. It is not necessarily true that $F'(x)=f(x)$ for all $x$, but it holds for almost all $x$, meaning for all $x$ outside a Lebesgue-null set.<sn>Changing $f$ on a null set, for instance at the two endpoints of $[0,1]$, changes nothing about $\mu$. So no statement about $F'=f$ at individual points can be expected.</sn> For example, taking $f=1$ on $(0,1)$, or on $[0,1]$, and $f=0$ otherwise, gives $F(x)=0$ for $x<0$, $F(x)=x$ for $0\le x\le1$ and $F(x)=1$ for $x>1$: the uniform distribution on $[0,1]$. (In Figure 1.8: *Uniform*, *Normal*, *Exponential*.)
 
 For a very different example, take a sequence of points $x_1,x_2,\ldots$ (for example the non-negative integers) with probabilities $p_n>0$ at these points and $\sum_np_n=1$. The discrete probability measure and its distribution function are $$\mu(A)=\sum_{n\,:\,x_n\in A}p_n,\qquad F(x)=\sum_{n\,:\,x_n\le x}p_n,$$ so $F$ increases by jumps, the jump at $x_n$ being of height $p_n$ (*Fair die*, *Poisson*). The picture can be complicated, for example if there is a jump at every rational.
 
-<pause q="Why can a distribution function have at most countably many jumps?">
+<pause n="Counting the jumps" q="Why can a distribution function have at most countably many jumps?">
 The jump at $x$ is $\mu(\{x\})$, and singletons are disjoint, so the jumps share a total mass of at most 1. If $F$ had $n$ jumps of height greater than $\frac1n$, their total would exceed 1. So for each $n$ there are fewer than $n$ such jumps, and the set of all jumps is a countable union of finite sets.
 </pause>
 
@@ -289,8 +290,7 @@ That swap defines the **Cantor function** or **Devil's staircase** $F$: on $C$, 
 
 So the <span data-tip="F is constant on every gap of the Cantor set, so F′ = 0 away from a set of length zero. And yet F climbs from 0 to 1. The fundamental theorem of calculus quietly fails.">Devil’s staircase</span> corresponds, roughly speaking, to the uniform distribution on the Cantor set (*Devil's staircase* in Figure 1.8). The measures $\mu$ described in this chapter are sometimes called **Lebesgue–Stieltjes measures**; we will return to them a little later.<sn>These three kinds are all there is. Every distribution function is a mixture $\alpha F_{\mathrm{ac}}+\beta F_{\mathrm d}+\gamma F_{\mathrm{sc}}$ of an absolutely continuous one (with a density), a discrete one (pure jumps) and a singular continuous one (like the staircase): the Lebesgue decomposition. The <em>Mixture</em> preset has one of each.</sn>
 
-## What we now have
-
+## What we now have [d1 i2]
 <ol class="summary-list">
 <li>A <strong>measure space</strong> $(\Omega,\F,\mu)$: a σ-algebra of events, closed under countable operations, and a countably additive way of weighing them (Definition 1.3).</li>
 <li><strong>Uniqueness</strong> needs only a π-system: finite measures with the same total mass that agree on $\I$ agree on $\sigma(\I)$ (Theorem 1.11).</li>
@@ -299,3 +299,5 @@ So the <span data-tip="F is constant on every gap of the Cantor set, so F′ = 0
 </ol>
 
 With a rich supply of measures in hand, Chapter 2 builds integration against any of them, from scratch.
+
+<sheet n="1" qs="C1,C2">Sheet 1 is now fully within reach.</sheet>

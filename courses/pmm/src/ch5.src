@@ -4,6 +4,7 @@
 @pages 40–42
 @dek Information arrives over time, and decisions may use only what has arrived. This short chapter turns those two sentences into definitions: filtrations, adapted processes, and the random times you can act on without peeking into the future.
 ---
+## Information that grows with time {40} [d1 i3]
 The language and tools we have developed so far lend themselves beautifully to describing sequences of random phenomena, known as **stochastic processes**. We can capture their dynamics, how we learn information about them as time passes, and their long-run behaviour.
 
 We start with information and how it evolves. This is captured by σ-algebras (Figure 1.4 showed a σ-algebra as a body of information) and by suitable classes of random variables. We work on a fixed probability space $(\Omega,\F,\PP)$. The measure $\PP$ plays no role in this chapter; it's all about sets, functions and their measurability. $\PP$ becomes important in the next chapter, when we consider the nature of the random evolution.
@@ -34,6 +35,7 @@ A stochastic process $X$ is automatically adapted to the natural filtration it g
 
 The index $n$ could count days, seconds or years. It could also be some other, non-uniform clock, or something more abstract: the $n$-th letter in a book, the $n$-th word. In B8.2 you will consider continuous index sets such as $\{t\ge0\}$ instead of the discrete $\{n:n\ge0\}$ of B8.1. What matters in all these cases is that there is a linear order (which might or might not be naturally interpreted as time).
 
+## Stopping times {41} [d2 i3]
 Whatever the interpretation of $n$, we call specific choices of $n$ **deterministic times**: $n=42$, say, or (indexing by days) the temperature recorded at Greenwich Observatory at noon on the first of July, or the Rolls-Royce Holdings plc closing price on the London Stock Exchange on a given day.
 
 But we often use other, random times: the next time I meet you, the first time you see a yeti, the moment the stock price drops by more than 30% from its past maximum. These are well defined but not known in advance. They are of the type "I know it when it happens". We now make this precise. Much of the power of martingale methods comes from the fact that they work equally well when the index is such a random time.
@@ -57,9 +59,11 @@ Let $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ be a filtered probability space and $\tau,\
 <li>$\tau\wedge\rho$ and $\tau\vee\rho$ are stopping times.</li></ol>
 </thm>
 
+<sheet n="4" qs="A2">Part 2 also uses the tower property from Chapter 4.</sheet>
+
 Here $a\wedge b=\min(a,b)$ and $a\vee b=\max(a,b)$.
 
-<pause lead="Exercise." q="Prove Proposition 5.5.">
+<pause n="Minimum and maximum" q="Prove Proposition 5.5.">
 (i) $\{t=k\}$ is $\Omega$ if $k=n$ and $\emptyset$ otherwise, and both are in every $\F_k$.
 
 (ii) Use the "$\le$" form of the definition: $\{\tau\wedge\rho\le n\}=\{\tau\le n\}\cup\{\rho\le n\}$ and $\{\tau\vee\rho\le n\}=\{\tau\le n\}\cap\{\rho\le n\}$, both in $\F_n$.
@@ -71,12 +75,17 @@ The following proposition says that the first time an adapted process enters a r
 Let $X=(X_n)_{n\ge0}$ be an adapted process on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ and $B\in\B(\R)$. Then $$h_B=\inf\{n\ge0:X_n\in B\},$$ the first hitting time of $B$, is a stopping time.
 </thm>
 
+<pause n="One step too early" q="Toss a coin repeatedly and let $\tau$ be the first time you have seen two heads in a row. Is $\tau$ a stopping time for the natural filtration? Is $\tau-1$?">
+$\{\tau=n\}$ says that tosses $n-1$ and $n$ are heads and no earlier pair of consecutive tosses was. That is decided by the first $n$ tosses, so it lies in $\F_n$ and $\tau$ is a stopping time. But $\{\tau-1=n\}=\{\tau=n+1\}$ depends on toss $n+1$: knowing the first $n$ tosses end in a head, you can't yet tell whether the next one will complete the pair. So $\tau-1$ is not a stopping time. It would require you to stop just before something happens, which is exactly what "I know it when it happens" rules out.
+</pause>
+
 <pf>
 $\{h_B\le n\}=\bigcup_{k=0}^nX_k^{-1}(B)$, "$X$ has been in $B$ at some time up to $n$". Each $X_k^{-1}(B)\in\F_k\subseteq\F_n$ since $X$ is adapted.
 </pf>
 
 By contrast, the *last* time $X$ is in $B$ before time $N$ is generally not a stopping time: to know at time $n$ that this was the last visit, you need to know that $X$ won't come back.
 
+## What is known at a stopping time {41} [d3 i2]
 We often use stopping times because we are interested in the value of the process at that time, the random variable $X_\tau$. Each $X_n$ is $\F_n$-measurable, since the process is adapted. But what about $X_\tau$? It is $\F_\infty$-measurable (check!), but we expect it to be measurable with respect to a smaller σ-algebra, reflecting "the information available at time $\tau$".
 
 <thm k="Definition 5.7" pg="41">
@@ -92,7 +101,7 @@ Let $\tau,\rho$ be stopping times on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$. Then
 <li>if $\tau\le\rho$ then $\F_\tau\subseteq\F_\rho$.</li></ol>
 </thm>
 
-<pause lead="Exercise." q="Prove Proposition 5.8.">
+<pause n="Information at a stopping time" q="Prove Proposition 5.8.">
 (i) $\emptyset\cap\{\tau=n\}=\emptyset\in\F_n$. If $A\in\F_\tau$ then $A^c\cap\{\tau=n\}=\{\tau=n\}\setminus(A\cap\{\tau=n\})\in\F_n$ (both sets are in $\F_n$). If $A_k\in\F_\tau$ then $\big(\bigcup_kA_k\big)\cap\{\tau=n\}=\bigcup_k(A_k\cap\{\tau=n\})\in\F_n$.
 
 (ii) Use the "$\le$" form. Let $A\in\F_\tau$. Since $\tau\le\rho$, $\{\rho\le n\}\subseteq\{\tau\le n\}$, so $A\cap\{\rho\le n\}=(A\cap\{\tau\le n\})\cap\{\rho\le n\}$, an intersection of two sets in $\F_n$.
@@ -100,6 +109,7 @@ Let $\tau,\rho$ be stopping times on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$. Then
 
 In particular, combining Propositions 5.5 and 5.8, $(\F_{\tau\wedge n})_{n\ge0}$ is a filtration, which is smaller than the original one in the sense that $\F_{\tau\wedge n}\subseteq\F_n$ for $n\ge0$ (as $\tau\wedge n\le n$, and $\F_n$ for the deterministic time $n$ is just $\F_n$).
 
+## Stopped processes {42} [d2 i3]
 If $(X_n)_{n\ge0}$ represents our ongoing winnings in a game and $\tau$ is our stopping strategy, then our final winnings are $X_\tau$. If $\tau<\infty$ then this is a well-defined function $$\Omega\ni\omega\longmapsto X_\tau(\omega):=X_{\tau(\omega)}(\omega),$$ and it is $\F$-measurable since $X_\tau^{-1}(B)=\bigcup_{n\ge0}\big(\tau^{-1}(\{n\})\cap X_n^{-1}(B)\big)\in\F$. In fact $X_\tau$ is $\F_\tau$-measurable. We rephrase this by introducing the stopped process.
 
 <thm k="Proposition 5.9" nm="Stopped process" pg="42" it>
