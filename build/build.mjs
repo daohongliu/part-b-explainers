@@ -214,7 +214,7 @@ ${aiNote(course, { available: available.length ? `${available.length} results fr
     site: 'Part B explainers', course: { id: course.id, code: course.code, title: course.title, lecturer: course.lecturer },
     page: { kind: 'chapter', chapter: ch.number, title: ch.title, url: ch.url },
     sections: ch.sections.map((s) => ({ id: s.id, number: s.number, title: s.title, availableResults: available.filter((i) => i.order <= s.endOrder).map((i) => ({ id: i.id, label: labelOf(i) })) })),
-    rules: course.aiRules, notation: `/${course.id}/notation.html`, index: `/${course.id}/index.json`, llms: '/llms.txt',
+    rules: course.aiRules, macros: course.macros, notation: `/${course.id}/notation.html`, index: `/${course.id}/index.json`, llms: '/llms.txt',
   };
   let html = shell({
     title: `${ch.number}. ${ch.title} · ${course.short}`, course, description: ch.summary,

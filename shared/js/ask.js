@@ -30,8 +30,18 @@ function selectionText(sel) {
   return fragmentToText(div);
 }
 
+// Expand the course's zero-argument KaTeX macros so the copied TeX is standard LaTeX.
+function expandMacros(text, macros) {
+  const names = Object.keys(macros || {}).filter((k) => !/#\d/.test(macros[k])).sort((a, b) => b.length - a.length);
+  for (let pass = 0; pass < 3; pass++) {
+    for (const k of names) text = text.replace(new RegExp(`${k.replace(/\\/g, '\\\\')}(?![a-zA-Z])`, 'g'), () => macros[k]);
+  }
+  return text;
+}
+
 async function buildPrompt(sel) {
-  const text = selectionText(sel);
+  const ctx0 = JSON.parse(document.getElementById('ai-context')?.textContent || '{}');
+  const text = expandMacros(selectionText(sel), ctx0.macros);
   const node = sel.anchorNode?.nodeType === 1 ? sel.anchorNode : sel.anchorNode?.parentElement;
   const section = node?.closest('section.sec');
   const item = node?.closest('.item, .exercise, .question, .viz');
