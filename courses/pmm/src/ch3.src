@@ -9,7 +9,7 @@ We'll return to independence, or more importantly the lack of it, later. First w
 
 The first question: given a sequence of events $A_1,A_2,\dots$, which outcomes $\omega$ are in *infinitely many* of them? And which are in *all but finitely many*?
 
-<thm k="Definition 3.1" pg="22">
+<thm k="Definition 3.1" d="limsup and liminf of events" pg="22">
 Let $(A_n)$ be a sequence of sets from $\F$. We define $$\begin{aligned}\limsup_{n\to\infty}A_n&=\bigcap_{n=1}^\infty\bigcup_{m\ge n}A_m\\&=\{\omega\in\Omega:\omega\in A_m\text{ for infinitely many }m\}\\&=\{A_m\text{ occurs infinitely often}\}=\{A_m\text{ i.o.}\}\end{aligned}$$ and $$\begin{aligned}\liminf_{n\to\infty}A_n&=\bigcup_{n=1}^\infty\bigcap_{m\ge n}A_m\\&=\{\omega:\exists\,m_0(\omega)\text{ with }\omega\in A_m\text{ for all }m\ge m_0(\omega)\}\\&=\{A_m\text{ eventually}\}=\{A_m^c\text{ infinitely often}\}^c.\end{aligned}$$
 </thm>
 
@@ -23,7 +23,7 @@ The reverse bound is similar. $\PP[X_n\ge(1+\eps)\log n]=n^{-(1+\eps)}$ is summa
 
 Read the formulas slowly once. $\omega\in\bigcup_{m\ge n}A_m$ says "$\omega$ is in some $A_m$ at or after time $n$". Requiring this for *every* $n$ (the outer intersection) says that however late you start looking, $\omega$ shows up again: infinitely often. Similarly $\omega\in\bigcap_{m\ge n}A_m$ says "from time $n$ on, $\omega$ is in every $A_m$", and the outer union asks for this to hold from *some* $n$ on: eventually. Both sets are in $\F$, being built from countably many unions and intersections.
 
-<thm k="Lemma 3.2" pg="23" it>
+<thm k="Lemma 3.2" d="Indicators of limsup and liminf" pg="23" it>
 $$\ind_{\limsup_{n\to\infty}A_n}=\limsup_{n\to\infty}\ind_{A_n},\qquad\ind_{\liminf_{n\to\infty}A_n}=\liminf_{n\to\infty}\ind_{A_n}.$$
 </thm>
 
@@ -59,7 +59,7 @@ Set $a_m=\PP[A_m]$ and note that $1-a\le e^{-a}$ for all real $a$ (the line $1-a
 
 Without independence BC2 fails badly: take $A_n=A$ for every $n$ with $\PP[A]=\frac12$. Then $\sum\PP[A_n]=\infty$ but $\PP[A_n\text{ i.o.}]=\PP[A]=\frac12$.
 
-<thm k="Example 3.5" pg="24">
+<thm k="Example 3.5" d="The typing monkey" pg="24">
 A monkey is provided with a typewriter. At each time step it has probability $1/26$ of typing any of the 26 letters, independently of other times. What is the probability that it will type ABRACADABRA at least once? Infinitely often?
 </thm>
 
@@ -71,7 +71,7 @@ Let $A_n$ be the event that roll $n$ is a six. The $A_n$ are independent with $\
 
 Later in the course, with the help of a suitable martingale, we'll be able to work out how long we must wait, on average, before we see patterns like this. We'll see many applications of BC1 and BC2. Here is one more.
 
-<thm k="Example 3.6" pg="24">
+<thm k="Example 3.6" d="Maxima of exponentials grow like log n" pg="24">
 Let $(X_n)_{n\ge1}$ be independent exponentially distributed random variables with mean 1 and let $M_n=\max\{X_1,\dots,X_n\}$. Then $$\PP\Big[\lim_{n\to\infty}\frac{M_n}{\log n}=1\Big]=1.$$
 </thm>
 
@@ -123,7 +123,7 @@ and no others hold in general. The figure below has a counterexample for every m
 
 The notions of convergence almost surely and in $L^p$ are discussed (for Lebesgue measure, rather than general probability measures) in Part A Integration. Here are the two standard examples.
 
-<thm k="Example 3.8" pg="26">
+<thm k="Example 3.8" d="A.s. convergence without L¹ convergence" pg="26">
 On the probability space $\Omega=[0,1]$ with the Borel σ-algebra and Lebesgue measure, consider the sequence of functions $$f_n(x)=\begin{cases}n(1-nx)&0\le x\le1/n,\\0&\text{otherwise.}\end{cases}$$ Then $f_n\to0$ almost everywhere on $[0,1]$ but $f_n\not\to0$ in $L^1$. Thinking of each $f_n$ as a random variable, we have $f_n\to0$ almost surely but $f_n\not\to0$ in $L^1$.
 </thm>
 
@@ -184,7 +184,7 @@ $\PP[X\ge\lambda]\le\PP[\varphi(X)\ge\varphi(\lambda)]\le\frac{1}{\varphi(\lambd
 
 The most familiar special case takes $\varphi(x)=x^2$ on $[0,\infty)$ and applies the result to $Y=|X-\E[X]|$, giving **Chebyshev's inequality** $$\PP\big[|X-\E[X]|\ge t\big]\le\frac{\E[(X-\E[X])^2]}{t^2}=\frac{\mathrm{Var}[X]}{t^2}\qquad\text{for }t>0.$$ Corollary 3.12 is also often applied with $\varphi(x)=e^{\theta x}$, $\theta\ge0$, to obtain $$\PP[X\ge\lambda]\le e^{-\theta\lambda}\E[e^{\theta X}].$$ The next step is often to optimise over $\theta$ (this gives the Chernoff bounds).
 
-<thm k="Corollary 3.13" pg="28" it>
+<thm k="Corollary 3.13" d="Lᵖ convergence implies convergence in probability" pg="28" it>
 For $p>0$, convergence in $L^p$ implies convergence in probability.
 </thm>
 
@@ -218,7 +218,7 @@ Let $f:I\to\R$ be a convex function on an interval $I\subseteq\R$. If $X$ is an 
 
 (We assume the expectation of $f(X)$ exists; this is usually no problem since $f$ is often non-negative.) Definition 3.15 is exactly the case where $X$ takes two values, $x$ with probability $t$ and $y$ with probability $1-t$. Perhaps the nicest proof of the general case rests on the following geometric lemma: a convex function has a straight line touching it from below at any interior point.
 
-<thm k="Lemma 3.17" pg="29" it>
+<thm k="Lemma 3.17" d="A convex function lies above a supporting line" pg="29" it>
 Suppose that $f:I\to\R$ is convex and let $m$ be an interior point of $I$. Then there exists $a\in\R$ such that $f(x)\ge f(m)+a(x-m)$ for all $x\in I$.
 </thm>
 
@@ -237,13 +237,13 @@ If $\E[X]$ is not an interior point of $I$ then it is an endpoint, and $X$ must 
 ## 3.2 L<sup>p</sup> spaces {30} [d3 i2]
 The set of all random variables on a probability space is a large set. It is useful to organise it by how integrable its members are.
 
-<thm k="Definition 3.18" pg="30">
+<thm k="Definition 3.18" d="The spaces Lᵖ" pg="30">
 Let $p\ge0$. The space of all random variables $X$ such that $\E[|X|^p]<\infty$ is denoted $\Lp p$. In particular, $\Lp0$ is the space of all random variables. We also denote by $\Lp\infty$ the set of all random variables that are bounded.
 </thm>
 
 For example $X\in\Lp1$ means $X$ is integrable, and $X\in\Lp2$ means $X$ has finite variance (it is "square integrable"). For $p>0$ the function $x\mapsto x^p$ is increasing on $\R_+$, so $$(x+y)^p\le(2\max(x,y))^p\le2^p(x^p+y^p)\qquad\text{for all }x,y\ge0.$$ It follows that $X,Y\in\Lp p$ implies $X+Y\in\Lp p$. Obviously also $\alpha X\in\Lp p$ for any $\alpha\in\R$, so $\Lp p$ is a vector space. For $X\in\Lp p$ put $$\|X\|_p:=\big(\E[|X|^p]\big)^{1/p}.$$ This is a way of measuring the size of $X$; for $p=2$ it is the root-mean-square, and $\|X-\E X\|_2$ is the standard deviation.
 
-<thm k="Lemma 3.19" pg="30" it>
+<thm k="Lemma 3.19" d="Lᵖ ⊆ Lʳ when r ≤ p" pg="30" it>
 Let $0<r\le p$. Suppose $X\in\Lp p$. Then $X\in\Lp r$ and $\|X\|_r\le\|X\|_p$. In particular, convergence in $L^p$ implies convergence in $L^r$.
 </thm>
 
@@ -257,7 +257,7 @@ This depends on having a *probability* measure: on a two-point space, a random v
 
 We now derive two crucial inequalities. Hölder's inequality is used in many proofs, and Minkowski's inequality shows that $\|\cdot\|_p$ satisfies the triangle inequality.
 
-<thm k="Theorem 3.20" pg="30" it>
+<thm k="Theorem 3.20" d="Hölder and Minkowski inequalities" pg="30" it>
 Let $p,q>1$ be such that $\frac1p+\frac1q=1$. Suppose $X,Y\in\Lp p$ and $Z\in\Lp q$. Then $$\begin{aligned}\E[|XZ|]&\le\|X\|_p\|Z\|_q&&\text{(Hölder's inequality)},\\\|X+Y\|_p&\le\|X\|_p+\|Y\|_p&&\text{(Minkowski's inequality)}.\end{aligned}$$
 </thm>
 
@@ -277,7 +277,7 @@ A sequence is **Cauchy** if its terms get close to *each other*: $\sup_{r,s\ge n
 
 The following result is of fundamental importance in functional analysis. We will use it for $p=2$.
 
-<thm k="Theorem 3.21" pg="31" it>
+<thm k="Theorem 3.21" d="Lᵖ is complete" pg="31" it>
 Let $p\ge1$. The vector space $\Lp p$ is complete, i.e., for any sequence $(X_n)_{n\ge1}\subseteq\Lp p$ such that $$\sup_{r,s\ge n}\|X_s-X_r\|_p\xrightarrow{n\to\infty}0$$ there exists $X\in\Lp p$ such that $X_n\to X$ in $L^p$.
 </thm>
 

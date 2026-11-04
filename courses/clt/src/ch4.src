@@ -40,7 +40,7 @@ Look at the update. If $h_t$ gets example $i$ right, its weight is multiplied by
 
 @@clt-fig4-1@@
 
-<thm k="Theorem 4.2" pg="41" it>
+<thm k="Theorem 4.2" d="AdaBoost drives training error to zero" pg="41" it>
 Suppose WeakLearn is a $\gamma$-weak learner for $\C$. If $T\ge\frac{\log2m}{2\gamma^2}$, then with probability at least $1-\delta$ the hypothesis output by AdaBoost has training error $0$.
 </thm>
 
@@ -70,7 +70,7 @@ Reading the proof back: (4.8) says the product of the normalising constants boun
 
 Zero training error is not the goal; small error on fresh data is. Theorem 3.8 converts one into the other if the final hypothesis comes from a class of small VC dimension. Suppose WeakLearn outputs hypotheses from $\H$ with $\VCD(\H)=d$. AdaBoost's output lies in $$\mathrm{THRESHOLDS}_k(\H)=\Big\{x\mapsto\sgn\Big(\sum_{i=1}^k\alpha_ih_i(x)\Big):h_i\in\H,\ \alpha_i\in\R\Big\}$$ with $k=T$.
 
-<thm k="Lemma 4.3" pg="43" it>
+<thm k="Lemma 4.3" d="VC dimension of weighted votes" pg="43" it>
 If $\VCD(\H)=d$, then $\VCD(\mathrm{THRESHOLDS}_k(\H))=O(kd\log k)$.
 </thm>
 

@@ -11,7 +11,7 @@ Recall what $\G$-measurable means (Definition 2.25): a $\G$-measurable random va
 ## Warming up: conditioning on a partition {32} [d1 i2]
 Before tackling the question in full generality, let's build intuition when $\G$ is simple and we measure closeness by $\|\cdot\|_2$, the root-mean-square distance of Section 3.2.
 
-<thm k="Example 4.1" pg="32">
+<thm k="Example 4.1" d="Best guess given one event" pg="32">
 Let $X\in\Lp2(\Omega,\F,\PP)$. Let $B\in\F$ with $\PP(B)>0$ (and $\PP(B^c)>0$), and note that $\sigma(B)=\{\emptyset,\Omega,B,B^c\}$. Consider the optimisation problem $$\inf\E[(X-Y)^2]$$ where the inf is taken over all square-integrable, $\sigma(B)$-measurable random variables $Y$. The infimum is attained by the random variable $$\omega\mapsto\E[X\mid\sigma(B)](\omega)=\frac{\E[X\ind_B]}{\PP(B)}\ind_B(\omega)+\frac{\E[X\ind_{B^c}]}{\PP(B^c)}\ind_{B^c}(\omega).$$
 </thm>
 
@@ -29,7 +29,7 @@ which is immediate from <a class="xref" href="#eq11">(11)</a>. Informally, it sa
 
 @@fig4-1@@
 
-<thm k="Example 4.2" pg="32">
+<thm k="Example 4.2" d="Best guess given a random variable" pg="32">
 Let $X,Y$ be random variables on $(\Omega,\F,\PP)$. We would like a random variable $Z$ that is as "close as possible" to $X$ but only measurable with respect to $\sigma(Y)$, that is, $Z$ must be a function of $Y$.
 </thm>
 
@@ -109,7 +109,7 @@ Here is a picture that makes conditional expectation on a partition concrete, an
 ## Properties of conditional expectation {34} [d2 i3]
 Let's turn to some elementary properties of conditional expectation. Most of the following are obvious, once you remember one thing: *whereas expectation is a number, conditional expectation is a function on $\Omega$*. And since conditional expectation is only defined up to equality almost surely, we have to qualify many statements with "a.s.".
 
-<thm k="Proposition 4.6" pg="34" it>
+<thm k="Proposition 4.6" d="Linearity, positivity and other basic properties" pg="34" it>
 Let $(\Omega,\F,\PP)$ be a probability space, $X$ and $Y$ integrable random variables, $\G\subseteq\F$ a σ-algebra and $a,b,c$ real numbers. Then
 
 <ol><li>$\E[\E[X\mid\G]]=\E[X]$.</li>
@@ -201,7 +201,7 @@ This section gives an alternative, more geometric existence proof. Neither proof
 
 Motivated by this, we replace $\R^d$ by $\Lp2(\Omega,\F,\PP)$, take as subspace $K=\Lp2(\Omega,\G,\PP)$ (the square-integrable random variables that are $\G$-measurable), and study, for $X\in\Lp2(\Omega,\F,\PP)$, the problem $$\inf_{Y\in K}\|X-Y\|_2.$$ If it has a minimiser, that should be our candidate for $\E[X\mid\G]$. Among all the $\Lp p$ spaces, $\Lp2$ is special because it carries an **inner product**, $$\langle X,Y\rangle:=\E[XY]\qquad\text{for }X,Y\in\Lp2,$$ with $\|X\|_2=\sqrt{\langle X,X\rangle}$. In particular we say that $X,Y$ are **orthogonal** if $\langle X,Y\rangle=0$. Having geometry and orthogonality available helps a lot. In fact the minimisation problem is well posed for any complete subspace $K$.
 
-<thm k="Theorem 4.11" pg="38" it>
+<thm k="Theorem 4.11" d="Orthogonal projection onto a subspace of L²" pg="38" it>
 Let $K$ be a complete vector subspace of $\Lp2(\Omega,\F,\PP)$. For any $X\in\Lp2(\Omega,\F,\PP)$ the infimum $\inf_{Z\in K}\|X-Z\|_2$ is attained by some $Y\in K$, and $X-Y$ is orthogonal to $Z$ for all $Z\in K$ with $\|Z\|_2>0$.
 </thm>
 

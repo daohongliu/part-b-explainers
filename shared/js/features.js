@@ -132,7 +132,7 @@ function buildToc(v) {
         const sl = h('li', x.tagName === 'H3' ? 'tl-h3' : 'tl-r'), sa = h('a');
         sa.href = '#' + x.id;
         if (x.tagName === 'H3') sa.textContent = plainHeading(x);
-        else { sa.appendChild(h('span', 'tl-k', x.dataset.label)); if (x.dataset.name) sa.appendChild(h('span', 'tl-nm', x.dataset.name)); }
+        else { sa.appendChild(h('span', 'tl-k', x.dataset.label)); const nm = x.dataset.name || x.dataset.desc; if (nm) { const e = h('span', 'tl-nm' + (x.dataset.name ? '' : ' tl-desc'), nm); sa.appendChild(e); } }
         sl.appendChild(sa); sub.appendChild(sl); subs.push([x, sl]);
       });
     }

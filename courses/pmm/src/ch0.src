@@ -74,7 +74,7 @@ In words: generation $n-1$ has $Z_{n-1}$ individuals; the $r$-th of them has $X_
 
 Two quantities control the process: the **mean offspring** $m=\E[X]=\sum_kkp_k$, which we assume finite, and the **probability generating function** (pgf) $$f(\theta)=\E[\theta^X]=\sum_{k=0}^\infty p_k\theta^k,\qquad0\le\theta\le1.$$ The pgf encodes the whole distribution: $f(0)=p_0$, $f(1)=1$, and $f'(1)=m$.
 
-<thm k="Claim 0.3" pg="7" it>
+<thm k="Claim 0.3" d="Zₙ’s generating function is f iterated n times" pg="7" it>
 Let $f_n(\theta)=\E[\theta^{Z_n}]$. Then $f_n$ is the $n$-fold composition of $f$ with itself (where by convention a 0-fold composition is the identity).
 </thm>
 
@@ -94,7 +94,7 @@ In <a class="xref" href="#eq2">(2)</a> we used the **tower property**: averaging
 
 Watson wanted the **extinction probability**, the probability that $Z_n=0$ for some $n$.
 
-<thm k="Claim 0.4" pg="7" it>
+<thm k="Claim 0.4" d="Extinction probability is the smallest root of θ = f(θ)" pg="7" it>
 Let $q=\PP[Z_n=0\text{ for some }n]$. Then $q$ is the smallest root in $[0,1]$ of the equation $\theta=f(\theta)$. In particular, assuming $p_1=\PP[X=1]<1$,
 
 <ul><li>if $m=\E[X]\le1$, then $q=1$,</li><li>if $m=\E[X]>1$, then $q<1$.</li></ul>

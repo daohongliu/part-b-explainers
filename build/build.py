@@ -144,7 +144,8 @@ def process(s):
             kind = 'def' if kw.startswith('definition') else 'ex' if kw.startswith(('example', 'remark', 'claim', 'fact')) else 'thm'
             cls = ('thm italic' if a.get('it') else 'thm') + ' k-' + kind
             idattr = f' id="{tid}"' if tid else ''
-            return ph(f'<div class="{cls}"{idattr} data-label="{k}" data-name="{html.escape(re.sub("<[^>]+>", "", nm))}"><div class="tb">{body}</div></div>')
+            ds = a.get('d', '')
+            return ph(f'<div class="{cls}"{idattr} data-label="{k}" data-name="{html.escape(re.sub("<[^>]+>", "", nm))}"' + (f' data-desc="{html.escape(ds)}"' if ds else '') + f'><div class="tb">{body}</div></div>')
         if tag == 'pf':
             h = a.get('h', 'Proof.')
             body = first_p_insert(body, f'<span class="phead">{h}</span> ')
@@ -331,9 +332,9 @@ def build_course(cid, conf):
                    f'<div class="cmeta">≈ {mins(tot["w"], tot["f"])} min · {tot["r"]} results · {tot["f"]} figures · {tot["x"]} exercises{gauges(tot)}</div><div class="secs">{sl}</div></div></li>')
     idx = []
     for name, meta, hb, tot in chapters:
-        res = re.findall(r'<div class="thm[^"]*" id="(r[^"]+)" data-label="([^"]+)" data-name="([^"]*)"', hb)
+        res = re.findall(r'<div class="thm[^"]*" id="(r[^"]+)" data-label="([^"]+)" data-name="([^"]*)"(?: data-desc="([^"]*)")?', hb)
         if res:
-            idx.append(f'<h3>{meta["num"]} · {meta["title"]}</h3><ul>' + ''.join(f'<li><a class="xref" href="#{i}">{l}</a>' + (f' <span class="nm">{n}</span>' if n else '') + '</li>' for i, l, n in res) + '</ul>')
+            idx.append(f'<h3>{meta["num"]} · {meta["title"]}</h3><ul>' + ''.join(f'<li><a class="xref" href="#{i}">{l}</a>' + (f' <span class="nm">{n or d}</span>' if (n or d) else '') + '</li>' for i, l, n, d in res) + '</ul>')
     sl = ''.join(f'<li><a href="#{n}">Problem Sheet {m["num"]}</a> <span class="nm">{m.get("title", "")}</span></li>' for n, m, _ in sheets)
     cv = (f'<section class="view course-home" id="{cid}" data-course="{cid}" data-short="{conf["short"]}" data-title="{cname}" hidden>'
           f'<header class="runhead"><span>{conf["code"]} · {cname}</span><span>{conf["after"]}</span></header>'

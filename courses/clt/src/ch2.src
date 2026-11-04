@@ -46,7 +46,7 @@ The proof never looks at how $L$ chooses among consistent hypotheses. Any consis
 
 Read (2.3) as a statement about description length. A hypothesis in $\H_n$ can be named with $\log_2|\H_n|$ bits. The bound says that about $\frac1\eps$ examples per bit of description suffice. Memorising $m$ examples needs a description that grows with $m$, so (2.3) can never be satisfied that way; a class whose descriptions are shorter than the data can.
 
-<thm k="Remark 2.3" pg="24">
+<thm k="Remark 2.3" d="Hypotheses may grow slowly with the data" pg="24">
 The theorem lets $\H_n$ depend only on $n$ (and $\C_n$). A more general version lets the class depend on the sample size too: the consistent learner outputs $h\in\H_{n,m}$. As long as $\log|\H_{n,m}|$ is at most a polynomial in $n$, $\size(c)$, $1/\eps$, $1/\delta$ times $m^\beta$ for some fixed $\beta<1$, a PAC learner still follows. The hypothesis may grow with the data, as long as it grows more slowly. Exercise 2.2 in the notes, and Kearns and Vazirani Chapter 2, have the details.
 </thm>
 

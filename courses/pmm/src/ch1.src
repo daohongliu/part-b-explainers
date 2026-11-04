@@ -87,7 +87,7 @@ The condition $\mu(G_k)<\infty$ in (2) is essential. Take $G_n=(n,\infty)\subset
 
 The following partial converse is sometimes useful. We will lean on it in the proof of Theorem 1.15.
 
-<thm k="Lemma 1.5" pg="10" it>
+<thm k="Lemma 1.5" d="Countable additivity ⇔ continuity at ∅" pg="10" it>
 Let $\mu:\A\to[0,\infty)$ be an additive set function on an algebra $\A$ taking only finite values. Then $\mu$ is countably additive if and only if for every sequence $(A_n)$ of sets in $\A$ with $A_n\downarrow\emptyset$ we have $\mu(A_n)\to0$.
 </thm>
 
@@ -150,7 +150,7 @@ Let $\I$ be a collection of subsets of $\Omega$. We say that $\I$ is a <strong>�
 
 An algebra is automatically a π-system. A π-system is a much weaker thing than an algebra: no complements, no unions, just intersections.
 
-<thm k="Example 1.10" pg="11">
+<thm k="Example 1.10" d="Rays (−∞, x] generate the Borel sets" pg="11">
 The collection $\pi(\R)=\{(-\infty,x] : x\in\R\}$ forms a π-system, and $\sigma(\pi(\R))$, the σ-algebra it generates, is $\B(\R)$, the σ-algebra of all Borel subsets of $\R$ (exercise).
 </thm>
 
@@ -202,7 +202,7 @@ The infimum runs over *countable* covers, and that one word does a lot of work.
 
 Watch the red part as the number of intervals grows. Each rational is eventually covered, yet the uncovered length never drops below $1-\eps$. In the limit the red part is a closed set of positive length that contains no rational at all.<sn>Covering by finitely many intervals is the older idea of <em>Jordan content</em>. Under it $\Q\cap[0,1]$ has outer content 1 and inner content 0, so it has no content at all. Lebesgue’s move to countable covers is what repairs this.</sn>
 
-<thm k="Corollary 1.13" pg="11" it>
+<thm k="Corollary 1.13" d="Lebesgue measure exists and is unique" pg="11" it>
 There exists a unique Borel measure $\mu$ on $\R$ such that for all $a,b\in\R$ with $a<b$, $\mu((a,b])=b-a$. The measure $\mu$ is the <span data-tip="Named for Henri Lebesgue, whose 1902 thesis was called Intégrale, longueur, aire.">Lebesgue measure</span> on $\B(\R)$.
 </thm>
 
@@ -221,7 +221,7 @@ In Part A Integration, Lebesgue measure was defined on a σ-algebra $\M_{\mathrm
 ## Measures on the line are increasing functions {12} [d2 i3]
 In discrete measure theory there was a one-to-one correspondence between measures and mass functions. Is there something similar for Borel measures on $\R$, that is, measures on $(\R,\B(\R))$?
 
-<thm k="Definition 1.14" pg="12">
+<thm k="Definition 1.14" d="Distribution function F(x) = μ((−∞, x])" pg="12">
 Let $\mu$ be a Borel probability measure on $\R$. The <strong>distribution function</strong> of $\mu$ is the function $F:\R\to\R$ defined by $F(x)=\mu((-\infty,x])$.
 </thm>
 

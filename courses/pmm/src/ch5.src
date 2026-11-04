@@ -52,7 +52,7 @@ If the filtration is unambiguous we simply say $\tau$ is a stopping time; they a
 
 We now discuss some easy properties of stopping times. If I have two valid strategies, I may decide to stop when the first one tells me to, or when both have told me to; so the minimum and maximum of stopping times should be stopping times.
 
-<thm k="Proposition 5.5" pg="41" it>
+<thm k="Proposition 5.5" d="Constants, minima and maxima are stopping times" pg="41" it>
 Let $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ be a filtered probability space and $\tau,\rho$ stopping times. Then
 
 <ol><li>a deterministic time $t$, $t(\omega)=n$ for all $\omega\in\Omega$, is a stopping time;</li>
@@ -71,7 +71,7 @@ Here $a\wedge b=\min(a,b)$ and $a\vee b=\max(a,b)$.
 
 The following proposition says that the first time an adapted process enters a region is a stopping time. This **first hitting time** is the canonical example of a stopping time; many stopping times are of this type for some process. We use the usual convention $\inf\emptyset=\infty$: if the process never enters the region, the hitting time is $\infty$.
 
-<thm k="Proposition 5.6" pg="41" it>
+<thm k="Proposition 5.6" d="First hitting times are stopping times" pg="41" it>
 Let $X=(X_n)_{n\ge0}$ be an adapted process on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ and $B\in\B(\R)$. Then $$h_B=\inf\{n\ge0:X_n\in B\},$$ the first hitting time of $B$, is a stopping time.
 </thm>
 
@@ -88,13 +88,13 @@ By contrast, the *last* time $X$ is in $B$ before time $N$ is generally not a st
 ## What is known at a stopping time {41} [d3 i2]
 We often use stopping times because we are interested in the value of the process at that time, the random variable $X_\tau$. Each $X_n$ is $\F_n$-measurable, since the process is adapted. But what about $X_\tau$? It is $\F_\infty$-measurable (check!), but we expect it to be measurable with respect to a smaller σ-algebra, reflecting "the information available at time $\tau$".
 
-<thm k="Definition 5.7" pg="41">
+<thm k="Definition 5.7" d="𝓕_τ, what is known at time τ" pg="41">
 Let $\tau$ be a stopping time on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$. We define $$#eq20 \F_\tau=\{A\in\F_\infty:A\cap\{\tau=n\}\in\F_n\ \ \forall n\ge0\}. \tag{20}$$
 </thm>
 
 In words: $A$ is in $\F_\tau$ if, whenever we stop at time $n$, we know at that moment whether $A$ has happened. For example, with $\tau$ the first time a random walk hits $5$, the event "the walk visited $-3$ before hitting $5$" is in $\F_\tau$, but "the walk visits $-3$ after hitting $5$" is not. In the definition we could replace $\{\tau=n\}$ by $\{\tau\le n\}$. The following shows that this new notion behaves as we would want.
 
-<thm k="Proposition 5.8" pg="42" it>
+<thm k="Proposition 5.8" d="𝓕_τ is a σ-algebra, growing with τ" pg="42" it>
 Let $\tau,\rho$ be stopping times on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$. Then
 
 <ol><li>$\F_\tau$ defined in <a class="xref" href="#eq20">(20)</a> is a σ-algebra;</li>

@@ -62,13 +62,13 @@ If $\VCD(\C)=d$, then for all $m\ge d$, $$\Pi_\C(m)\le\Big(\frac{em}d\Big)^d.$$
 
 So a class of VC dimension $d$ behaves, on $m$ points, like a finite class of size about $m^d$. The proof goes through a counting function.
 
-<thm k="Definition 3.5" pg="30">
+<thm k="Definition 3.5" d="Φ(m, d): subsets of size at most d" pg="30">
 For $m,d\in\N$ let $$#eq3-3 \Phi(m,d)=\sum_{i=0}^d\binom mi. \tag{3.3}$$
 </thm>
 
 $\Phi(m,d)$ counts the subsets of an $m$-element set that have at most $d$ elements. Clearly $\Phi(m,0)=\Phi(0,d)=1$, $\Phi$ increases in both arguments, and $\Phi(m,d)=2^m$ when $m\le d$.
 
-<thm k="Lemma 3.6" pg="30" it>
+<thm k="Lemma 3.6" d="Pascal’s rule and a bound for Φ" pg="30" it>
 For all $m,d\ge1$, $$#eq3-4 \Phi(m,d)=\Phi(m-1,d)+\Phi(m-1,d-1), \tag{3.4}$$ and for $m\ge d\ge1$, $$#eq3-5 \Phi(m,d)\le\Big(\frac{em}d\Big)^d. \tag{3.5}$$
 </thm>
 
@@ -78,7 +78,7 @@ For (3.4), count subsets of $\{1,\dots,m\}$ of size at most $d$ by whether they 
 For (3.5), multiply and divide by $(m/d)^d$. Since $d/m\le1$ and $i\le d$, we have $(d/m)^d\le(d/m)^i$, so $$\Phi(m,d)=\Big(\frac md\Big)^d\sum_{i=0}^d\binom mi\Big(\frac dm\Big)^d\le\Big(\frac md\Big)^d\sum_{i=0}^m\binom mi\Big(\frac dm\Big)^i=\Big(\frac md\Big)^d\Big(1+\frac dm\Big)^m\le\Big(\frac md\Big)^de^d,$$ using the binomial theorem and $1+x\le e^x$.
 </pf>
 
-<thm k="Lemma 3.7" pg="31" it>
+<thm k="Lemma 3.7" d="Growth function is at most Φ(m, d)" pg="31" it>
 If $\VCD(\C)=d$ then $\Pi_\C(m)\le\Phi(m,d)$ for all $m$.
 </thm>
 
@@ -100,7 +100,7 @@ For the second term, let $\C'$ be the class (on $S\setminus\{x\}$) of dichotomie
 
 The VC dimension now plays the part that $\log|\H|$ played in Theorem 2.2.
 
-<thm k="Theorem 3.8" pg="32" it>
+<thm k="Theorem 3.8" d="VC dimension bounds the sample size above" pg="32" it>
 Let $\H\supseteq\C$ be a hypothesis class with $\VCD(\H)=d$, where $1\le d<\infty$, and let $L$ be a consistent learner for $\C$ that outputs hypotheses in $\H$. There is a universal constant $\kappa_0$ such that, for all $0<\eps,\delta\le\frac12$, $L$ PAC learns $\C$ when given $$m\ge\kappa_0\Big(\frac1\eps\log\frac1\delta+\frac d\eps\log\frac1\eps\Big)$$ examples from $\EX(c,\D)$.
 </thm>
 
@@ -132,7 +132,7 @@ The theorem applies with $\H=\C$ for proper learning, but its real use is with a
 
 The upper bound would be less interesting if some cleverer algorithm could get by with much less data. It can't. The next theorem holds for *every* learning algorithm, however slow, and whatever hypotheses it outputs.
 
-<thm k="Theorem 3.9" pg="35" it>
+<thm k="Theorem 3.9" d="VC dimension bounds the sample size below" pg="35" it>
 Let $\VCD(\C)\ge d$ with $d\ge25$. Any PAC learning algorithm for $\C$, using any $\H\supseteq\C$, needs at least $$\max\Big\{\frac{d-1}{32\eps},\ \frac1{4\eps}\log\frac1{4\delta}\Big\}$$ examples.
 </thm>
 
