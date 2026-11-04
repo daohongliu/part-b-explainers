@@ -75,13 +75,13 @@ The following proposition says that the first time an adapted process enters a r
 Let $X=(X_n)_{n\ge0}$ be an adapted process on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ and $B\in\B(\R)$. Then $$h_B=\inf\{n\ge0:X_n\in B\},$$ the first hitting time of $B$, is a stopping time.
 </thm>
 
-<pause n="One step too early" q="Toss a coin repeatedly and let $\tau$ be the first time you have seen two heads in a row. Is $\tau$ a stopping time for the natural filtration? Is $\tau-1$?">
-$\{\tau=n\}$ says that tosses $n-1$ and $n$ are heads and no earlier pair of consecutive tosses was. That is decided by the first $n$ tosses, so it lies in $\F_n$ and $\tau$ is a stopping time. But $\{\tau-1=n\}=\{\tau=n+1\}$ depends on toss $n+1$: knowing the first $n$ tosses end in a head, you can't yet tell whether the next one will complete the pair. So $\tau-1$ is not a stopping time. It would require you to stop just before something happens, which is exactly what "I know it when it happens" rules out.
-</pause>
-
 <pf>
 $\{h_B\le n\}=\bigcup_{k=0}^nX_k^{-1}(B)$, "$X$ has been in $B$ at some time up to $n$". Each $X_k^{-1}(B)\in\F_k\subseteq\F_n$ since $X$ is adapted.
 </pf>
+
+<pause n="One step too early" q="Toss a coin repeatedly and let $\tau$ be the first time you have seen two heads in a row. Is $\tau$ a stopping time for the natural filtration? Is $\tau-1$?">
+$\{\tau=n\}$ says that tosses $n-1$ and $n$ are heads and no earlier pair of consecutive tosses was. That is decided by the first $n$ tosses, so it lies in $\F_n$ and $\tau$ is a stopping time. But $\{\tau-1=n\}=\{\tau=n+1\}$ depends on toss $n+1$: knowing the first $n$ tosses end in a head, you can't yet tell whether the next one will complete the pair. So $\tau-1$ is not a stopping time. It would require you to stop just before something happens, which is exactly what "I know it when it happens" rules out.
+</pause>
 
 By contrast, the *last* time $X$ is in $B$ before time $N$ is generally not a stopping time: to know at time $n$ that this was the last visit, you need to know that $X$ won't come back.
 

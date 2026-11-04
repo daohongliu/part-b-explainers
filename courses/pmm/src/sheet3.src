@@ -5,25 +5,25 @@
 ---
 ## Section A · Warm-up
 
-<qn n="A1">
+<qn n="A1" t="Indicators of limsup and liminf">
 Show that $\ind_{\limsup_nA_n}=\limsup_n\ind_{A_n}$ and $\ind_{\liminf_nA_n}=\liminf_n\ind_{A_n}$.
 
 <p class="uses">Uses Definition 3.1.</p>
 </qn>
 
-<qn n="A2">
+<qn n="A2" t="Maxima of exponentials">
 Let $(X_n)_{n\ge1}$ be independent exponential random variables with mean 1, and let $M_n=\max\{X_1,\dots,X_n\}$. Show that $$\PP\Big[\lim_{n\to\infty}\frac{M_n}{\log n}=1\Big]=1.$$
 
 <p class="uses">Uses Lemma 3.3 and Lemma 3.4.</p>
 </qn>
 
-<qn n="A3">
+<qn n="A3" t="Where a conditional expectation is positive">
 Let $X\ge0$ be a random variable on $(\Omega,\F,\PP)$, and let $\G\subseteq\F$ be a σ-algebra. Show that $\{X>0\}\subseteq\{\E[X\mid\G]>0\}$, up to an event of probability zero. Show also that $\{\E[X\mid\G]>0\}$ is the smallest $\G$-measurable event containing $\{X>0\}$, up to events of probability zero.
 
 <p class="uses">Uses Definition 4.3 and Proposition 4.6.</p>
 </qn>
 
-<qn n="A4">
+<qn n="A4" t="Conditioning with a joint density">
 Let $X$ and $Y$ be bounded random variables on $(\Omega,\F,\PP)$ with joint density $f(x,y)$, so that $\PP[(X,Y)\in A]=\int_Af(x,y)\,dx\,dy$ for measurable $A\subseteq\R^2$. Apply Fubini's theorem to show that $$\E[X\mid\sigma(Y)]=\frac{\int xf(x,Y)\,dx}{\int f(x,Y)\,dx}.$$ In other words, $\E[X\mid\sigma(Y)]=g(Y)$ where $g(y)=\int xf(x,y)\,dx\big/\int f(x,y)\,dx$.
 
 <p class="uses">Uses Theorem 2.21 and Definition 4.3.</p>
@@ -31,60 +31,60 @@ Let $X$ and $Y$ be bounded random variables on $(\Omega,\F,\PP)$ with joint dens
 
 ## Section B · To be handed in
 
-<qn n="B1">
+<qn n="B1" t="Probability implies distribution">
 Show that convergence in probability implies convergence in distribution.
 
 <p class="uses">Uses Definition 3.7.</p>
 </qn>
 
-<qn n="B2">
+<qn n="B2" t="In probability, not almost surely">
 Let $(X_n)_{n\ge2}$ be independent random variables with $$\PP[X_n=n]=\PP[X_n=-n]=\frac1{2n\log n},\qquad\PP[X_n=0]=1-\frac1{n\log n}.$$ Let $S_n=X_2+\dots+X_n$. Prove that $S_n/n\to0$ in probability, but not almost surely. [Hint: compute the variance of $S_n$ for the convergence in probability, and use a Borel–Cantelli lemma for the almost sure part.]
 
 <p class="uses">Uses Corollary 3.12 and Lemma 3.4.</p>
 </qn>
 
-<qn n="B3">
+<qn n="B3" t="Independence, mean independence, uncorrelated">
 Let $X$ and $Y$ be bounded random variables on $(\Omega,\F,\PP)$. Show that each of the following statements implies the next, but that the reverse implications do not hold: (i) $X$ and $Y$ are independent; (ii) $\E[X\mid Y]=\E[X]$ a.s.; (iii) $\E[XY]=\E[X]\E[Y]$.
 
 <p class="uses">Uses Proposition 4.6 and Lemma 4.8.</p>
 </qn>
 
-<qn n="B4">
+<qn n="B4" t="Each the conditional mean of the other">
 Suppose that $X$ and $Y$ are integrable random variables on $(\Omega,\F,\PP)$ with $$\E[X\mid Y]=Y\text{ a.s.},\qquad\E[Y\mid X]=X\text{ a.s.}$$ Prove that $\PP[X=Y]=1$. [Hint: the square-integrable case is immediate. In general, first show that $\E[Xf(Y)]=\E[Yf(Y)]$ for any bounded measurable $f$. Then take $f=\ind_{[c,\infty)}$ and show that $\E[(X-Y)\ind_{\{Y\ge c>X\}}]=0$ for every $c\in\R$. Conclude.]
 </qn>
 
-<qn n="B5">
+<qn n="B5" t="σ(Y)-measurable means a function of Y">
 Let $X$ be a $\sigma(Y)$-measurable random variable. Show that there is a measurable function $f:\R\to\R$ such that $X=f(Y)$. [Hint: first consider $X=\ind_A$ for a suitable set $A$.] What can you say when $X$ is $\sigma(Y,Z)$-measurable?
 
 <p class="uses">Uses Definition 2.23 and the approximation by simple functions in Section 2.1.</p>
 </qn>
 
-<qn n="B6">
+<qn n="B6" t="Conditional Markov inequality">
 Let $X$ be an integrable random variable, $\G\subseteq\F$ a σ-algebra, and $Z$ a strictly positive, $\G$-measurable, integrable random variable. Show the conditional Markov inequality: $$\E\big[\ind_{\{|X|\ge Z\}}\mid\G\big]\le\frac1Z\,\E\big[|X|\mid\G\big]\quad\text{a.s.}$$ Carefully state any properties of conditional expectation that you use.
 
 <p class="uses">Compare Lemma 3.11; uses Proposition 4.6 and Lemma 4.8.</p>
 </qn>
 
-<qn n="B7">
+<qn n="B7" t="Conditioning on sums">
 Let $X,Y$ be independent, identically distributed, integrable random variables. Calculate:
 <ol class="parts"><li>$\E[X\mid X,Y]$ and $\E[X\mid Y]$;</li><li>$\E[X\mid X+Y]$ and $\E[Y\mid X+Y]$;</li><li>$\E[h(X,Y)\mid X+Y,X-Y]$ for a bounded Borel measurable $h:\R^2\to\R$.</li></ol>
 </qn>
 
 ## Section C · Extra practice
 
-<qn n="C1">
+<qn n="C1" t="A maximal-type Lᵖ bound">
 Let $X,Y$ be positive random variables such that $x\,\PP(X\ge x)\le\E[Y\ind_{\{X\ge x\}}]$ for all $x>0$. Prove that for $p>1$ and $q=p/(p-1)$, $\|X\|_p\le q\|Y\|_p$.
 </qn>
 
-<qn n="C2">
+<qn n="C2" t="Covariance">
 For $X,Y\in\Lp2(\Omega,\F,\PP)$ let $\mathrm{Cov}(X,Y)=\E\big[(X-\E[X])(Y-\E[Y])\big]=\E[XY]-\E[X]\E[Y]$. Show that $\mathrm{Cov}$ is bilinear and that $\mathrm{Var}(X+Y)=\mathrm{Var}(X)+\mathrm{Var}(Y)$ if $\mathrm{Cov}(X,Y)=0$. When $\mathrm{Cov}(X,Y)=0$ we say $X$ and $Y$ are uncorrelated. Independent random variables are uncorrelated; show by a counterexample that the converse can fail.
 </qn>
 
-<qn n="C3">
+<qn n="C3" t="The parallelogram law">
 Define $\langle X,Y\rangle:=\E[XY]$ for $X,Y\in\Lp2(\Omega,\F,\PP)$; this is well defined because $XY\in\Lp1$ by Hölder's inequality. Show that $\langle\cdot,\cdot\rangle$ is bilinear and use it to prove the parallelogram law $$\|X\|_2^2+\|Y\|_2^2=\tfrac12\big(\|X+Y\|_2^2+\|X-Y\|_2^2\big).$$
 </qn>
 
-<qn n="C4">
+<qn n="C4" t="Conditional expectation as projection">
 Let $K$ be a complete vector subspace of $\Lp2(\Omega,\F,\PP)$.
 <ol class="parts"><li>Show that for any $X\in\Lp2$ the infimum $\inf_{Z\in K}\|X-Z\|_2$ is attained by some $Y\in K$, and that $X-Y$ is orthogonal to every $Z\in K$.</li><li>Let $K$ be the space of almost surely constant random variables. Show that the projection of $X$ onto $K$ is $\E[X]$.</li><li>Let $\G$ be a sub-σ-algebra of $\F$ and $K=\Lp2(\Omega,\G,\PP)$. Show that the minimiser $Y$ is a version of $\E[X\mid\G]$.</li><li>Use these results to show that $\E[X\mid\G]$ exists when we only assume $X\in\Lp1(\Omega,\F,\PP)$.</li></ol>
 This gives a proof of the existence of conditional expectation that avoids the Radon–Nikodym theorem.
@@ -92,12 +92,12 @@ This gives a proof of the existence of conditional expectation that avoids the R
 <p class="uses">This is the route of Section 4.1 and Theorem 4.11.</p>
 </qn>
 
-<qn n="C5">
+<qn n="C5" t="cMON, cFatou, cDOM">
 Prove cMON, cFatou and cDOM.
 
 <p class="uses">These are the three parts of Proposition 4.7.</p>
 </qn>
 
-<qn n="C6">
+<qn n="C6" t="Pythagoras for conditional expectations">
 <ol class="parts"><li>Show that if $Y$ is a $\G$-measurable random variable, then $\E\big[Y(X-\E[X\mid\G])\big]=0$ (when the expectations make sense).</li><li>Suppose $\H\subseteq\G$ are σ-algebras and $\E[X^2]<\infty$. Show that $$\E\big[(X-\E[X\mid\G])^2\big]+\E\big[(\E[X\mid\G]-\E[X\mid\H])^2\big]=\E\big[(X-\E[X\mid\H])^2\big].$$</li></ol>
 </qn>

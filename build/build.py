@@ -159,7 +159,8 @@ def process(s):
             return ph(f'<aside class="sheet-prompt"><span class="sp-ico" aria-hidden="true">✎</span><span>Now try {what}.' + (f' {extra}' if extra else '') + '</span></aside>')
         if tag == 'qn':
             n = a.get('n', '')
-            return ph(f'<div class="sq" id="SHEETID-{n.lower()}"><div class="sq-n">{n}</div><div class="sq-b">{body}</div></div>')
+            t = a.get('t', '')
+            return ph(f'<div class="sq" id="SHEETID-{n.lower()}" data-label="Question {n}" data-name="{t}"><div class="sq-n">{n}</div><div class="sq-b">' + (f'<p class="sq-t">{t}</p>' if t else '') + f'{body}</div></div>')
         if tag == 'bg':
             lead = a.get('lead', 'Background')
             bid = a.get('id', '')

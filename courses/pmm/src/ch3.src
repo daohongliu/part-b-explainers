@@ -166,13 +166,13 @@ The First Borel–Cantelli Lemma is a powerful tool for proving almost sure conv
 Let $(\Omega,\F,\PP)$ be a probability space and $X$ a non-negative random variable. Then, for each $\lambda>0$, $$\PP[X\ge\lambda]\le\frac1\lambda\E[X].$$
 </thm>
 
-<pause n="Markov is sharp" q="Find a non-negative random variable $X$ with $\E[X]=1$ and $\PP[X\ge10]=\frac1{10}$, so that Markov's inequality holds with equality.">
-Let $X=10$ with probability $\frac1{10}$ and $X=0$ otherwise. Then $\E[X]=10\cdot\frac1{10}=1$ and $\PP[X\ge10]=\frac1{10}=\E[X]/10$. Equality needs all the mass of $X$ to sit either at $0$ or exactly at the threshold: any mass strictly between them, or above, would make $\E[X]$ count for more than the bound uses.
-</pause>
-
 <pf>
 For each $\omega\in\Omega$ we have $X(\omega)\ge\lambda\ind_{\{X\ge\lambda\}}(\omega)$: where $X\ge\lambda$ the right side is $\lambda$, and elsewhere it is 0. Hence $\E[X]\ge\E[\lambda\ind_{\{X\ge\lambda\}}]=\lambda\PP[X\ge\lambda]$.
 </pf>
+
+<pause n="Markov is sharp" q="Find a non-negative random variable $X$ with $\E[X]=1$ and $\PP[X\ge10]=\frac1{10}$, so that Markov's inequality holds with equality.">
+Let $X=10$ with probability $\frac1{10}$ and $X=0$ otherwise. Then $\E[X]=10\cdot\frac1{10}=1$ and $\PP[X\ge10]=\frac1{10}=\E[X]/10$. Equality needs all the mass of $X$ to sit either at $0$ or exactly at the threshold: any mass strictly between them, or above, would make $\E[X]$ count for more than the bound uses.
+</pause>
 
 <thm k="Corollary 3.12" nm="General Chebyshev’s inequality" pg="28" it>
 Let $X$ be a random variable taking values in a (measurable) set $A\subseteq\R$, and let $\varphi:A\to[0,\infty]$ be an increasing, measurable function. Then for any $\lambda\in A$ with $\varphi(\lambda)<\infty$ we have $$\PP[X\ge\lambda]\le\frac{\E[\varphi(X)]}{\varphi(\lambda)}.$$

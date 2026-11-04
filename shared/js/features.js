@@ -106,8 +106,7 @@ function buildToc(v) {
     a.href = '#' + hd.id;
     if (isSheet) {
       a.appendChild(h('span', 'tl-n', hd.querySelector('.sq-n').textContent.trim()));
-      const first = (hd.querySelector('.sq-b').textContent || '').replace(/\s+/g, ' ').trim();
-      a.appendChild(h('span', 'tl-t', first.length > 54 ? first.slice(0, 52) + '…' : first));
+      a.appendChild(h('span', 'tl-t', hd.dataset.name || ''));
     } else {
       const sec = hd.querySelector('.sec');
       if (sec) a.appendChild(h('span', 'tl-n', sec.textContent));
