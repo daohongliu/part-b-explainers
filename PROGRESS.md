@@ -48,3 +48,5 @@ Everything ships as ONE artifact (both courses), notes stored in the artifact's 
 
 ## Testing
 `node <scratchpad>/t3.js "" view1,view2 [notes]` (run from the scratchpad dir) screenshots desk 1440 and phone 390.
+
+- [x] Removed: private notes (features.js, topbar button, hub text) and the flashcard button, at David's request. Artifact capabilities cleared to {}.

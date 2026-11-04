@@ -1,7 +1,7 @@
 
 /* =====================================================================
    features.js: course context, chapter contents sidebar with progress,
-   the "beside" panel, private notes, header strips, three.js loader.
+   the "beside" panel, header strips, three.js loader.
    ===================================================================== */
 
 const LS = {
@@ -15,7 +15,7 @@ function toast(msg) {
   setTimeout(() => { t.classList.remove('on'); setTimeout(() => t.remove(), 400); }, 2600);
 }
 
-/* ---------- TeX source for every typeset formula (used by notes) ---------- */
+/* ---------- TeX source for every typeset formula  ---------- */
 function tagTex(nodes) {
   try {
     MathJax.startup.document.getMathItemsWithin(nodes).forEach(it => {
@@ -249,274 +249,6 @@ function openBeside(id) {
   $$('canvas', body).forEach(c => c.remove());
 }
 
-/* ---------- private notes ---------- */
-const NOTES = { list: LS.get('pbs-notes', []), db: null, mode: 'local' };
-function noteText(n) { return n.nodeType === 3; }
-const SKIP_SEL = 'script, style, .sn-toggle, button, svg, canvas, .sec-meta, .for-llms, .eqno, input, textarea';
-/* Flatten a view into a string, with every formula written as its TeX source. */
-function linearize(root) {
-  let text = ''; const segs = [];
-  (function walk(n) {
-    for (let c = n.firstChild; c; c = c.nextSibling) {
-      if (c.nodeType === 3) { segs.push({ n: c, s: text.length, e: text.length + c.data.length }); text += c.data; }
-      else if (c.nodeType === 1) {
-        if (c.tagName === 'MJX-CONTAINER') { const tx = c.dataset.tex ? (c.dataset.disp ? '$$' + c.dataset.tex + '$$' : '$' + c.dataset.tex + '$') : ''; segs.push({ n: c, s: text.length, e: text.length + tx.length, m: 1 }); text += tx; }
-        else if (c.matches(SKIP_SEL)) continue;
-        else walk(c);
-      }
-    }
-  })(root);
-  return { text, segs };
-}
-function offsetOf(L, node, off, isEnd) {
-  for (const s of L.segs) {
-    if (s.m && s.n.contains(node)) return isEnd ? s.e : s.s;
-    if (s.n === node) return s.s + Math.min(off, s.e - s.s);
-  }
-  const pr = document.createRange();
-  try { pr.setStart(node, off); } catch (_) { return -1; }
-  for (const s of L.segs) { if (pr.comparePoint(s.n, 0) >= 0) return s.s; }
-  return L.text.length;
-}
-function anchorBefore(node, v) {
-  let best = null;
-  $$('[id]', v).forEach(x => { if (x.matches('h2, h3, .thm, figure, .disp, aside.bg, .sq, details.pause') && (x.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING || x.contains(node))) best = x; });
-  return best;
-}
-function unmark(v) {
-  $$('mark.unote', v).forEach(m => { const p = m.parentNode; while (m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); p.normalize(); });
-  $$('.unote-m', v).forEach(m => { m.classList.remove('unote-m'); delete m.dataset.note; });
-}
-function markNote(v, n) {
-  const L = linearize(v);
-  let idx = -1, best = -1, from = 0;
-  while ((from = L.text.indexOf(n.quote, from)) >= 0) {
-    let sc = 0;
-    const pre = L.text.slice(Math.max(0, from - (n.prefix || '').length), from), suf = L.text.slice(from + n.quote.length, from + n.quote.length + (n.suffix || '').length);
-    for (let k = 1; k <= pre.length && pre[pre.length - k] === n.prefix[n.prefix.length - k]; k++) sc++;
-    for (let k = 0; k < suf.length && suf[k] === n.suffix[k]; k++) sc++;
-    if (sc > best) { best = sc; idx = from; }
-    from++;
-  }
-  if (idx < 0) return false;
-  const a = idx, b = idx + n.quote.length;
-  L.segs.filter(s => s.e > a && s.s < b).forEach(s => {
-    if (s.m) { s.n.classList.add('unote-m'); s.n.dataset.note = n.id; return; }
-    let node = s.n; const st = Math.max(0, a - s.s), en = Math.min(s.e, b) - s.s;
-    if (!node.data.slice(st, en).trim()) return;
-    if (en < node.data.length) node.splitText(en);
-    if (st > 0) node = node.splitText(st);
-    const m = document.createElement('mark'); m.className = 'unote'; m.dataset.note = n.id;
-    node.parentNode.insertBefore(m, node); m.appendChild(node);
-  });
-  return true;
-}
-function restoreNotes(v) {
-  if (!v) return;
-  unmark(v);
-  NOTES.list.filter(n => n.view === v.id).forEach(n => { n._lost = !markNote(v, n); });
-}
-function noteCount() { const c = $('#notes-btn .count'); if (c) c.textContent = NOTES.list.length ? String(NOTES.list.length) : ''; }
-function persistLocal() { LS.set('pbs-notes', NOTES.list.map(({ _lost, ...n }) => n)); }
-async function saveNote(n) {
-  n.updated = Date.now();
-  const i = NOTES.list.findIndex(x => x.id === n.id); if (i >= 0) NOTES.list[i] = n; else NOTES.list.push(n);
-  refreshNotes();
-  if (NOTES.mode === 'db') {
-    try { const { _lost, ...d } = n; await NOTES.db.collection('notes').doc(n.id).set(d); return; }
-    catch (err) { console.warn('[notes]', err); NOTES.mode = 'local'; toast('Couldn’t reach your account’s storage, so this note is kept in this browser.'); }
-  }
-  persistLocal();
-}
-async function deleteNote(id) {
-  NOTES.list = NOTES.list.filter(x => x.id !== id); refreshNotes();
-  if (NOTES.mode === 'db') { try { await NOTES.db.collection('notes').doc(id).delete(); return; } catch (err) { console.warn('[notes]', err); } }
-  persistLocal();
-}
-function refreshNotes() {
-  noteCount();
-  const v = currentView && document.getElementById(currentView);
-  if (v && prepared[v.id]) prepared[v.id].then(() => restoreNotes(v));
-  if (!drawer.hidden) renderDrawer();
-}
-async function initNotes() {
-  noteCount();
-  if (!(window.claude && typeof window.claude.use === 'function')) return;
-  let db = null; try { db = await window.claude.use('db'); } catch (_) {}
-  if (!db) return;
-  NOTES.db = db;
-  const timer = setTimeout(() => { if (NOTES.mode !== 'db') console.warn('[notes] storage slow; using this browser for now'); }, 10000);
-  db.collection('notes').onSnapshot(snap => {
-    clearTimeout(timer);
-    const first = NOTES.mode !== 'db';
-    NOTES.mode = 'db';
-    const remote = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
-    /* notes written in this browser before the account store answered are moved across once */
-    if (first) {
-      const local = LS.get('pbs-notes', []).filter(n => !remote.some(r => r.id === n.id));
-      local.forEach(n => db.collection('notes').doc(n.id).set(n).catch(() => {}));
-      if (local.length) { remote.push(...local); LS.set('pbs-notes', []); }
-    }
-    NOTES.list = remote; refreshNotes();
-  }, err => { clearTimeout(timer); console.warn('[notes]', err); NOTES.mode = 'local'; });
-}
-
-/* selection → "add a note" button */
-const fab = h('button', 'note-fab', '✎ note'); fab.type = 'button'; fab.hidden = true; document.body.appendChild(fab);
-let pending = null;
-function selectionInfo() {
-  const sel = window.getSelection(); if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return null;
-  const r = sel.getRangeAt(0);
-  const host = r.commonAncestorContainer.nodeType === 1 ? r.commonAncestorContainer : r.commonAncestorContainer.parentElement;
-  if (!host || host.closest('.xcard, .side-panel, .notes-drawer, .note-pop, .topbar, .toc-side, figure .fig-body')) return null;
-  const v = host.closest('.view'); if (!v) return null;
-  return fromRange(r, v);
-}
-function fromRange(r, v) {
-  const L = linearize(v);
-  const a = offsetOf(L, r.startContainer, r.startOffset, false), b = offsetOf(L, r.endContainer, r.endOffset, true);
-  if (a < 0 || b <= a) return null;
-  let quote = L.text.slice(a, b); const lead = quote.length - quote.trimStart().length;
-  quote = quote.trim(); if (quote.length < 2) return null;
-  const s = a + lead;
-  return { v, quote: quote.slice(0, 1200), prefix: L.text.slice(Math.max(0, s - 40), s), suffix: L.text.slice(s + quote.length, s + quote.length + 40), rect: r.getBoundingClientRect(), node: r.startContainer };
-}
-function showFab(info) {
-  pending = info; if (!info) { fab.hidden = true; return; }
-  const rc = info.rect;
-  fab.hidden = false;
-  const x = clamp(rc.right - fab.offsetWidth / 2, 12, window.innerWidth - fab.offsetWidth - 12);
-  let y = rc.bottom + 8; if (y + 40 > window.innerHeight) y = rc.top - 40;
-  fab.style.left = x + 'px'; fab.style.top = y + 'px';
-}
-let selT = 0;
-document.addEventListener('selectionchange', () => { clearTimeout(selT); selT = setTimeout(() => { if (!pop.hidden) return; showFab(selectionInfo()); }, 220); });
-window.addEventListener('scroll', () => { if (!fab.hidden && pending) { const s = window.getSelection(); if (s && s.rangeCount) { pending.rect = s.getRangeAt(0).getBoundingClientRect(); showFab(pending); } } }, { passive: true });
-/* a double-click on a formula selects the whole formula */
-document.addEventListener('dblclick', e => {
-  const c = e.target.closest && e.target.closest('.view mjx-container'); if (!c || c.closest('figure .fig-body')) return;
-  const r = document.createRange(); r.selectNode(c);
-  const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-});
-fab.addEventListener('mousedown', e => e.preventDefault());
-fab.addEventListener('click', () => {
-  if (!pending) return;
-  const p = pending, v = p.v, anc = anchorBefore(p.node, v);
-  const hd = headingBefore(p.node.nodeType === 1 ? p.node : p.node.parentElement);
-  openPop({ id: 'n' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), view: v.id, course: v.dataset.course || '', viewTitle: v.dataset.short + ' · ' + v.dataset.title,
-    where: hd ? plainHeading(hd) : '', anchor: anc ? anc.id : v.id, quote: p.quote, prefix: p.prefix, suffix: p.suffix, text: '', created: Date.now() }, p.rect, true);
-  fab.hidden = true;
-});
-
-/* the note editor */
-const pop = h('div', 'note-pop'); pop.hidden = true; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', 'Note');
-pop.innerHTML = '<div class="np-q"></div><textarea rows="4" placeholder="Your note. Only you can see it."></textarea><div class="np-row"><span class="np-where"></span><span class="np-b"><button type="button" class="np-del">delete</button><button type="button" class="np-cancel">cancel</button><button type="button" class="np-save">save</button></span></div>';
-document.body.appendChild(pop);
-let popNote = null;
-function quoteHTML(q) {
-  /* show the quote as text, with its formulas typeset */
-  return esc(q).replace(/\$\$([\s\S]+?)\$\$/g, '\\[$1\\]').replace(/\$([^$]+?)\$/g, '\\($1\\)');
-}
-function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
-function openPop(n, rect, isNew) {
-  popNote = Object.assign({}, n);
-  const q = $('.np-q', pop); q.innerHTML = quoteHTML(n.quote.length > 400 ? n.quote.slice(0, 398) + '…' : n.quote);
-  $('.np-where', pop).textContent = isNew ? '' : 'edited ' + new Date(n.updated || n.created).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
-  $('.np-del', pop).hidden = !!isNew;
-  const ta = $('textarea', pop); ta.value = n.text || '';
-  pop.hidden = false;
-  const w = pop.offsetWidth;
-  let x = clamp((rect ? rect.left : window.innerWidth / 2 - w / 2), 12, window.innerWidth - w - 12);
-  let y = rect ? rect.bottom + 10 : 120; if (y + pop.offsetHeight > window.innerHeight - 12) y = Math.max(12, (rect ? rect.top : 0) - pop.offsetHeight - 10);
-  pop.style.left = x + 'px'; pop.style.top = y + 'px';
-  if (/\\\(|\\\[/.test(q.innerHTML)) typeset([q]);
-  setTimeout(() => ta.focus(), 30);
-}
-function closePop() { pop.hidden = true; popNote = null; }
-$('.np-cancel', pop).addEventListener('click', closePop);
-$('.np-save', pop).addEventListener('click', () => { if (!popNote) return; popNote.text = $('textarea', pop).value.trim(); const n = popNote; closePop(); window.getSelection().removeAllRanges(); saveNote(n); });
-$('.np-del', pop).addEventListener('click', () => { if (!popNote) return; const id = popNote.id; closePop(); deleteNote(id); });
-$('textarea', pop).addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) $('.np-save', pop).click(); if (e.key === 'Escape') closePop(); });
-document.addEventListener('pointerdown', e => { if (!pop.hidden && !pop.contains(e.target) && e.target !== fab) closePop(); });
-document.addEventListener('click', e => {
-  const m = e.target.closest && e.target.closest('mark.unote, .unote-m'); if (!m || e.target.closest('a')) return;
-  const sel = window.getSelection(); if (sel && !sel.isCollapsed) return;
-  const n = NOTES.list.find(x => x.id === m.dataset.note); if (n) openPop(n, m.getBoundingClientRect(), false);
-});
-document.addEventListener('mouseover', e => {
-  const m = e.target.closest && e.target.closest('mark.unote, .unote-m'); if (!m) return;
-  const n = NOTES.list.find(x => x.id === m.dataset.note); if (n && !m.title) m.title = n.text || '(empty note)';
-});
-
-/* the notes drawer */
-const drawer = h('aside', 'notes-drawer'); drawer.hidden = true; drawer.setAttribute('aria-label', 'Your notes');
-document.body.appendChild(drawer);
-function noteMarkdown() {
-  const by = {};
-  NOTES.list.slice().sort((a, b) => a.created - b.created).forEach(n => { (by[n.viewTitle || n.view] = by[n.viewTitle || n.view] || []).push(n); });
-  let md = '# Notes on Part B, slowly\n\n_Exported ' + new Date().toLocaleString() + '_\n';
-  Object.keys(by).forEach(k => {
-    md += '\n## ' + k + '\n';
-    by[k].forEach(n => { md += '\n> ' + n.quote.replace(/\n+/g, ' ') + '\n' + (n.where ? '\n_' + n.where + '_\n' : '') + '\n' + (n.text || '_(no text)_') + '\n'; });
-  });
-  return md;
-}
-async function exportNotes() {
-  const md = noteMarkdown(), name = 'part-b-notes-' + new Date().toISOString().slice(0, 10) + '.md';
-  try {
-    const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
-    if (dl) { await dl.save({ filename: name, data: md }); return; }
-  } catch (err) { if (err && err.code === 'declined') return; console.warn('[export]', err); }
-  try {
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([md], { type: 'text/markdown' })); a.download = name;
-    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-  } catch (_) { copyNotes(); }
-}
-async function copyNotes() { try { await navigator.clipboard.writeText(noteMarkdown()); toast('Copied your notes as Markdown.'); } catch (_) { toast('Couldn’t reach the clipboard.'); } }
-function renderDrawer() {
-  drawer.innerHTML = '';
-  const hd = h('div', 'nd-head'); hd.appendChild(h('span', 'nd-t', 'your notes'));
-  const x = h('button', 'side-x', 'close'); x.type = 'button'; x.addEventListener('click', () => { drawer.hidden = true; }); hd.appendChild(x);
-  drawer.appendChild(hd);
-  drawer.appendChild(h('p', 'nd-where', NOTES.mode === 'db' ? 'Stored with your claude.ai account. Only you can read them.' : 'Stored in this browser only. Export them now and then to keep a copy.'));
-  if (!NOTES.list.length) {
-    drawer.appendChild(h('p', 'nd-empty', 'Nothing yet. Select a passage or double-click a formula, then press ✎ note.'));
-  }
-  const groups = {};
-  NOTES.list.slice().sort((a, b) => (a.course + a.view).localeCompare(b.course + b.view, undefined, { numeric: true }) || a.created - b.created).forEach(n => { (groups[n.viewTitle || n.view] = groups[n.viewTitle || n.view] || []).push(n); });
-  Object.keys(groups).forEach(k => {
-    drawer.appendChild(h('div', 'nd-g', k));
-    groups[k].forEach(n => {
-      const it = h('div', 'nd-it');
-      const q = h('div', 'nd-q'); q.innerHTML = quoteHTML(n.quote.length > 220 ? n.quote.slice(0, 218) + '…' : n.quote); it.appendChild(q);
-      if (n.text) it.appendChild(h('div', 'nd-x', n.text));
-      const row = h('div', 'nd-row');
-      row.appendChild(h('span', '', (n.where ? n.where + ' · ' : '') + new Date(n.updated || n.created).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) + (n._lost ? ' · passage moved' : '')));
-      const go = h('a', '', 'go →'); go.href = '#' + n.anchor;
-      go.addEventListener('click', e => { e.preventDefault(); drawer.hidden = true; goToNote(n); });
-      row.appendChild(go); it.appendChild(row); drawer.appendChild(it);
-    });
-  });
-  const ft = h('div', 'nd-foot');
-  const ex = h('button', '', 'export .md'); ex.type = 'button'; ex.addEventListener('click', exportNotes);
-  const cp = h('button', '', 'copy'); cp.type = 'button'; cp.addEventListener('click', copyNotes);
-  ft.appendChild(ex); ft.appendChild(cp); drawer.appendChild(ft);
-  typeset([drawer]);
-}
-function goToNote(n) {
-  const fromLabel = null;
-  jump(n.anchor, fromLabel);
-  const v = document.getElementById(n.view);
-  (prepared[n.view] || Promise.resolve()).then(() => setTimeout(() => {
-    const m = v && v.querySelector('[data-note="' + n.id + '"]');
-    if (m) { const d = m.closest('details'); if (d && !d.open) { let p = d; while (p) { if (p.tagName === 'DETAILS') p.open = true; p = p.parentElement; } } m.scrollIntoView({ block: 'center' }); m.classList.add('flash-n'); setTimeout(() => m.classList.remove('flash-n'), 1800); }
-  }, 120));
-}
-document.addEventListener('click', e => {
-  if (e.target.closest && e.target.closest('#notes-btn')) { drawer.hidden = !drawer.hidden; if (!drawer.hidden) renderDrawer(); }
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') drawer.hidden = true; });
-
 /* ---------- per-view hook ---------- */
 const _showView = showView;
 showView = function (id) {
@@ -528,11 +260,9 @@ showView = function (id) {
   buildToc(v);
   walkStrip();
   if (v && v.classList.contains('course-home')) markRead(v);
-  fab.hidden = true; closePop();
-  r.then(() => { restoreNotes(v); updateToc(); });
+  r.then(() => { updateToc(); });
   return r;
 };
-initNotes();
 function setTopH() { const t = $('.topbar'); if (t) document.documentElement.style.setProperty('--topbar-h', t.offsetHeight + 'px'); }
 setTopH(); window.addEventListener('resize', setTopH);
 
@@ -589,7 +319,6 @@ function layoutMinimap() {
     const sec = e.querySelector('.sec');
     if (isH2 && sec) { g.globalAlpha = 1; g.fillStyle = col('--paper'); const t = sec.textContent.trim(), tw = g.measureText(t).width; const ty = Y(r.top + r.height / 2); g.fillRect(W - tw - 6, ty - 5, tw + 5, 10); g.fillStyle = col('--ink'); g.fillText(t, W - tw - 3.5, ty + .5); }
   });
-  $$('mark.unote, .unote-m', v).forEach(e => { const r = e.getBoundingClientRect(); g.globalAlpha = 1; g.fillStyle = col('--ochre'); g.fillRect(W - 3, Y(r.top), 3, Math.max(2, r.height * sy)); });
   g.globalAlpha = 1;
   MM = { top0, sy, docH };
   updateMinimap();
