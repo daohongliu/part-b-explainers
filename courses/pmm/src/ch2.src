@@ -137,10 +137,6 @@ As in Prelims, think of $\Omega$ as the set of possible outcomes of an experimen
 The <strong>expectation</strong> of a random variable $X$ defined on $(\Omega,\F,\PP)$ is $$\E[X]=\int X\,d\PP=\int_\Omega X(\omega)\,d\PP(\omega).$$
 </thm>
 
-<pf>
-Letting $n\to\infty$ in $|f_n|\le g$ gives $|f|\le g$, so $f$ is integrable. Now $g+f_n\ge0$ and $g+f_n\to g+f$, so Fatou's Lemma gives $\int(g+f)\le\liminf_n\int(g+f_n)=\int g+\liminf_n\int f_n$. Since $\int g<\infty$ we can subtract it: $\int f\le\liminf_n\int f_n$. Applying the same argument to $g-f_n\ge0$ gives $-\int f\le\liminf_n\big(-\int f_n\big)=-\limsup_n\int f_n$. Together, $\limsup_n\int f_n\le\int f\le\liminf_n\int f_n$, so the limit exists and equals $\int f$.
-</pf>
-
 <sheet n="2" qs="B3">It needs Lebesgue measure from Chapter 1 and random variables from this section.</sheet>
 
 It is defined when $X\ge0$, or when $\E|X|<\infty$, in which case we say $X$ is **integrable**. A random variable $X$ induces a probability measure $\mu_X$ on $\R$, its **law** or **distribution**, via $$\mu_X(A)=\PP[X^{-1}(A)]=\PP[X\in A]\qquad\text{for }A\in\B(\R).$$ (It is countably additive because preimages of disjoint sets are disjoint.) In particular $F_X(x)=\mu_X((-\infty,x])$ is the distribution function of $X$, in the sense of Definition 1.14. Since $\{(-\infty,x]:x\in\R\}$ is a π-system, the distribution function uniquely determines $\mu_X$ (Theorem 1.11). From Remark 2.8, $$\E[X]=\int_\Omega X(\omega)\,d\PP(\omega)=\int_\R x\,d\mu_X(x).$$ More generally $\E[g(X)]=\int_\R g(x)\,d\mu_X(x)$ for measurable $g\ge0$ (by the standard machine: for $g=\ind_A$ both sides are $\PP(X\in A)$). With the two examples above, this gives back the Prelims formulas $\E[g(X)]=\sum_xg(x)\PP(X=x)$ and $\E[g(X)]=\int g(x)f_X(x)\,dx$. Very often in applications we suppress the sample space $\Omega$ and work directly with $\mu_X$.
@@ -181,6 +177,10 @@ Recall that $(f_n)$ **converges pointwise** to $f$ if, for every $x\in\Omega$, $
 <thm k="Theorem 2.14" nm="Dominated Convergence Theorem" pg="17" it>
 Let $(f_n)$ be a sequence of measurable functions on $(\Omega,\F,\mu)$ with $f_n\to f$ pointwise. Suppose that for some integrable function $g$, $|f_n|\le g$ for all $n$. Then $f$ is integrable and $$\int f_n\,d\mu\to\int f\,d\mu\quad\text{as }n\to\infty.$$
 </thm>
+
+<pf>
+Letting $n\to\infty$ in $|f_n|\le g$ gives $|f|\le g$, so $f$ is integrable. Now $g+f_n\ge0$ and $g+f_n\to g+f$, so Fatou's Lemma gives $\int(g+f)\le\liminf_n\int(g+f_n)=\int g+\liminf_n\int f_n$. Since $\int g<\infty$ we can subtract it: $\int f\le\liminf_n\int f_n$. Applying the same argument to $g-f_n\ge0$ gives $-\int f\le\liminf_n\big(-\int f_n\big)=-\limsup_n\int f_n$. Together, $\limsup_n\int f_n\le\int f\le\liminf_n\int f_n$, so the limit exists and equals $\int f$.
+</pf>
 
 <sheet n="2" qs="A1,A4,B2"></sheet>
 

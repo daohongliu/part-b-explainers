@@ -13,12 +13,6 @@ The first question: given a sequence of events $A_1,A_2,\dots$, which outcomes $
 Let $(A_n)$ be a sequence of sets from $\F$. We define $$\begin{aligned}\limsup_{n\to\infty}A_n&=\bigcap_{n=1}^\infty\bigcup_{m\ge n}A_m\\&=\{\omega\in\Omega:\omega\in A_m\text{ for infinitely many }m\}\\&=\{A_m\text{ occurs infinitely often}\}=\{A_m\text{ i.o.}\}\end{aligned}$$ and $$\begin{aligned}\liminf_{n\to\infty}A_n&=\bigcup_{n=1}^\infty\bigcap_{m\ge n}A_m\\&=\{\omega:\exists\,m_0(\omega)\text{ with }\omega\in A_m\text{ for all }m\ge m_0(\omega)\}\\&=\{A_m\text{ eventually}\}=\{A_m^c\text{ infinitely often}\}^c.\end{aligned}$$
 </thm>
 
-<pf>
-First recall that if $X$ is exponential with parameter 1 then $\PP[X\le x]=1-e^{-x}$ for $x\ge0$ (and $0$ for $x<0$). Fix $0<\eps<1$. Then $$\begin{aligned}\PP[M_n\le(1-\eps)\log n]&=\PP\Big[\bigcap_{i=1}^n\{X_i\le(1-\eps)\log n\}\Big]\\&=\prod_{i=1}^n\PP[X_i\le(1-\eps)\log n]\\&=\Big(1-\frac1{n^{1-\eps}}\Big)^n\le\exp(-n^\eps),\end{aligned}$$ using independence and then $1-a\le e^{-a}$. Thus $\sum_n\PP[M_n\le(1-\eps)\log n]<\infty$, and so by BC1, $\PP[M_n\le(1-\eps)\log n\text{ i.o.}]=0$. Since $\eps$ was arbitrary, take $\eps=\frac1j$ for $j=1,2,\dots$: a countable union of null events is null, so $$\PP\Big[\liminf_{n\to\infty}\frac{M_n}{\log n}<1\Big]=0.$$
-
-The reverse bound is similar. $\PP[X_n\ge(1+\eps)\log n]=n^{-(1+\eps)}$ is summable, so by BC1, $\PP[X_n\ge(1+\eps)\log n\text{ i.o.}]=0$. And $\{M_n\ge(1+\eps)\log n\text{ i.o.}\}$ is contained in that event up to a null set: if $M_n\ge(1+\eps)\log n$ then some $k\le n$ has $X_k\ge(1+\eps)\log n\ge(1+\eps)\log k$, and if this happens for infinitely many $n$ then, since each $X_k$ is finite, infinitely many different $k$ must be involved. Hence $\limsup_nM_n/\log n\le1$ almost surely as well.
-</pf>
-
 <sheet n="3" qs="A1"></sheet>
 
 Read the formulas slowly once. $\omega\in\bigcup_{m\ge n}A_m$ says "$\omega$ is in some $A_m$ at or after time $n$". Requiring this for *every* $n$ (the outer intersection) says that however late you start looking, $\omega$ shows up again: infinitely often. Similarly $\omega\in\bigcap_{m\ge n}A_m$ says "from time $n$ on, $\omega$ is in every $A_m$", and the outer union asks for this to hold from *some* $n$ on: eventually. Both sets are in $\F$, being built from countably many unions and intersections.
@@ -74,6 +68,12 @@ Later in the course, with the help of a suitable martingale, we'll be able to wo
 <thm k="Example 3.6" d="Maxima of exponentials grow like log n" pg="24">
 Let $(X_n)_{n\ge1}$ be independent exponentially distributed random variables with mean 1 and let $M_n=\max\{X_1,\dots,X_n\}$. Then $$\PP\Big[\lim_{n\to\infty}\frac{M_n}{\log n}=1\Big]=1.$$
 </thm>
+
+<pf>
+First recall that if $X$ is exponential with parameter 1 then $\PP[X\le x]=1-e^{-x}$ for $x\ge0$ (and $0$ for $x<0$). Fix $0<\eps<1$. Then $$\begin{aligned}\PP[M_n\le(1-\eps)\log n]&=\PP\Big[\bigcap_{i=1}^n\{X_i\le(1-\eps)\log n\}\Big]\\&=\prod_{i=1}^n\PP[X_i\le(1-\eps)\log n]\\&=\Big(1-\frac1{n^{1-\eps}}\Big)^n\le\exp(-n^\eps),\end{aligned}$$ using independence and then $1-a\le e^{-a}$. Thus $\sum_n\PP[M_n\le(1-\eps)\log n]<\infty$, and so by BC1, $\PP[M_n\le(1-\eps)\log n\text{ i.o.}]=0$. Since $\eps$ was arbitrary, take $\eps=\frac1j$ for $j=1,2,\dots$: a countable union of null events is null, so $$\PP\Big[\liminf_{n\to\infty}\frac{M_n}{\log n}<1\Big]=0.$$
+
+The reverse bound is similar. $\PP[X_n\ge(1+\eps)\log n]=n^{-(1+\eps)}$ is summable, so by BC1, $\PP[X_n\ge(1+\eps)\log n\text{ i.o.}]=0$. And $\{M_n\ge(1+\eps)\log n\text{ i.o.}\}$ is contained in that event up to a null set: if $M_n\ge(1+\eps)\log n$ then some $k\le n$ has $X_k\ge(1+\eps)\log n\ge(1+\eps)\log k$, and if this happens for infinitely many $n$ then, since each $X_k$ is finite, infinitely many different $k$ must be involved. Hence $\limsup_nM_n/\log n\le1$ almost surely as well.
+</pf>
 
 <sheet n="2" qs="B4,B5,B6,B7,C1">With both Borel–Cantelli lemmas in hand, Sheet 2 is complete.</sheet>
 
