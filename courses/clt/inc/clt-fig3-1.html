@@ -1,0 +1,20 @@
+<figure class="wide" id="fig3-1">
+  <div class="fig-body">
+    <div class="btn-row" role="group" aria-label="Concept class">
+      <button type="button" data-sh-c="int" aria-pressed="false">intervals on a line</button>
+      <button type="button" data-sh-c="rect" aria-pressed="true">axis-aligned rectangles</button>
+      <button type="button" data-sh-c="half" aria-pressed="false">halfplanes</button>
+    </div>
+    <div class="sh-grid">
+      <svg id="clt-sh-svg" class="pt" viewBox="0 0 340 300" role="img" aria-label="Points you can drag. Click a dichotomy on the right to see it drawn here."></svg>
+      <div class="sh-dich" id="clt-sh-dich" role="list" aria-label="All labellings of the points"></div>
+    </div>
+    <div class="controls">
+      <button type="button" id="clt-sh-add">add a point</button>
+      <button type="button" id="clt-sh-del">remove a point</button>
+      <button type="button" id="clt-sh-best">a shattered set</button>
+    </div>
+    <div class="readout" id="clt-sh-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.1</span>A shattering tester. Drag the points. On the right is every labelling of them, filled in if the class can produce it and crossed out if not; click one to draw it, with a concept that realises it when there is one. The set is shattered when nothing is crossed out. For each class, try to find the largest shattered set, then convince yourself no larger one exists.</figcaption>
+</figure>

@@ -594,6 +594,20 @@ mark.unote { background: linear-gradient(transparent 0 58%, var(--ochre-wash) 58
 .col-t .ok { color: var(--green); } .col-t .bad { color: var(--red); }
 @media (max-width: 640px) { .col-grid { grid-template-columns: minmax(0, 1fr); } .col-grid > svg { max-width: 15rem; margin: 0 auto; } }
 
+
+.sh-grid { display: grid; grid-template-columns: minmax(0, 21rem) minmax(0, 1fr); gap: 1rem 1.4rem; align-items: start; margin-top: .6rem; }
+.sh-grid > svg { width: 100%; height: auto; display: block; touch-action: none; }
+.sh-pt { cursor: grab; } .sh-pt:active { cursor: grabbing; }
+.sh-dich { display: flex; flex-wrap: wrap; gap: .3rem; align-content: flex-start; }
+.sh-d { font-family: var(--mono); font-size: .8rem; padding: .12rem .35rem; letter-spacing: .05em; background: var(--paper); border: 1px solid var(--rule); }
+.sh-d i { font-style: normal; } .sh-d .p { color: var(--blue); } .sh-d .n { color: var(--ochre); }
+.sh-d.no { opacity: .45; text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 1.5px; }
+.sh-d.on { outline: 2px solid var(--ink); outline-offset: 1px; }
+.three-wrap { position: relative; }
+.three-wrap canvas { display: block; width: 100%; cursor: grab; touch-action: none; }
+.three-note { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--mono); font-size: .8rem; color: var(--ink-soft); pointer-events: none; text-align: center; padding: 1rem; }
+@media (max-width: 640px) { .sh-grid { grid-template-columns: minmax(0, 1fr); } }
+
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {
