@@ -153,7 +153,7 @@ def process(s):
                       f'<div class="ex-q">{a.get("q", "")}</div><details class="ex-a"><summary>show answer</summary><div>{body}</div></details></details>')
         if tag == 'sheet':
             n = a.get('n', '1'); qs = [q.strip() for q in a.get('qs', '').split(',') if q.strip()]
-            links = ', '.join(f'<a href="#sheet{n}-{q.lower()}">{q}</a>' for q in qs)
+            links = ', '.join(f'<a class="xref" href="#sheet{n}-{q.lower()}">{q}</a>' for q in qs)
             what = (f'question{"s" if len(qs) > 1 else ""} {links} of ' if qs else '') + f'<a href="#sheet{n}">Problem Sheet {n}</a>'
             extra = body.replace('<p>', '').replace('</p>', ' ').strip()
             return ph(f'<aside class="sheet-prompt"><span class="sp-ico" aria-hidden="true">✎</span><span>Now try {what}.' + (f' {extra}' if extra else '') + '</span></aside>')

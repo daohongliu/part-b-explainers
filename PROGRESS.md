@@ -19,10 +19,16 @@ Everything ships as ONE artifact (both courses), notes stored in the artifact's 
 - `dist/index.html` — last good build (currently the PMM 0–5 artifact as published, version 5).
 
 ## Status
-- [x] PMM Chapters 0–5 written, 30 figures, cross-references, wide-maths fixes, sections sidebar.
-- [ ] build.py: multi-course main() (IN PROGRESS — helpers patched for difficulty/importance tags,
-      named exercises `<pause n=...>`, `<sheet n= qs=>` prompts, `<qn n=>` sheet questions; main() removed, needs rewriting).
-- [ ] features: detailed left TOC, section estimates, open-beside panel, notes (db + local), LLM block, course switcher.
-- [ ] PMM sheets 1–4 + prompts in chapters; names on existing exercises; [dN iN] tags on headings.
-- [ ] CLT Chapters 1–5 + figures + sheets 1–4 (PDFs in ~/Desktop/Part B/Computational Learning Theory).
-- [ ] Publish artifact with capabilities {db:{rules:[{path:"notes",read:"owner",write:"owner"}]}, user:{}}.
+- [x] PMM Chapters 0–5 written, 30 figures, cross-references, wide-maths fixes.
+- [x] build.py multi-course (`courses/<id>/course.json`; CLT ids prefixed `clt-`), hub view `#contents`, course homes `#pmm`/`#clt`.
+- [x] features.js: left contents sidebar with progress + minutes left (permanent ≥1300px), section estimates
+      (`## Title {page} [dN iN]` → difficulty/importance), beside panel (⇥ on hover cards), private notes
+      (select text or double-click a formula → ✎ note; db `notes` owner-only, localStorage fallback; drawer with export .md), LLM note per view.
+- [x] PMM sheets 1–4 transcribed (`courses/pmm/src/sheetN.src`, `<qn n= t=>`), prompts `<sheet n= qs=>` in chapters,
+      all exercises named, new fun exercises in ch0, ch2, ch3, ch4, ch5.
+- [ ] CLT Chapters 1–5 + figures (one three.js) + sheets 1–4 (PDF text extracted on device at /tmp/t/*.txt; re-run pdftotext if gone).
+- [ ] Publish artifact (same file path: scratchpad pmm/measure-spaces.html, written by build.py) with capabilities
+      {db:{rules:[{path:"notes",read:"owner",write:"owner"}]}, downloads:true}; then ArtifactData list check.
+
+## Testing
+`node <scratchpad>/t3.js "" view1,view2 [notes]` (run from the scratchpad dir) screenshots desk 1440 and phone 390.
