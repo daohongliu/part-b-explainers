@@ -1,0 +1,11 @@
+<figure class="wide" id="fig2-2">
+  <div class="fig-body">
+    <svg id="clt-sc-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Sample-size bounds from Theorem 2.2 against the number of variables n, on a logarithmic scale, for a proper 3-term DNF learner and for the 3-CNF learner."></svg>
+    <div class="controls">
+      <label class="grow" for="clt-sc-e">ε <input type="range" id="clt-sc-e" min="0.01" max="0.3" step="0.01" value="0.05"> <output id="clt-sc-ev"></output></label>
+      <label class="grow" for="clt-sc-n">n <input type="range" id="clt-sc-n" min="2" max="200" step="1" value="30"> <output id="clt-sc-nv"></output></label>
+    </div>
+    <div class="readout" id="clt-sc-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.2</span>The price of efficiency, according to Theorem 2.2 with \(\delta=0.05\). Coral: a learner that outputs a consistent 3-term DNF, using \(\log|\H_n|\le6n\log2\); it would have to solve an NP-hard problem. Teal: the efficient learner that outputs a consistent 3-CNF, using \(\log|\H_n|\le8n^3\log2\). The vertical scale is logarithmic, so the gap between the curves is a ratio, and it grows like \(n^2\).</figcaption>
+</figure>

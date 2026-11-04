@@ -1,0 +1,13 @@
+<figure class="wide" id="fig2-1">
+  <div class="fig-body">
+    <svg id="clt-vs-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Sixty-one threshold hypotheses drawn as bars whose height is their error. Sample points above the axis knock out the hypotheses that disagree with them."></svg>
+    <div class="controls">
+      <button type="button" id="clt-vs-one">draw 1 example</button>
+      <button type="button" id="clt-vs-ten">draw 10</button>
+      <button type="button" id="clt-vs-reset">start again</button>
+      <label class="grow" for="clt-vs-e">ε <input type="range" id="clt-vs-e" min="0.03" max="0.3" step="0.01" value="0.1"> <output id="clt-vs-ev"></output></label>
+    </div>
+    <div class="readout" id="clt-vs-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.1</span>Occam’s razor at work. The instance space is \([0,1]\) with \(\D\) uniform, the hypotheses are the 61 thresholds \(h_t(x)=\ind[x\ge t]\) for \(t=0,\frac1{60},\dots,1\), and the target is one of them. Each bar is a hypothesis; its height is its error \(|t-t^*|\), and it is red if that exceeds \(\eps\). Every example erases the hypotheses that disagree with it. The theorem’s claim is visible: well before the bound on \(m\) is reached, the hypotheses still standing are all good, so it doesn’t matter which one a consistent learner picks.</figcaption>
+</figure>

@@ -1,0 +1,75 @@
+@num 2
+@title Consistent learning and Occam’s razor
+@titlehtml Consistent learning and <em>Occam’s razor</em>
+@pages 21–26
+@dek Chapter 1 analysed each algorithm from scratch. Here is a general recipe instead: find any short rule that fits the data, and it will predict well. The proof is one union bound.
+---
+## 2.1 Occam’s Razor {21} [d1 i2]
+
+Chapter 1 asked for *predictive* guarantees: with high probability, the output does well on fresh data from $\D$. This chapter starts from a different, more explanatory question. Given examples $(x_1,y_1),\dots,(x_m,y_m)$ with $x_i\in\X_n$ and $y_i\in\{0,1\}$, can we find a hypothesis $h$ that is **consistent** with them, meaning $h(x_i)=y_i$ for every $i$?[[To avoid absurdities, assume the data never contain the same instance with two different labels.]]
+
+Without restrictions this is trivial: memorise. Output the program "if $x=x_1$ say $y_1$, else if $x=x_2$ say $y_2$, …, else if $x=x_m$ say $y_m$, otherwise say 0". It fits every example and has learned nothing. The trouble is that this "explanation" is as long as the data it explains. Even quite simple classes can memorise in this way: any $m$ examples are fitted by a DNF formula with $m$ terms (Exercise 2.1 in the notes).
+
+<pause n="Memorising with DNF" q="Given $m$ examples on $\{0,1\}^n$ with no instance appearing twice, write down a DNF formula consistent with them.">
+For each positive example $x_i$, take the term $T_{x_i}$ that is true only at $x_i$: it contains $z_j$ if $x_{i,j}=1$ and $\bit{z_j}$ if $x_{i,j}=0$. The "or" of these terms over all positive examples is $1$ exactly on the positive examples, so it is $0$ on every negative one. It has at most $m$ terms, each of $n$ literals, so its length is $O(mn)$, which is $O(m)$ for fixed $n$. It explains the data by listing it.
+</pause>
+
+What we want is for the explanation to be **succinct**: at the very least shorter than the data. In learning theory this is called the **Occam principle** or **Occam's razor**, after the medieval philosopher William of Ockham and the maxim that explanations should not be made unnecessarily complex.[[As the notes admit, this is not a wholly accurate account of what Ockham actually wrote.]]
+
+Succinctness connects to much else: to Kolmogorov complexity and the minimum description length principle, to a Bayesian reading that puts more prior weight on shorter hypotheses, and to compression. We won't follow those threads. Finding the *shortest* consistent hypothesis is usually intractable or even uncomputable, but we won't need it. It is enough for the output to be somewhat shorter than the data.
+
+## 2.2 Consistent Learning {22} [d2 i3]
+
+From this chapter on we drop the subscript $n$ when it causes no confusion, and write $\C$, $\X$, $\H$ for classes that are really unions over $n$.
+
+<thm k="Definition 2.1" nm="Consistent learner" pg="22">
+A learning algorithm $L$ is a **consistent learner** for a concept class $\C$ using a hypothesis class $\H$ if for all $n\ge1$, all $c\in\C_n$ and all $m\ge1$, given examples $(x_1,c(x_1)),\dots,(x_m,c(x_m))$ with each $x_i\in\X_n$, it outputs $h\in\H_n$ with $h(x_i)=c(x_i)$ for $i=1,\dots,m$. It is an **efficient** consistent learner if its running time is polynomial in $n$, $\size(c)$ and $m$. A class $\C$ is **(efficiently) consistently learnable** if there are such an $L$ and a polynomially evaluatable $\H$.
+</thm>
+
+So a consistent learner just has to fit the training data with something from $\H$. Nothing yet says $\H$ is small. The main result is that if $\H$ *is* small, fitting the data is enough to predict.
+
+<bg id="bg-erm" t="Empirical risk minimisation" lead="For machine learners">
+In statistical learning the data come from a distribution on pairs $(x,y)$ and a **loss** $\ell(y',y)\ge0$ measures the cost of predicting $y'$ when the truth is $y$. The **risk** of $h$ is $R(h)=\E_{(x,y)\sim\D}[\ell(h(x),y)]$ and the **empirical risk** on a sample $S$ of size $m$ is $\hat R(h)=\frac1m\sum_{(x,y)\in S}\ell(h(x),y)$. **Empirical risk minimisation** (ERM) picks $h\in\H$ minimising $\hat R$. With the zero-one loss $\ell(y',y)=\ind(y'\neq y)$, and in the **realisable** case where some $h\in\H$ has risk $0$, ERM is exactly consistent learning.
+</bg>
+
+<thm k="Theorem 2.2" nm="Occam’s razor, cardinality version" pg="22" it>
+Let $L$ be a consistent learner for $\C$ using $\H$. For all $n\ge1$, $c\in\C_n$, distributions $\D$ over $\X_n$ and $0<\eps,\delta<\frac12$: if $L$ is given $m$ examples from $\EX(c,\D)$ with $$#eq2-3 m\ge\frac1\eps\Big(\log|\H_n|+\log\frac1\delta\Big), \tag{2.3}$$ then with probability at least $1-\delta$ its output $h$ satisfies $\err(h)\le\eps$. If moreover $L$ is efficient, $\log|\H_n|$ is polynomial in $n$ and $\size(c)$, and $\H$ is polynomially evaluatable, then $\C$ is efficiently PAC learnable using $\H$.
+</thm>
+
+<pf>
+Fix $c$ and $\D$. Call $h\in\H_n$ **bad** if $\err(h)>\eps$. For each $h$, let $A_h$ be the event that all $m$ examples agree with $h$. A bad $h$ agrees with one random example with probability less than $1-\eps$, so $\PP[A_h]\le(1-\eps)^m\le e^{-\eps m}$. Let $E$ be the event that some bad hypothesis agrees with all the examples. By the union bound over the at most $|\H_n|$ bad hypotheses, $$\PP[E]\le\sum_{h\text{ bad}}\PP[A_h]\le|\H_n|\,e^{-\eps m},$$ which is at most $\delta$ exactly when $m\ge\frac1\eps(\log|\H_n|+\log\frac1\delta)$. When $E$ fails, every hypothesis consistent with the sample has error at most $\eps$, and the consistent learner outputs one of those.
+</pf>
+
+The proof never looks at how $L$ chooses among consistent hypotheses. Any consistent output will do, because with high probability *every* consistent hypothesis is good. Figure 2.1 shows this happening for a small class.
+
+@@clt-fig2-1@@
+
+Read (2.3) as a statement about description length. A hypothesis in $\H_n$ can be named with $\log_2|\H_n|$ bits. The bound says that about $\frac1\eps$ examples per bit of description suffice. Memorising $m$ examples needs a description that grows with $m$, so (2.3) can never be satisfied that way; a class whose descriptions are shorter than the data can.
+
+<thm k="Remark 2.3" pg="24">
+The theorem lets $\H_n$ depend only on $n$ (and $\C_n$). A more general version lets the class depend on the sample size too: the consistent learner outputs $h\in\H_{n,m}$. As long as $\log|\H_{n,m}|$ is at most a polynomial in $n$, $\size(c)$, $1/\eps$, $1/\delta$ times $m^\beta$ for some fixed $\beta<1$, a PAC learner still follows. The hypothesis may grow with the data, as long as it grows more slowly. Exercise 2.2 in the notes, and Kearns and Vazirani Chapter 2, have the details.
+</thm>
+
+<pause n="Why $\beta<1$ is enough" q="In Remark 2.3, (2.3) becomes $m\ge\frac1\eps\big(p\,m^\beta+\log\frac1\delta\big)$ with $p$ a polynomial in the other parameters. Why does some polynomially large $m$ satisfy this?">
+The left side grows linearly in $m$ and the right side grows like $m^\beta$ with $\beta<1$, so the left side eventually wins. Concretely, it is enough to have both $m\ge\frac2\eps p\,m^\beta$ and $m\ge\frac2\eps\log\frac1\delta$. The first holds once $m^{1-\beta}\ge\frac{2p}\eps$, that is $m\ge(2p/\eps)^{1/(1-\beta)}$. For a fixed $\beta<1$ the exponent $\frac1{1-\beta}$ is a constant, so this is still a polynomial in $n$, $\size(c)$, $1/\eps$ and $1/\delta$. If $\beta=1$ the inequality could fail for every $m$, which is the memorisation case.
+</pause>
+
+## 2.3 Improved Sample Complexity {24} [d2 i2]
+
+### Learning conjunctions
+
+Algorithm 1.1 was a consistent learner in disguise: its output always fits the data, and it outputs a conjunction, so $\H_n=\C_n$. There are $3^n$ conjunctions that are not identically false (each variable appears positively, negatively or not at all), and one more that is, so $\log|\H_n|=\log(3^n+1)\approx n\log3$. Theorem 1.4 asked for $\frac{2n}\eps\big(\log(2n)+\log\frac1\delta\big)$ examples. Theorem 2.2 says $$\frac1\eps\Big(n\log3+\log\frac1\delta\Big)$$ already suffice, a saving of a factor of about $2\log(2n)$ in the main term.
+
+### Learning 3-TERM-DNF
+
+Here the comparison is more interesting. Finding a 3-term DNF consistent with a sample is NP-hard (that was the content of Theorem 1.6), but finding a consistent 3-CNF formula is easy (Theorem 1.5). What does Theorem 2.2 say about the data each route needs?
+
+A 3-term DNF formula can be written with $6n$ bits, so $|3\text{-TERM-DNF}_n|\le2^{6n}$. A 3-CNF formula is a choice of which of the $(2n)^3=8n^3$ possible clauses to include, so $|3\text{-CNF}_n|\le2^{8n^3}$. It is also not hard to show $|3\text{-CNF}_n|\ge2^{\kappa n^3}$ for some constant $\kappa>0$, so $\log|3\text{-CNF}_n|=\Theta(n^3)$.
+
+So, with $\delta$ fixed:
+
+<ul><li>a learner that could find a consistent 3-term DNF would need only $O(n/\eps)$ examples, but would have to solve an NP-hard problem;</li><li>the efficient learner via 3-CNF needs $\Omega(n^3/\eps)$ examples, at least as far as Theorem 2.2 can tell. (Chapter 3 shows this is a genuine lower bound for learning 3-CNF by any algorithm.)</li></ul>
+
+This suggests a trade-off between running time and data. It doesn't prove one: some other efficient algorithm might learn 3-term DNF with fewer examples. Whether it can is an open question.
+
+@@clt-fig2-2@@
