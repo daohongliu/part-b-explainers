@@ -198,7 +198,7 @@ KIND = r'(?:Theorem|Lemma|Definition|Corollary|Proposition|Example|Remark|Claim|
 XREF = re.compile(r'\b(' + KIND + r')(\s|&nbsp;)(\d+\.\d+)((?:(?:,\s*|\s+and\s+|\s+or\s+|–)\d+\.\d+)*)')
 def target_id(kind, num):
     a, b = num.split('.')
-    if kind.startswith('Figure'): return f'{P}fig{a}-{b}'
+    if kind.startswith('Figure'): return FIGID.get((P, f'{a}.{b}'), f'{P}fig{a}-{b}')
     if kind.startswith('Section'): return f'{P}s{a}-{b}'
     if kind.startswith('Algorithm'): return f'{P}alg{a}-{b}'
     return f'{P}r{a}-{b}'
@@ -322,6 +322,7 @@ def gauges(tot):
             f' · <span class="meter" data-tip="Overall importance for the rest of the course: {["background", "useful", "core"][ii - 1]}.">importance <span class="dots di">{DOTS(ii, "★", "☆")}</span></span>')
 
 MAPS = []
+FIGID = {}
 
 def build_course(cid, conf):
     global ROOT, P, CHNUM
@@ -334,6 +335,19 @@ def build_course(cid, conf):
     for path in sorted((ROOT / 'src').glob('sheet*.src')):
         meta, body = read_src(path); CHNUM = 's' + meta['num']
         sheets.append((P + path.stem, meta, wrap_sections(compile_body(body).replace('SHEETID', path.stem))))
+    # number figures in order of appearance, whatever their file names say, and update every mention
+    remap = {}
+    for k, (name, meta, hb, tot) in enumerate(chapters):
+        num = 0
+        for m in re.finditer(r'<figure[^>]*\sid="(fig(\d+)-(\d+))"[^>]*>.*?<span class="figtag">Figure (\d+\.\d+)</span>', hb, re.S):
+            num += 1; new = f'{meta["num"]}.{num}'
+            remap[m.group(4)] = new; FIGID[(P, new)] = P + m.group(1)
+    def renum(h):
+        h = re.sub(r'(Figures?(?:\s|&#160;|&nbsp;))(\d+\.\d+)(?!\d)', lambda m: m.group(1) + '\x01' + remap.get(m.group(2), m.group(2)) + '\x01', h)
+        h = re.sub(r'(?<=\sand )(\d+\.\d+)(?=\b)', lambda m: m.group(1), h)
+        return h.replace('\x01', '')
+    chapters = [(n, m, renum(hb), t) for n, m, hb, t in chapters]
+    sheets = [(n, m, renum(hb)) for n, m, hb in sheets]
     views = []
     cname = conf['title']
     # course contents view

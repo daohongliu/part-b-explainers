@@ -1,0 +1,13 @@
+<figure class="wide" id="fig5-91">
+  <div class="fig-body">
+    <div class="btn-row" role="group" aria-label="Choose a random time">
+      <button type="button" data-ft="first" aria-pressed="true">first head</button>
+      <button type="button" data-ft="second" aria-pressed="false">second head</button>
+      <button type="button" data-ft="const" aria-pressed="false">always 2</button>
+      <button type="button" data-ft="last" aria-pressed="false">last tail</button>
+    </div>
+    <svg id="ft-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Eight outcomes of three coin tosses. Each row shows the partition of the information at time n, and highlights the outcomes where the random time equals n."></svg>
+    <div class="readout" id="ft-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 5.91</span>Three coin tosses. Row \(n\) shows what is known at time \(n\): outcomes in the same box agree on the first \(n\) tosses, and the boxes are the atoms of \(\F_n\). The shaded cells are \(\{\tau=n\}\). \(\tau\) is a stopping time exactly when, in every row, the shading never cuts a box in two: at time \(n\) you can tell from what you have seen whether to stop. "Last tail" fails, because deciding it needs the future.</figcaption>
+</figure>

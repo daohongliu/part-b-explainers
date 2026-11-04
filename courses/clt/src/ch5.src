@@ -94,6 +94,8 @@ Polynomial-size circuits are about the most expressive class one could hope to l
 The repeated-squaring circuit has depth $\Theta(n)$, because $x^{2^{j+1}}$ can only be computed after $x^{2^j}$. But that chain of squarings doesn't use $d$ at all. So change the learning problem: instead of $x$, the instance is the string of length $(2n)^2$ $$\big(x,\ x^2,\ x^4,\ \dots,\ x^{2^k}\big)\bmod N.$$ This can't make learning easier, because the learner could have computed the extra coordinates itself in polynomial time; the problem stays hard under the DCRA. But now the target only has to multiply together the coordinates picked out by the bits of $d$: at most $2n$ numbers, multiplied in pairs in a balanced tree of depth $O(\log n)$, each multiplication itself a circuit of depth $O(\log n)$. That gives depth $O((\log n)^2)$, and with the constructions of Beame, Cook and Hoover the depth comes down to $O(\log n)$.
 </role>
 
+@@clt-fig5-91@@
+
 <thm k="Theorem 5.4" d="Log-depth circuits are hard to learn" pg="48" it>
 There is a constant $\kappa_0>0$ such that, under the DCRA, the class $\C$ with $\C_n$ the circuits on $n$ inputs of depth at most $\kappa_0\log n$ is not efficiently PAC learnable.
 </thm>

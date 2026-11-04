@@ -119,6 +119,8 @@ Let $\C$ be a concept class over $\X$. We say $\C$ is **PAC learnable (take I)**
 
 If moreover the running time of $L$ is polynomial in $1/\eps$ and $1/\delta$, then $\C$ is **efficiently PAC learnable (take I)**.
 </thm>
+
+@@clt-fig1-91@@
 <role r="reading" a="Definition 1.1">
 
 PAC stands for *probably approximately correct*. "Approximately correct" because we only ask for error at most $\eps$: two concepts may differ on a single point that $\D$ almost never produces, and no finite sample can tell them apart. "Probably" because the sample might be unrepresentative, a rare but real possibility, and then the algorithm is allowed to fail.

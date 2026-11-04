@@ -1,0 +1,15 @@
+<figure class="wide" id="fig5-91">
+  <div class="fig-body">
+    <div class="btn-row" role="group" aria-label="Which circuit">
+      <button type="button" data-dp="chain" aria-pressed="true">from x alone</button>
+      <button type="button" data-dp="tree" aria-pressed="false">given all the squares</button>
+    </div>
+    <svg id="clt-dp-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Two ways to compute x to the power d modulo N: a long chain of squarings followed by products, or a shallow tree of products when the squares are given as input."></svg>
+    <div class="controls">
+      <label class="grow" for="clt-dp-k">bits of d <input type="range" id="clt-dp-k" min="4" max="14" step="1" value="10"> <output id="clt-dp-kv"></output></label>
+      <button type="button" id="clt-dp-new">new d</button>
+    </div>
+    <div class="readout" id="clt-dp-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 5.91</span>Depth is about waiting. From \(x\) alone, each square must wait for the one before it, so the circuit is at least as deep as the number of bits of \(d\). Hand the circuit all the squares \(x^{2^j}\) as inputs (which a learner could compute for itself, so the problem is no easier) and only the products picked out by the 1-bits of \(d\) remain. Done in pairs, those take depth about \(\log_2\) of their number: one way to see why Theorem 5.4 can get away with logarithmic depth.</figcaption>
+</figure>

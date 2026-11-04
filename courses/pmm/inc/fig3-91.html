@@ -1,0 +1,10 @@
+<figure class="wide" id="fig3-91">
+  <div class="fig-body">
+    <svg id="mk-svg" class="pt" viewBox="0 0 720 270" role="img" aria-label="A non-negative random variable drawn as a decreasing curve over [0,1], with the step lambda times the indicator of X at least lambda underneath it."></svg>
+    <div class="controls">
+      <label class="grow" for="mk-l">λ <input type="range" id="mk-l" min="0.2" max="4" step="0.05" value="1.5"> <output id="mk-lv"></output></label>
+    </div>
+    <div class="readout" id="mk-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.91</span>Markov’s inequality in one picture. Line up the outcomes from the largest value of \(X\) to the smallest, so \(X\) becomes a decreasing curve over \([0,1]\); the area under it is \(\E[X]\). The ochre block has height \(\lambda\) and width \(\PP[X\ge\lambda]\), and it fits under the curve because \(\lambda\ind_{\{X\ge\lambda\}}\le X\). So \(\lambda\,\PP[X\ge\lambda]\le\E[X]\).</figcaption>
+</figure>

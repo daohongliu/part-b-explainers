@@ -209,6 +209,8 @@ The left-hand side is certainly $\F_1$-measurable, so we need to check the defin
 
 The coarser information wins: "my best guess, now, of what my better-informed future self will guess" is just my best guess now. This extends Proposition 4.6(1), which (in the light of 4.6(5)) is the case $\F_1=\{\emptyset,\Omega\}$. It is also the rigorous version of the step labelled "tower property" in Claim 0.3. In Figure 4.2, averaging the level-3 averages over level-1 blocks gives the level-1 averages directly.
 </role>
+
+@@fig4-91@@
 <role r="link" a="Jensen, conditionally">
 
 Jensen's inequality also extends to the conditional setting.

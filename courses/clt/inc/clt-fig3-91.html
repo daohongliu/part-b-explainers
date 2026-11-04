@@ -1,0 +1,11 @@
+<figure class="wide" id="fig3-91">
+  <div class="fig-body">
+    <svg id="clt-lb-svg" class="pt" viewBox="0 0 720 230" role="img" aria-label="The lower-bound distribution: one heavy point and many light ones. Sampled points are marked; on unseen points the learner can only guess."></svg>
+    <div class="controls">
+      <label class="grow" for="clt-lb-m">m <input type="range" id="clt-lb-m" min="10" max="400" step="5" value="60"> <output id="clt-lb-mv"></output></label>
+      <button type="button" id="clt-lb-new">new sample</button>
+    </div>
+    <div class="readout" id="clt-lb-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.91</span>Why \(\frac{d-1}{32\eps}\) examples are needed, with \(d=41\) and \(\eps=0.02\). The big circle is \(x_1\), carrying mass \(1-8\eps\); the forty small ones share \(8\eps\). A shattered set means every labelling of the small points is possible, so on a point it hasn’t seen the learner is right only half the time. With \(m\approx\frac{d-1}{32\eps}\approx63\) examples it typically sees only a dozen or so of the forty, and the expected error, half the mass of the unseen points, sits well above \(\eps\).</figcaption>
+</figure>

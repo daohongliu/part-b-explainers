@@ -1,0 +1,14 @@
+<figure class="wide" id="fig4-91">
+  <div class="fig-body">
+    <div class="btn-row" role="group" aria-label="What to show">
+      <button type="button" data-tow="x" aria-pressed="true">X</button>
+      <button type="button" data-tow="f" aria-pressed="false">𝔼[X | 𝓕]</button>
+      <button type="button" data-tow="g" aria-pressed="false">𝔼[X | 𝒢]</button>
+      <button type="button" data-tow="fg" aria-pressed="false">𝔼[ 𝔼[X | 𝓕] | 𝒢]</button>
+    </div>
+    <svg id="tow-svg" class="pt" viewBox="0 0 720 260" role="img" aria-label="A random variable on twelve equally likely outcomes, and its averages over a fine and a coarse partition."></svg>
+    <div class="controls"><button type="button" id="tow-new">new X</button></div>
+    <div class="readout" id="tow-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 4.91</span>The tower property as repeated averaging. Twelve equally likely outcomes; the fine partition (thin boxes) generates \(\F\), the coarse one (thick boxes) generates \(\G\subseteq\F\). Conditioning on a partition replaces \(X\) by its average on each piece. Averaging the fine averages over a coarse piece gives the coarse average, so the last two buttons draw the same picture.</figcaption>
+</figure>

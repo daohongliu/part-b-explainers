@@ -103,6 +103,8 @@ $\{\tau=n\}$ says that tosses $n-1$ and $n$ are heads and no earlier pair of con
 By contrast, the *last* time $X$ is in $B$ before time $N$ is generally not a stopping time: to know at time $n$ that this was the last visit, you need to know that $X$ won't come back.
 </role>
 
+@@fig5-91@@
+
 ## What is known at a stopping time {41} [d3 i2]
 We often use stopping times because we are interested in the value of the process at that time, the random variable $X_\tau$. Each $X_n$ is $\F_n$-measurable, since the process is adapted. But what about $X_\tau$? It is $\F_\infty$-measurable (check!), but we expect it to be measurable with respect to a smaller σ-algebra, reflecting "the information available at time $\tau$".
 
@@ -141,6 +143,8 @@ Let $X=(X_n)_{n\ge0}$ be an adapted process on $(\Omega,\F,(\F_n)_{n\ge0},\PP)$ 
 
 The stopped process follows $X$ until time $\tau$ and then freezes at the value $X_\tau$ forever.
 </role>
+
+@@fig5-92@@
 
 <pf>
 It suffices to show that if $\rho$ is a finite stopping time then $X_\rho$ is $\F_\rho$-measurable (then apply it to $\rho=\tau\wedge n$). This follows from <a class="xref" href="#eq20">(20)</a>, since $$\{X_\rho\le x\}\cap\{\rho=n\}=\{X_n\le x\}\cap\{\rho=n\}\in\F_n\qquad\text{for all }n\ge0.$$ (Also $\{X_\rho\le x\}\in\F_\infty$, as a countable union of such sets.)

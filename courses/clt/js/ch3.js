@@ -38,7 +38,7 @@ reg('clt-ch3', 'shatter', function () {
   }
   function frame() {
     clear(gA);
-    if (cls === 'int') { path('M14 ' + LINE_Y + 'H' + (W - 14), 's-ink', gA, { 'stroke-width': 1.3 }); arrowHead(gA, W - 12, LINE_Y, 'r'); }
+    if (cls === 'int') { path('M14 ' + LINE_Y + 'H' + (W - 14), 's-ink', gA, { 'stroke-width': 1.3 }); arrowHead(gA, W - 12, LINE_Y, 1, 'ink'); }
   }
   function render() {
     frame(); clear(gC); clear(gP);

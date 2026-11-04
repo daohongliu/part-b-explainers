@@ -216,6 +216,8 @@ For each $\omega\in\Omega$ we have $X(\omega)\ge\lambda\ind_{\{X\ge\lambda\}}(\o
 Let $X=10$ with probability $\frac1{10}$ and $X=0$ otherwise. Then $\E[X]=10\cdot\frac1{10}=1$ and $\PP[X\ge10]=\frac1{10}=\E[X]/10$. Equality needs all the mass of $X$ to sit either at $0$ or exactly at the threshold: any mass strictly between them, or above, would make $\E[X]$ count for more than the bound uses.
 </pause>
 
+@@fig3-91@@
+
 <thm k="Corollary 3.12" nm="General Chebyshev’s inequality" pg="28" it>
 Let $X$ be a random variable taking values in a (measurable) set $A\subseteq\R$, and let $\varphi:A\to[0,\infty]$ be an increasing, measurable function. Then for any $\lambda\in A$ with $\varphi(\lambda)<\infty$ we have $$\PP[X\ge\lambda]\le\frac{\E[\varphi(X)]}{\varphi(\lambda)}.$$
 </thm>

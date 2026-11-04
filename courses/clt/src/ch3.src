@@ -176,6 +176,8 @@ Let $\VCD(\C)\ge d$ with $d\ge25$. Any PAC learning algorithm for $\C$, using an
 The idea of the first bound: put almost all the probability on one point $x_1$, and spread a small amount, $8\eps$ in total, over $d-1$ other points that $\C$ shatters. With too few examples the learner sees fewer than half of those $d-1$ points. On the unseen ones it can only guess, and since every labelling of them is possible, it guesses wrong on about half. Each unseen point has mass $\frac{8\eps}{d-1}$, so half of more than $\frac{d-1}2$ unseen points already costs more than $2\eps$ in error.
 </role>
 
+@@clt-fig3-91@@
+
 <pf>
 Suppose $L$ PAC learns $\C$ with $m$ examples, where $m<\frac{d-1}{32\eps}$ (we take $m=\frac{d-1}{32\eps}$ for simplicity). Let $T=\{x_1,\dots,x_d\}$ be shattered by $\C$, and let $\D(x_1)=1-8\eps$ and $\D(x_j)=\frac{8\eps}{d-1}$ for $j\ge2$. Only labellings of $T$ matter, and all $2^d$ occur. We may assume $L$ always labels $x_1$ correctly once it has seen it (if not, patch its output at $x_1$).
 
