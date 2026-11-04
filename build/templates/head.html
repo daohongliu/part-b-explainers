@@ -617,6 +617,22 @@ details.hint > summary::-webkit-details-marker { display: none; }
 details.hint[open] > summary { color: var(--ink-soft); border-color: transparent; }
 details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-wash); }
 
+/* sidebar: gauges, vertical progress rail */
+.toc-l { position: relative; }
+.tl-sec > a { display: grid; grid-template-columns: 1.7rem minmax(0, 1fr) auto; column-gap: .4rem; align-items: baseline; }
+.tl-sec > a .tl-n { min-width: 0; }
+.tl-g { grid-column: 2 / 4; display: flex; gap: .55rem; font-size: .62rem; letter-spacing: .1em; line-height: 1.2; margin-top: .05rem; opacity: .8; }
+.tl-gd { color: var(--ochre); } .tl-gi { color: var(--blue); }
+.tl-sec.done > a .tl-g { opacity: .45; }
+.toc-rail { position: absolute; left: -1px; top: 0; bottom: 0; width: 2px; pointer-events: none; }
+.toc-rail i { position: absolute; left: 0; top: 0; width: 2px; background: var(--blue); opacity: .45; border-radius: 1px; transition: height .12s linear; }
+.toc-rail b { position: absolute; left: -3px; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 3px var(--paper); transition: top .12s linear; }
+.tl-sec.cur > a { border-left-color: transparent; }
+.tl-sub li.cur > a { color: var(--ink); background: var(--blue-wash); }
+.ch-meta .meter, .cmeta .meter { letter-spacing: .1em; }
+.ch-meta .meter .dots, .cmeta .dots { font-size: .7rem; }
+.cmeta .dd { color: var(--ochre); } .cmeta .di { color: var(--blue); }
+
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {

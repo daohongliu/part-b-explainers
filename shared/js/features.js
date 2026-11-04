@@ -112,10 +112,17 @@ function buildToc(v) {
       if (sec) a.appendChild(h('span', 'tl-n', sec.textContent));
       a.appendChild(h('span', 'tl-t', plainHeading(hd)));
       if (hd.dataset.min) a.appendChild(h('span', 'tl-m', hd.dataset.min + '′'));
+      if (hd.dataset.d) {
+        const dd = +hd.dataset.d, ii = +hd.dataset.i;
+        const gauge = h('span', 'tl-g');
+        gauge.title = 'Difficulty: ' + ['gentle', 'steady', 'demanding'][dd - 1] + '. Importance for the rest of the course: ' + ['background', 'useful', 'core'][ii - 1] + '.';
+        gauge.innerHTML = '<span class="tl-gd" aria-label="difficulty ' + dd + ' of 3">' + '●'.repeat(dd) + '○'.repeat(3 - dd) + '</span><span class="tl-gi" aria-label="importance ' + ii + ' of 3">' + '★'.repeat(ii) + '☆'.repeat(3 - ii) + '</span>';
+        a.appendChild(gauge);
+      }
     }
     li.appendChild(a);
     /* everything between this heading and the next: subsections and numbered results */
-    const sub = h('ul', 'tl-sub');
+    const sub = h('ul', 'tl-sub'), subs = [];
     if (!isSheet) {
       const next = tops[i + 1];
       $$('h3[id], .thm[id^="' + (v.dataset.course === 'clt' ? 'clt-' : '') + 'r"]', v).forEach(x => {
@@ -126,20 +133,21 @@ function buildToc(v) {
         sa.href = '#' + x.id;
         if (x.tagName === 'H3') sa.textContent = plainHeading(x);
         else { sa.appendChild(h('span', 'tl-k', x.dataset.label)); if (x.dataset.name) sa.appendChild(h('span', 'tl-nm', x.dataset.name)); }
-        sl.appendChild(sa); sub.appendChild(sl);
+        sl.appendChild(sa); sub.appendChild(sl); subs.push([x, sl]);
       });
     }
     if (sub.children.length) li.appendChild(sub);
     ul.appendChild(li);
-    secs.push({ hd, li, min: +(hd.dataset.min || 0) });
+    secs.push({ hd, li, subs, min: +(hd.dataset.min || 0) });
   });
+  const rail = h('div', 'toc-rail'); rail.appendChild(h('i')); rail.appendChild(h('b')); ul.appendChild(rail);
   tocSide.appendChild(ul);
   const foot = h('div', 'toc-foot');
   const course = v.dataset.course;
   const home = h('a', '', '↖ ' + (course === 'clt' ? 'Learning Theory' : 'PMM') + ' contents'); home.href = '#' + course;
   foot.appendChild(home); tocSide.appendChild(foot);
   ul.addEventListener('click', e => { if (e.target.closest('a')) closeToc(); });
-  TS = { v, secs, meta, prog: prog.firstChild, total: secs.reduce((s, x) => s + x.min, 0), isSheet };
+  TS = { v, secs, meta, ul, rail, prog: prog.firstChild, total: secs.reduce((s, x) => s + x.min, 0), isSheet };
   updateToc();
 }
 function updateToc() {
@@ -161,6 +169,23 @@ function updateToc() {
       left += s.min * clamp((nx - vh * .3) / span, 0, 1);
     }
   });
+  /* vertical rail: how far down the list the reading point is, interpolated within the current section and subsection */
+  let y = 0;
+  if (cur >= 0) {
+    const s = secs[cur], hdTop = s.hd.getBoundingClientRect().top;
+    const nxTop = secs[cur + 1] ? secs[cur + 1].hd.getBoundingClientRect().top : r.bottom;
+    const items = [[s.hd, s.li.firstChild]].concat(s.subs.map(([x, sl]) => [x, sl]));
+    let k = 0; items.forEach(([x], j) => { if (x.getBoundingClientRect().top < vh * .3) k = j; });
+    s.subs.forEach(([, sl], j) => sl.classList.toggle('cur', j + 1 === k));
+    const elTop = items[k][0].getBoundingClientRect().top, elNext = items[k + 1] ? items[k + 1][0].getBoundingClientRect().top : nxTop;
+    const f = clamp((vh * .3 - elTop) / Math.max(1, elNext - elTop), 0, 1);
+    const ulTop = TS.ul.getBoundingClientRect().top, row = items[k][1].getBoundingClientRect();
+    const rowNext = items[k + 1] ? items[k + 1][1].getBoundingClientRect().top : (secs[cur + 1] ? secs[cur + 1].li.getBoundingClientRect().top : s.li.getBoundingClientRect().bottom);
+    y = row.top - ulTop + f * (rowNext - row.top);
+  }
+  secs.forEach((s, i) => { if (i !== cur) s.subs.forEach(([, sl]) => sl.classList.remove('cur')); });
+  TS.rail.firstChild.style.height = y.toFixed(1) + 'px';
+  TS.rail.lastChild.style.top = y.toFixed(1) + 'px'; TS.rail.lastChild.style.opacity = cur >= 0 ? 1 : 0;
   const best = Math.max(READ[v.id] || 0, frac);
   if (best > (READ[v.id] || 0) + .02 || (best === 1 && READ[v.id] !== 1)) { READ[v.id] = Math.round(best * 100) / 100; LS.set('pbs-read', READ); }
   TS.meta.textContent = TS.isSheet ? `${secs.length} questions` : `${Math.round(frac * 100)}% through · ≈ ${Math.max(0, Math.round(left))} min left`;
