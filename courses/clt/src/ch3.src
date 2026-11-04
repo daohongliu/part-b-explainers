@@ -4,9 +4,12 @@
 @pages 27–38
 @dek Occam’s razor counts hypotheses, which is useless when there are infinitely many. The VC dimension measures a class by the largest set of points it can label in every possible way, and that number turns out to control exactly how much data learning needs.
 ---
+<role r="question" a="what replaces log |H| for infinite classes?">
 Theorem 2.2 needs $\log|\H|$ to be small, so it says nothing about infinite classes. Yet the classes used most in practice are infinite, even uncountable: linear threshold functions (halfspaces) in $\R^n$, and the rectangles of Chapter 1, which we learned with no trouble. This chapter replaces $\log|\H|$ by a measure of capacity that can be finite for infinite classes, and shows it controls the sample complexity from above and below.
+</role>
 
 ## 3.1 The Vapnik Chervonenkis (VC) Dimension {27} [d2 i3]
+<role r="setup" a="dichotomies">
 
 We drop the subscript $n$ throughout; everything applies to $\C=\bigcup_n\C_n$. Let $S\subseteq\X$ be a finite set of instances. A concept $c$ restricted to $S$ is the function $c|_S:S\to\{0,1\}$, and the set of all such restrictions is
 
@@ -17,6 +20,7 @@ If $S=\{x_1,\dots,x_m\}$ we can list each restriction as the vector of its value
 $$#eq3-2 \Pi_\C(S)=\{(c(x_1),\dots,c(x_m)):c\in\C\}. \tag{3.2}$$
 
 These are the **dichotomies** of $S$ that $\C$ can produce: the ways of splitting $S$ into a positive part and a negative part. There are $2^m$ splits in all, so $|\Pi_\C(S)|\le2^m$, however large $\C$ is. That is the key: an infinite class can only act on $m$ points in finitely many ways.
+</role>
 
 <thm k="Definition 3.1" nm="Shattering" pg="28">
 A finite set $S\subseteq\X$ is **shattered** by $\C$ if $|\Pi_\C(S)|=2^{|S|}$, that is, if every dichotomy of $S$ is realised by some concept in $\C$.
@@ -25,16 +29,24 @@ A finite set $S\subseteq\X$ is **shattered** by $\C$ if $|\Pi_\C(S)|=2^{|S|}$, t
 <thm k="Definition 3.2" nm="Vapnik–Chervonenkis dimension" pg="28">
 The **VC dimension** of $\C$, written $\VCD(\C)$, is the size $d$ of the largest finite set shattered by $\C$. If $\C$ shatters arbitrarily large finite sets, $\VCD(\C)=\infty$.
 </thm>
+<role r="caution" a="mind the quantifiers">
 
 The quantifiers matter. To show $\VCD(\C)\ge d$ you need *one* set of $d$ points that is shattered. To show $\VCD(\C)<d+1$ you need that *every* set of $d+1$ points has some labelling that no concept produces. In the language of the game: an adversary picks the labels, you pick the points first.
+</role>
 
 ### 3.1.1 Examples
+<role r="example" a="intervals: VC dimension 2">
 
 **Intervals on the line.** Let $\X=\R$ and let $\C$ consist of the indicators of closed intervals $[a,b]$. Any two points can be shattered: an interval can contain both, either one, or neither. No three points $x_1<x_2<x_3$ can be: the labelling $+,-,+$ would need an interval containing $x_1$ and $x_3$ but not $x_2$, which lies between them. So $\VCD=2$.
+</role>
+<role r="example" a="rectangles: VC dimension 4">
 
 **Axis-aligned rectangles in the plane.** Four points in a diamond (one at each compass point) are shattered: for any subset, the smallest rectangle around it misses the others. Four points in some other positions are not, so the choice of set matters, but one good set is enough. No five points can be shattered. Among five points, take one with the largest $x$-coordinate, one with the smallest, one with the largest $y$ and one with the smallest. That is at most four points, so some fifth point is none of these. Label it negative and the others positive: any rectangle containing the four extreme points contains the whole bounding box, and with it the fifth point. So $\VCD=4$.
+</role>
+<role r="example" a="halfplanes: VC dimension 3">
 
 **Halfplanes.** A **linear threshold function** on $\R^2$ is positive on one side of a line and negative on the other. Three points not on a line are shattered. Three points on a line are not ($+,-,+$ fails again), but again one good set is enough. No four points are shattered. If their convex hull is a quadrilateral, label opposite corners alike and adjacent corners differently: the two positive points' segment crosses the two negative points' segment, so no line separates them. If the hull is a triangle with the fourth point inside, label the corners positive and the inside point negative. (Points with three on a line are handled like the collinear triple.) So $\VCD=3$. In $\R^n$ the answer is $n+1$ (Exercise 3.1 in the notes; Sheet 3).
+</role>
 
 Figure 3.1 lets you test sets of points against all three classes. The grid lists every dichotomy and marks the ones the class can produce.
 
@@ -49,8 +61,10 @@ A single point can be labelled either way, so $\VCD(\C)\ge1$. For two points $x_
 <sheet n="4" qs="1"></sheet>
 
 ## 3.2 Growth Function {30} [d3 i3]
+<role r="question" a="how many dichotomies on m points?">
 
 How many dichotomies can $\C$ produce on $m$ points, at most? For $m\le\VCD(\C)$ the answer is $2^m$. The surprise is what happens after that: the count stops growing exponentially and grows only polynomially, with degree $\VCD(\C)$.
+</role>
 
 <thm k="Definition 3.3" nm="Growth function" pg="30">
 For $m\in\N$, the **growth function** of $\C$ is $$\Pi_\C(m)=\max\{|\Pi_\C(S)|:S\subseteq\X,\ |S|=m\}.$$
@@ -59,14 +73,18 @@ For $m\in\N$, the **growth function** of $\C$ is $$\Pi_\C(m)=\max\{|\Pi_\C(S)|:S
 <thm k="Lemma 3.4" nm="Sauer–Shelah lemma" pg="30" it>
 If $\VCD(\C)=d$, then for all $m\ge d$, $$\Pi_\C(m)\le\Big(\frac{em}d\Big)^d.$$
 </thm>
+<role r="reading" a="Lemma 3.4">
 
 So a class of VC dimension $d$ behaves, on $m$ points, like a finite class of size about $m^d$. The proof goes through a counting function.
+</role>
 
 <thm k="Definition 3.5" d="Φ(m, d): subsets of size at most d" pg="30">
 For $m,d\in\N$ let $$#eq3-3 \Phi(m,d)=\sum_{i=0}^d\binom mi. \tag{3.3}$$
 </thm>
+<role r="idea" a="what Φ counts">
 
 $\Phi(m,d)$ counts the subsets of an $m$-element set that have at most $d$ elements. Clearly $\Phi(m,0)=\Phi(0,d)=1$, $\Phi$ increases in both arguments, and $\Phi(m,d)=2^m$ when $m\le d$.
+</role>
 
 <thm k="Lemma 3.6" d="Pascal’s rule and a bound for Φ" pg="30" it>
 For all $m,d\ge1$, $$#eq3-4 \Phi(m,d)=\Phi(m-1,d)+\Phi(m-1,d-1), \tag{3.4}$$ and for $m\ge d\ge1$, $$#eq3-5 \Phi(m,d)\le\Big(\frac{em}d\Big)^d. \tag{3.5}$$
@@ -81,8 +99,10 @@ For (3.5), multiply and divide by $(m/d)^d$. Since $d/m\le1$ and $i\le d$, we ha
 <thm k="Lemma 3.7" d="Growth function is at most Φ(m, d)" pg="31" it>
 If $\VCD(\C)=d$ then $\Pi_\C(m)\le\Phi(m,d)$ for all $m$.
 </thm>
+<role r="roadmap" a="how the pieces fit">
 
 Lemmas 3.6 and 3.7 together prove the Sauer–Shelah lemma.
+</role>
 
 <pf>
 Induction on $m+d$. If $d=0$, no single point is shattered, so all concepts agree on every point and $\C$ produces one dichotomy on any set: $\Pi_\C(m)=1=\Phi(m,0)$. If $m=0$ there is one dichotomy of the empty set and $\Phi(0,d)=1$.
@@ -97,20 +117,28 @@ For the second term, let $\C'$ be the class (on $S\setminus\{x\}$) of dichotomie
 @@clt-fig3-2@@
 
 ## 3.3 Sample Complexity Upper Bound {32} [d3 i3]
+<role r="link" a="Theorem 2.2, for infinite classes">
 
 The VC dimension now plays the part that $\log|\H|$ played in Theorem 2.2.
+</role>
 
 <thm k="Theorem 3.8" d="VC dimension bounds the sample size above" pg="32" it>
 Let $\H\supseteq\C$ be a hypothesis class with $\VCD(\H)=d$, where $1\le d<\infty$, and let $L$ be a consistent learner for $\C$ that outputs hypotheses in $\H$. There is a universal constant $\kappa_0$ such that, for all $0<\eps,\delta\le\frac12$, $L$ PAC learns $\C$ when given $$m\ge\kappa_0\Big(\frac1\eps\log\frac1\delta+\frac d\eps\log\frac1\eps\Big)$$ examples from $\EX(c,\D)$.
 </thm>
+<role r="reading" a="Theorem 3.8">
 
 Compare with (2.3): $\log|\H|$ has become $d\log\frac1\eps$. The proof has a new idea in it, **symmetrisation**, which turns up in almost every sample-complexity argument from here on. First some vocabulary.
+</role>
+<role r="setup" a="disagreements and ε-nets">
 
 For boolean functions $f,g$ write $f\oplus g$ for the function that is $1$ where they disagree. Then $\err(h;c,\D)=\PP_{x\sim\D}[(h\oplus c)(x)=1]$. Let $\H\oplus c=\{h\oplus c:h\in\H\}$; it has the same VC dimension as $\H$, since $h\mapsto h\oplus c$ just flips the labels at the points where $c=1$ (Exercise 3.4 in the notes).
 
 A finite set $S$ is an **$\eps$-net** for $\H\oplus c$ (with respect to $\D$) if every $h\oplus c$ with $\PP_{x\sim\D}[(h\oplus c)(x)=1]\ge\eps$ is $1$ at some point of $S$. In plain terms: every hypothesis with error at least $\eps$ makes a mistake somewhere on $S$. So if the sample is an $\eps$-net, a consistent learner can't output a bad hypothesis, because a bad one is inconsistent. The whole proof is about showing a random sample is an $\eps$-net with probability at least $1-\delta$.
+</role>
+<role r="idea" a="symmetrisation: a ghost sample">
 
 The difficulty is that there are infinitely many bad hypotheses, so we can't union-bound over them. Symmetrisation gets round this by bringing in a second, imaginary sample, after which only the finitely many dichotomies on $2m$ points matter.
+</role>
 
 <bg id="bg-chernoff" t="Chernoff bounds" lead="Background">
 Let $X=X_1+\dots+X_m$ be a sum of independent $\{0,1\}$-valued random variables with mean $\mu=\E[X]$. For $0<\eta\le1$, $$\PP[X\le(1-\eta)\mu]\le e^{-\eta^2\mu/2},\qquad\PP[X\ge(1+\eta)\mu]\le e^{-\eta^2\mu/3}.$$ A sum of many independent bits is very unlikely to be far from its mean in relative terms, and the failure probability shrinks exponentially in $\mu$. This is much stronger than what Chebyshev's inequality gives. The notes' Appendix A states several versions.
@@ -125,20 +153,28 @@ Let $X=X_1+\dots+X_m$ be a sum of independent $\{0,1\}$-valued random variables 
 
 **Step 3: solve for $m$.** The right side is polynomial in $m$ times an exponentially small factor, so it drops below $\delta$ once $m$ is a large enough multiple of $\frac d\eps\log\frac1\eps+\frac1\eps\log\frac1\delta$. The notes carry out the calculation in full and find that $$m\ge\frac4{\eps\log2}\max\Big\{8d\log\frac4{\eps\log2},\ \log\frac2\delta\Big\}$$ suffices; this also ensures $\eps m\ge16$.
 </pf>
+<role r="why" a="why allow a larger H">
 
 The theorem applies with $\H=\C$ for proper learning, but its real use is with a larger $\H$, when a bigger class makes consistent learning efficient. Section 3.5 is an example.
+</role>
 
 ## 3.4 Sample Complexity Lower Bounds {34} [d3 i2]
+<role r="question" a="could a cleverer learner use less data?">
 
 The upper bound would be less interesting if some cleverer algorithm could get by with much less data. It can't. The next theorem holds for *every* learning algorithm, however slow, and whatever hypotheses it outputs.
+</role>
 
 <thm k="Theorem 3.9" d="VC dimension bounds the sample size below" pg="35" it>
 Let $\VCD(\C)\ge d$ with $d\ge25$. Any PAC learning algorithm for $\C$, using any $\H\supseteq\C$, needs at least $$\max\Big\{\frac{d-1}{32\eps},\ \frac1{4\eps}\log\frac1{4\delta}\Big\}$$ examples.
 </thm>
+<role r="aside" a="the condition d ≥ 25">
 
 (The condition $d\ge25$ only simplifies the arithmetic; a more careful argument works for $d\ge2$.)
+</role>
+<role r="idea" a="hide most points where the learner rarely looks">
 
 The idea of the first bound: put almost all the probability on one point $x_1$, and spread a small amount, $8\eps$ in total, over $d-1$ other points that $\C$ shatters. With too few examples the learner sees fewer than half of those $d-1$ points. On the unseen ones it can only guess, and since every labelling of them is possible, it guesses wrong on about half. Each unseen point has mass $\frac{8\eps}{d-1}$, so half of more than $\frac{d-1}2$ unseen points already costs more than $2\eps$ in error.
+</role>
 
 <pf>
 Suppose $L$ PAC learns $\C$ with $m$ examples, where $m<\frac{d-1}{32\eps}$ (we take $m=\frac{d-1}{32\eps}$ for simplicity). Let $T=\{x_1,\dots,x_d\}$ be shattered by $\C$, and let $\D(x_1)=1-8\eps$ and $\D(x_j)=\frac{8\eps}{d-1}$ for $j\ge2$. Only labellings of $T$ matter, and all $2^d$ occur. We may assume $L$ always labels $x_1$ correctly once it has seen it (if not, patch its output at $x_1$).
@@ -151,34 +187,44 @@ Suppose $L$ PAC learns $\C$ with $m$ examples, where $m<\frac{d-1}{32\eps}$ (we 
 
 **The second bound** uses two points. Since $\VCD(\C)\ge2$ there are $x_1,x_2$ and concepts $c_1,c_2$ with $c_1(x_1)=c_2(x_1)=0$ and $c_1(x_2)\neq c_2(x_2)$. Put $\D(x_1)=e^{-4\eps}$ and $\D(x_2)=1-e^{-4\eps}$. A sample of size $\frac1{4\eps}\log\frac1{4\delta}$ misses $x_2$ entirely with probability $(e^{-4\eps})^m=4\delta$. Then the learner can't tell $c_1$ from $c_2$, and for one of them it errs at $x_2$, which has mass $1-e^{-4\eps}>2\eps$ when $\eps<\frac14$. Arguing as above, it fails with probability more than $\delta$.
 </pf>
+<role r="payoff" a="VC dimension is the statistical story">
 
 So, up to the $\log\frac1\eps$ factor, $\frac d\eps+\frac1\eps\log\frac1\delta$ examples are both necessary and sufficient. The VC dimension captures the *statistical* difficulty of learning a class essentially completely. It says nothing about the *computational* difficulty, which is the subject of Chapter 5.
+</role>
 
 <pause n="Lower bound for 3-CNF" q="Chapter 2 claimed that learning 3-CNF needs $\Omega(n^3/\eps)$ examples whatever the algorithm. Using Theorem 3.9, what do you need to show about 3-CNF?">
 You need $\VCD(3\text{-CNF}_n)=\Omega(n^3)$: a set of order $n^3$ points shattered by 3-CNF formulas. Here is one. For each clause $C$ made of three distinct variables, $C=z_i\vee z_j\vee z_k$, let $x_C$ be the instance that is $0$ in positions $i,j,k$ and $1$ elsewhere. $x_C$ falsifies $C$ and satisfies every other such clause (each other clause has a variable outside $\{i,j,k\}$, which is $1$). So for any subset $A$ of these instances, the 3-CNF formula made of the clauses $C$ with $x_C\in A$ is $0$ exactly on $A$. That shatters $\binom n3=\Omega(n^3)$ points, and Theorem 3.9 gives the $\Omega(n^3/\eps)$ bound.
 </pause>
 
 ## 3.5 Consistent Learner for Linear Threshold Functions {36} [d2 i2]
+<role r="roadmap" a="halfspaces via linear programming">
 
 To finish, an application. The linear threshold functions on $\R^n$ are
 
 $$#eq3-8 \mathrm{LTF}_n=\{x\mapsto\ind_{\ge0}(w\cdot x+w_0):w\in\R^n,\ \|w\|_2=1,\ w_0\in\R\}, \tag{3.8}$$
 
 where $\ind_{\ge0}(z)=1$ if $z\ge0$ and $0$ otherwise. The VC dimension is $n+1$ (Sheet 3), so by Theorem 3.8 an *efficient consistent learner* gives an efficient PAC learner. Given examples labelled by some halfspace, we need to find a halfspace that agrees with all of them. This is a **linear program**, and linear programs can be solved in polynomial time.
+</role>
 
 <bg id="bg-lp" t="Linear programming" lead="Background">
 A **linear program** asks for real numbers satisfying finitely many linear inequalities, often while maximising a linear function. The feasible set is a convex polyhedron. Algorithms such as the ellipsoid method and interior-point methods find a feasible point, or report there is none, in time polynomial in the size of the input. That is all we need: here there is nothing to maximise, only a feasible point to find.
 </bg>
+<role r="setup" a="the linear program">
 
 The variables are $w_0,w_1,\dots,w_n$, and the constraints are
 
 $$#eq3-9 w_0+w_1x_{i1}+\dots+w_nx_{in}\ge0\qquad\text{for each }i\text{ with }y_i=1, \tag{3.9}$$
 
 $$#eq3-10 -w_0-w_1x_{i1}-\dots-w_nx_{in}\ge1\qquad\text{for each }i\text{ with }y_i=0. \tag{3.10}$$
+</role>
+<role r="technique" a="no strict inequalities: rescale">
 
 A negative example needs $w\cdot x+w_0<0$, but a linear program can't use strict inequalities, since its feasible set has to be closed. Asking for $\le-1$ instead costs nothing, because the inequalities can be rescaled. If the target is $(w^*,w_0^*)$, let $\alpha=\min\{-(w^*\cdot x_i+w_0^*):y_i=0\}$, which is positive. Then $(w^*/\alpha,w_0^*/\alpha)$ satisfies every constraint: positives keep their sign, and negatives now have $-(w\cdot x_i+w_0)\ge1$. So the program is feasible, any feasible point is a consistent halfspace (after rescaling $w$ to unit length), and LTFs are efficiently PAC learnable.
+</role>
+<role r="example" a="four points in space">
 
 Figure 3.3 shows $n+1=4$ points in $\R^3$ in general position. Every one of the $2^4$ labellings is cut out by a plane, so the four points are shattered.
+</role>
 
 <sheet n="3" qs="1">Figure 3.3 is part 1 for $n=3$.</sheet>
 

@@ -5,18 +5,24 @@
 @dek Suppose you can only ever do slightly better than a coin toss. AdaBoost turns that into learning to any accuracy you like, by repeatedly asking the weak learner about the examples it keeps getting wrong.
 ---
 ## 4.1 Weak Learnability {39} [d2 i3]
+<role r="question" a="which requirement can we relax?">
 
 Definition 1.8 is demanding. A PAC learner must work for every target in the class, for every distribution, and for every accuracy $\eps$ and confidence $\delta$. What happens if we relax one of these?
 
 Relaxing the confidence changes nothing: an algorithm that succeeds with probability $\frac34$ can be turned into one that succeeds with probability $1-\delta$ (Exercise 1.3 in the notes; Sheet 1). Relaxing the *distribution* changes a lot: some classes that can't be learned from polynomially many examples in general become learnable if the algorithm only has to cope with, say, the uniform distribution (Sheet 2, question 2).[[The order of quantifiers is the point. PAC learning asks for one algorithm that works whatever the distribution. The algorithm may still adapt its behaviour to the examples it receives.]]
+</role>
+<role r="question" a="can a coin-toss-beater learn everything?">
 
 This chapter relaxes the *accuracy*. Error $\frac12$ is free: predict by tossing a coin.[[If hypotheses must be deterministic, use the better of the two constant functions, which has error at most $\frac12$. A sample of size $O(1/\gamma^2)$ tells you, with high confidence, which constant is better.]] So suppose all we can guarantee is error $\frac12-\gamma$ for some small $\gamma>0$. Could a class be learnable to error $\frac14$ but no better? The answer is a surprising no. If you can beat a coin toss by any noticeable margin, you can learn to any accuracy. The technique that does it is called **boosting**.
+</role>
 
 <thm k="Definition 4.1" nm="γ-weak learning" pg="40">
 Let $\gamma(\cdot,\cdot)>0$. An algorithm $L$ is a **$\gamma$-weak PAC learner** for $\C$ using $\H$ if for every $n$, every $c\in\C_n$, every distribution $\D$ over $\X_n$ and every $0<\delta<\frac12$: given access to $\EX(c,\D)$ and inputs $\size(c)$ and $\delta$, it outputs $h\in\H_n$ that with probability at least $1-\delta$ satisfies $$\err(h)\le\frac12-\gamma(n,\size(c)).$$ It is **efficient** if $\H$ is polynomially evaluatable, $1/\gamma(n,\size(c))$ is bounded by a polynomial in $n$ and $\size(c)$, and $L$ runs in time polynomial in $n$, $\size(c)$ and $1/\delta$.
 </thm>
+<role r="reading" a="Definition 4.1">
 
 The advantage $\gamma$ may shrink as $n$ grows, but only polynomially: a weak learner that beats a coin toss by $1/n^3$ counts, one that beats it by $2^{-n}$ doesn't.
+</role>
 
 <pause n="A weak learner for conjunctions" q="On $\{0,1\}^n$, let $\H_n$ contain the constant functions $0$ and $1$ and the $2n$ 'dictators' $z_i$ and $\bit{z_i}$. Why should some function in $\H_n$ have error noticeably below $\frac12$ for any target conjunction and any distribution? (This is Sheet 3, question 3. Think before opening.)">
 Here is the idea, without all the details. Let $c$ be a conjunction with literals $\ell_1,\dots,\ell_k$, and let $p=\PP[c(x)=1]$. If $p$ is far from $\frac12$, the right constant function already has error well below $\frac12$. If $p$ is close to $\frac12$, consider the negative examples: each one falsifies at least one of the $k\le2n$ literals, so some literal $\ell$ is false on at least a $\frac1{2n}$ fraction of the negative mass. Use $\ell$ itself as the hypothesis: it is $1$ on all positives (since $\ell$ is in $c$) and $0$ on that chunk of negatives. Balancing the two cases gives an advantage of order $\frac1n$, which is what the sheet asks you to prove carefully.
@@ -25,26 +31,36 @@ Here is the idea, without all the details. Let $c$ be a conjunction with literal
 <sheet n="3" qs="3">Parts 1 and 2 need the weak learning definition; part 2 also uses AdaBoost from the next section.</sheet>
 
 ### Boosting: a short history
+<role r="history">
 
 Boosting is a good example of a theoretical question leading to a practical algorithm. Weak learning first appeared in work of Kearns and Valiant, who showed that some classes are hard to learn even when you only need to beat random guessing. Soon after, Schapire and Freund showed that, distribution-free, weak and strong learning are equivalent. The early boosting algorithms were awkward to implement. Freund and Schapire then designed **AdaBoost**, which kept the guarantees and was easy to run. It has been very successful in practice and is in most machine learning libraries.
+</role>
 
 ## 4.2 The AdaBoost Algorithm {40} [d3 i3]
+<role r="idea" a="make the old hypothesis useless">
 
 The idea is simple. Run the weak learner to get $h_1$, a little better than random. Running it again might return $h_1$ again. So change the distribution until $h_1$ is useless, with error exactly $\frac12$; now the weak learner must return something different.[[Not something *worse*: if $h_1$ had error well above $\frac12$ under the new distribution, the weak learner could return $1-h_1$, which tells us nothing new.]] Repeat, and combine the hypotheses by a weighted vote. AdaBoost ("adaptive boosting") is aggressive about it: it reweights according to how good each hypothesis was, and gives better hypotheses more say in the vote.
+</role>
+<role r="setup" a="labels ±1 and the weighted sample">
 
 AdaBoost works on a fixed training sample of $m$ examples. Each round it puts a distribution $D_t$ on the sample, and it simulates an example oracle for the weak learner by drawing training examples according to $D_t$. For the algebra it is cleaner to use labels $y\in\{-1,+1\}$ instead of $\{0,1\}$, and $\sgn(z)=+1$ for $z\ge0$ and $-1$ for $z<0$. Then $y\,h(x)=+1$ when $h$ is right and $-1$ when it is wrong.
+</role>
 
 <div class="algo" id="alg4-1" data-label="Algorithm 4.1" data-name="AdaBoost"><div class="algo-h"><span class="algo-k">Algorithm 4.1</span> AdaBoost</div><ol class="algo-l"><li><b>Inputs:</b> training data $(x_1,y_1),\dots,(x_m,y_m)$ from $\EX(c,\D)$; number of rounds $T$; confidence $\delta$; a weak learner WeakLearn</li><li>set $D_1(i)=1/m$ for each $i$ <span class="algo-c">start uniform</span></li><li><b>for</b> $t=1,\dots,T$:</li><li class="in1">$h_t\leftarrow$ WeakLearn$(D_t,\delta/T)$ <span class="algo-c">examples drawn from $D_t$</span></li><li class="in1">$\eps_t=\PP_{i\sim D_t}[h_t(x_i)\neq y_i]$ <span class="algo-c">at most $\frac12-\gamma$ if WeakLearn succeeded</span></li><li class="in1">$\alpha_t=\frac12\log\frac{1-\eps_t}{\eps_t}$</li><li class="in1">$D_{t+1}(i)=D_t(i)\,e^{-\alpha_ty_ih_t(x_i)}/Z_{t+1}$ <span class="algo-c">$Z_{t+1}$ makes $D_{t+1}$ sum to 1</span></li><li>$\tilde h=\sum_{t=1}^T\alpha_th_t$</li><li><b>Output:</b> $\hat h(x)=\sgn(\tilde h(x))$</li></ol></div>
+<role r="reading" a="Algorithm 4.1">
 
 Look at the update. If $h_t$ gets example $i$ right, its weight is multiplied by $e^{-\alpha_t}$; if wrong, by $e^{\alpha_t}$. Since $\eps_t<\frac12$, $\alpha_t>0$, so mistakes gain weight and successes lose it. The same $\alpha_t$ is $h_t$'s weight in the final vote, and it grows as $\eps_t$ shrinks. Figure 4.1 runs the algorithm with the simplest possible weak learner.
+</role>
 
 @@clt-fig4-1@@
 
 <thm k="Theorem 4.2" d="AdaBoost drives training error to zero" pg="41" it>
 Suppose WeakLearn is a $\gamma$-weak learner for $\C$. If $T\ge\frac{\log2m}{2\gamma^2}$, then with probability at least $1-\delta$ the hypothesis output by AdaBoost has training error $0$.
 </thm>
+<role r="roadmap" a="what the proof really shows">
 
 The proof shows something stronger and more useful: the training error after $T$ rounds is at most $\prod_tZ_{t+1}$, and each $Z_{t+1}$ is at most $e^{-2\gamma^2}$. So the training error falls exponentially in the number of rounds.
+</role>
 
 <pf>
 **Allow for failures.** Each call to WeakLearn fails with probability at most $\delta/T$, so by the union bound all $T$ calls succeed with probability at least $1-\delta$. Assume they do.
@@ -63,12 +79,16 @@ Differentiate: $-(1-\eps_t)e^{-\alpha}+\eps_te^{\alpha}=0$, so $e^{2\alpha}=\fra
 </pause>
 
 <sheet n="3" qs="2"></sheet>
+<role r="recap" a="the proof in one sentence">
 
 Reading the proof back: (4.8) says the product of the normalising constants bounds the training error, and each one is below $1$ precisely because the weak learner beats a coin toss. Sheet 3, question 2, explores the algorithm further; for instance, $h_t$ has error exactly $\frac12$ under $D_{t+1}$, which is the "make the old hypothesis useless" idea from the start of the section.
+</role>
 
 ### 4.2.1 Bounding the generalisation error
+<role r="why" a="training error is not the goal">
 
 Zero training error is not the goal; small error on fresh data is. Theorem 3.8 converts one into the other if the final hypothesis comes from a class of small VC dimension. Suppose WeakLearn outputs hypotheses from $\H$ with $\VCD(\H)=d$. AdaBoost's output lies in $$\mathrm{THRESHOLDS}_k(\H)=\Big\{x\mapsto\sgn\Big(\sum_{i=1}^k\alpha_ih_i(x)\Big):h_i\in\H,\ \alpha_i\in\R\Big\}$$ with $k=T$.
+</role>
 
 <thm k="Lemma 4.3" d="VC dimension of weighted votes" pg="43" it>
 If $\VCD(\H)=d$, then $\VCD(\mathrm{THRESHOLDS}_k(\H))=O(kd\log k)$.
@@ -79,5 +99,8 @@ Count the dichotomies of a set $S$ of $m$ points. A function in the class is bui
 
 Each $h_i$ can act on $S$ in at most $(em/d)^d$ ways by the Sauer–Shelah lemma, so the first stage produces at most $(em/d)^{dk}$ different configurations of $m$ vectors. For each configuration, linear threshold functions in $\R^k$ have VC dimension $k+1$, so they produce at most $\big(\frac{em}{k+1}\big)^{k+1}$ dichotomies. If $m$ is large enough that $$#eq4-10 \Big(\frac{em}{k+1}\Big)^{k+1}\Big(\frac{em}d\Big)^{dk}<2^m, \tag{4.10}$$ then $S$ is not shattered, so the VC dimension is below $m$. The left side is $2^{O(kd\log m)}$, and a short calculation shows (4.10) holds for all $m\ge c_0kd\log k$ for a suitable constant $c_0$ (Exercise 4.2 in the notes).
 </pf>
+<role r="payoff" a="weak learning implies PAC learning">
 
 With $T=O(\frac{\log m}{\gamma^2})$ rounds, the output has VC dimension $O\big(\frac{d\log m}{\gamma^2}\log\frac{\log m}{\gamma^2}\big)$, which grows only logarithmically in $m$. Since Theorem 3.8 needs $m$ to grow roughly linearly in the VC dimension, a large enough polynomial $m$ makes AdaBoost a PAC learner. So weak learnability implies PAC learnability.[[Finite VC dimension of the weak hypotheses is not a strong requirement, but it isn't necessary either: AdaBoost can be shown to generalise without it, through margin-based arguments.]]
+
+</role>
