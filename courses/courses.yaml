@@ -1,0 +1,5 @@
+# Courses in hub order. To add a course: create courses/<id>/ with course.yaml, macros.json,
+# notation.yaml, manifest.yaml, source/, sheets/ and viz/, then add its id here.
+courses:
+  - pmm
+  - clt

@@ -1,0 +1,12 @@
+{
+  "\\R": "\\mathbb{R}",
+  "\\N": "\\mathbb{N}",
+  "\\C": "\\mathcal{C}",
+  "\\Hc": "\\mathcal{H}",
+  "\\D": "\\mathcal{D}",
+  "\\X": "\\mathcal{X}",
+  "\\eps": "\\varepsilon",
+  "\\err": "\\operatorname{err}",
+  "\\VCD": "\\operatorname{VCD}",
+  "\\poly": "\\operatorname{poly}"
+}

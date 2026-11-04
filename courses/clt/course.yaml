@@ -1,0 +1,15 @@
+id: clt
+code: CS
+short: CLT
+title: Computational Learning Theory
+lecturer: Varun Kanade
+term: Lecture notes, 2024
+blurb: PAC learning, Occam's razor, VC dimension, boosting and the cryptographic hardness of learning, following the course notes.
+exerciseLabel: Check
+accent:
+  light: "#2f6a68"
+  lightInk: "#255b59"
+  lightSoft: "rgba(47, 106, 104, 0.09)"
+  dark: "#7fc0b8"
+  darkInk: "#93cdc5"
+  darkSoft: "rgba(127, 192, 184, 0.12)"
