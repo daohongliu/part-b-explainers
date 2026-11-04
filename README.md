@@ -114,11 +114,9 @@ A visualisation module exports `mount(host, ctx)`. `ctx.colours()` returns the c
 
 Create `courses/<id>/` with `course.yaml`, `macros.json`, `notation.yaml`, `manifest.yaml`, `source/`, `sheets/` and `viz/`, then add the id to `courses/courses.yaml`. The hub, course page, notation index, results index, search index, `llms.txt` entry and coverage report follow from those files.
 
-## Asking Claude
+## AI assistants
 
-Select any text on a page and press **Ask Claude**. The button copies a prompt to the clipboard and opens claude.ai in a new tab. The prompt holds the selection with its maths as LaTeX, the page, section and enclosing result, the results available at that point, and the house rules. If the prompt is short enough it is also passed as `?q=` to pre-fill the chat. Whether claude.ai still honours that parameter hasn't been checked (the check needs a signed-in browser), so paste from the clipboard if the chat opens empty. Nothing calls a paid API.
-
-Claude in Chrome and the desktop app's browser can read a served page directly. Each page carries the house rules in a collapsed "Note for AI assistants" at the end, plus a machine-readable `<script id="ai-context">`. `/llms.txt` has the rules and the course structure.
+Claude in Chrome and the desktop app's browser can read a served page directly. Each page carries the house rules in a collapsed "Note for AI assistants" at the end, plus a machine-readable `<script id="ai-context">` (results in scope per section, course macros). `/llms.txt` has the rules and the course structure.
 
 ## Keyboard
 

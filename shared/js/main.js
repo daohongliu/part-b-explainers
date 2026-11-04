@@ -8,7 +8,6 @@ import { initToc } from './toc.js';
 import { initSearch } from './search.js';
 import { initKeys } from './keys.js';
 import { initProgress } from './progress.js';
-import { initAsk } from './ask.js';
 import { initViz } from './viz-loader.js';
 import { initTips } from './tips.js';
 
@@ -23,7 +22,6 @@ run('panel', initPanel);
 run('search', initSearch);
 run('keys', initKeys);
 run('progress', initProgress);
-run('ask', initAsk);
 run('viz', initViz);
 run('tips', initTips);
 

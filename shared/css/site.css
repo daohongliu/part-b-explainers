@@ -425,8 +425,6 @@ body.panel-open .margin-notes { opacity: 0; pointer-events: none; }
 .help-box dl { display: grid; grid-template-columns: 6rem 1fr; gap: 0.35rem 0.8rem; font-size: 0.78rem; margin: 0; }
 .help-box dd { margin: 0; color: var(--ink-2); }
 .help-foot { font-size: 0.7rem; color: var(--ink-3); margin: 0.8rem 0 0; }
-.ask-btn { position: absolute; z-index: 65; font-family: var(--sans); font-size: 0.68rem; background: var(--ink); color: var(--paper); border: 0; border-radius: 5px; padding: 0.3rem 0.6rem; cursor: pointer; box-shadow: var(--shadow); animation: fadein 0.12s var(--ease); }
-.ask-btn:hover { background: var(--accent-ink); }
 .toast { position: fixed; z-index: 80; left: 50%; top: 4rem; transform: translateX(-50%); font-family: var(--sans); font-size: 0.72rem; background: var(--card); border: 1px solid var(--rule-2); box-shadow: var(--shadow); padding: 0.55rem 0.9rem; border-radius: 6px; max-width: min(28rem, calc(100vw - 2rem)); animation: fadein 0.2s var(--ease); }
 .tip { position: absolute; z-index: 75; font-family: var(--sans); font-size: 0.66rem; background: var(--ink); color: var(--paper); padding: 0.25rem 0.5rem; border-radius: 4px; max-width: 18rem; pointer-events: none; line-height: 1.35; }
 

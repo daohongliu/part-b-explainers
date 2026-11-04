@@ -98,8 +98,7 @@ ${body}
 <div class="help" id="help" hidden role="dialog" aria-label="Keyboard shortcuts"><div class="help-box"><h2>Keyboard</h2><dl>
 <dt><kbd>/</kbd></dt><dd>search the course</dd><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>next / previous section</dd>
 <dt><kbd>p</kbd></dt><dd>show or hide pinned items</dd><dt><kbd>Alt</kbd> <kbd>←</kbd></dt><dd>return to where you were after a jump</dd>
-<dt><kbd>t</kbd></dt><dd>light / dark</dd><dt><kbd>?</kbd></dt><dd>this list</dd><dt><kbd>Esc</kbd></dt><dd>close whatever is open</dd></dl>
-<p class="help-foot">Select any text to ask Claude about it.</p></div></div>
+<dt><kbd>t</kbd></dt><dd>light / dark</dd><dt><kbd>?</kbd></dt><dd>this list</dd><dt><kbd>Esc</kbd></dt><dd>close whatever is open</dd></dl></div></div>
 ${aiContext ? `<script type="application/json" id="ai-context">${JSON.stringify(aiContext).replace(/</g, '\\u003c')}</script>` : ''}
 <script type="module" src="/assets/js/main.js"></script>
 </body>
