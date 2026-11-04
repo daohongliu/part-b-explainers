@@ -132,7 +132,7 @@ $$#eq1-6 \varphi_{P,N}=\bigwedge_{i\in P}z_i\wedge\bigwedge_{i\in N}\bit{z_i}. \
 
 We allow $P\cap N\neq\emptyset$, so that $z_1\wedge\bit{z_1}$, which is false everywhere, is a conjunction. With $P=N=\emptyset$ we get the empty conjunction, true everywhere. Let $\mathrm{CONJUNCTIONS}_n=\{\varphi_{P,N}:P,N\subseteq[n]\}$. Each of $P$ and $N$ is a bit string of length $n$, so every conjunction has a representation of size $2n$.
 
-<pause n="How many conjunctions?" q="How many different <em>functions</em> $\{0,1\}^n\to\{0,1\}$ are conjunctions?">
+<pause n="How many conjunctions?" q="How many different functions $\{0,1\}^n\to\{0,1\}$ are conjunctions?">
 A conjunction with $P\cap N=\emptyset$ is determined by choosing, for each variable, whether it appears positively, negatively, or not at all, and different choices give different functions (each one has a different set of satisfying assignments, a "subcube"). That gives $3^n$ functions. Every conjunction with $P\cap N\neq\emptyset$ is the constant $0$, which is one more function. So there are $3^n+1$. In particular at least $2^n$, so any representation needs at least $n$ bits for some conjunctions, and $2n$ is not wasteful.
 </pause>
 

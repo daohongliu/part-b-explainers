@@ -123,11 +123,19 @@ def blocks_to_html(s):
         if cur.strip(): out.append('<p>' + cur.strip() + '</p>')
     return '\n'.join(out)
 
-CONT = re.compile(r'<(thm|pf|pause|bg|sheet|qn)\b([^>]*)>(.*?)</\1>', re.S)
+CONT = re.compile(r'<(thm|pf|pause|bg|sheet|qn|role)\b([^>]*)>(.*?)</\1>', re.S)
 
 def first_p_insert(body_html, ins):
     if body_html.startswith('<p>'): return '<p>' + ins + body_html[3:]
     return '<p>' + ins + '</p>' + body_html
+
+ROLES = {'question': 'the question', 'idea': 'intuition', 'why': 'motivation', 'example': 'example', 'link': 'connection', 'caution': 'careful', 'reading': 'in words',
+         'technique': 'technique', 'roadmap': 'roadmap', 'recap': 'recap', 'aside': 'aside', 'history': 'history', 'setup': 'set-up', 'payoff': 'payoff'}
+ROLE_TIPS = {'question': 'Sets up the problem this part answers.', 'idea': 'The picture to keep in mind; not a proof.', 'why': 'Why the next definition or result is needed.',
+             'example': 'A concrete case of what was just said.', 'link': 'Connects this to something elsewhere in the course.', 'caution': 'A pitfall, or why a condition can’t be dropped.',
+             'reading': 'What the result just stated actually says.', 'technique': 'A trick that will be used again.', 'roadmap': 'Where the argument is heading.',
+             'recap': 'Pulls together what came before.', 'aside': 'Context you can skip.', 'history': 'Where the idea came from.', 'setup': 'Fixes notation or assumptions for what follows.',
+             'payoff': 'What we get out of the work just done.'}
 
 def process(s):
     def repl(m):
@@ -153,6 +161,10 @@ def process(s):
             idx = body.rfind('</p>')
             body = body[:idx] + q + body[idx:] if idx >= 0 else body + q
             return ph(f'<div class="proof">{body}</div>')
+        if tag == 'role':
+            r = a.get('r', 'idea'); lab = ROLES.get(r, r); ann = a.get('a', '')
+            tip = ROLE_TIPS.get(r, '')
+            return ph(f'<div class="role r-{r}"><div class="role-l" data-tip="{tip}"><span class="role-k">{lab}</span>' + (f'<span class="role-a">{ann}</span>' if ann else '') + f'</div>{body}</div>')
         if tag == 'pause':
             lead = a.get('lead', 'Exercise').rstrip('.')
             nm = a.get('n', '')

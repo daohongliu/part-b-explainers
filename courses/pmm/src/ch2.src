@@ -277,7 +277,7 @@ Let $(\Omega,\F,\PP)$ be a probability space. Let $I$ be a finite or countably i
 
 A **sub σ-algebra** of $\F$ is a σ-algebra $\G\subseteq\F$ on the same $\Omega$; think of it as a body of information (as in Figure 1.4). Note that we impose these conditions for finite subsets only, but they then also hold for countable subsets, using Lemma 1.4 (intersect more and more of the sets). They also hold after complementing some or all of the $A_i$ (exercise).
 
-<pause n="Pairs are not enough" q="Why insist on <em>all</em> finite subsets, rather than just pairs?">
+<pause n="Pairs are not enough" q="Why insist on all finite subsets, rather than just pairs?">
 Pairwise independence is genuinely weaker. Toss two fair coins; let $A$ = "first is heads", $B$ = "second is heads", $C$ = "the two tosses agree". Each has probability $\frac12$, and each pair is independent (for instance $\PP[A\cap C]=\PP[\text{HH}]=\frac14$). But $\PP[A\cap B\cap C]=\frac14\ne\frac18$: knowing $A$ and $B$ determines $C$.
 </pause>
 

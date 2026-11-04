@@ -48,7 +48,8 @@ window.MathJax = {
   --serif: "Alegreya", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --sc: "Alegreya SC", "Alegreya", Georgia, serif;
   --mono: "Recursive", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --col: 41.5rem; --pw: 66rem;
+  --col: 41.5rem; --gut: 5rem; --snw: 14.5rem; --sng: 4rem;
+  --pw: calc(var(--gut) + var(--col) + var(--sng) + var(--snw) + 1rem);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -168,14 +169,14 @@ aside.bg > *:last-child { margin-bottom: .2rem; }
 }
 .sn-toggle:checked + .sidenote { display: block; margin: .6rem 0 .8rem; padding: .1rem 0 .1rem .9rem; border-left: 1.5px solid var(--rule); }
 @media (min-width: 1120px) {
-  .page { padding-left: max(5rem, env(safe-area-inset-left, 0px)); }
-  .sidenote { display: block; float: right; clear: right; width: 14.5rem; margin: .3rem -18.5rem 1rem 0; position: relative; }
-  .sn-toggle:checked + .sidenote { margin: .3rem -18.5rem 1rem 0; padding: 0; border: 0; }
+  .page { padding-left: max(var(--gut), env(safe-area-inset-left, 0px)); }
+  .sidenote { display: block; float: right; clear: right; width: var(--snw); margin: .3rem calc(-1 * (var(--snw) + var(--sng))) 1rem 0; position: relative; }
+  .sn-toggle:checked + .sidenote { margin: .3rem calc(-1 * (var(--snw) + var(--sng))) 1rem 0; padding: 0; border: 0; }
   .sn-ref { cursor: default; }
-  .pg { position: absolute; left: -5rem; top: .45em; margin: 0; width: 4.2rem; text-align: right; vertical-align: 0; }
+  .pg { position: absolute; left: calc(-1 * var(--gut)); top: .45em; margin: 0; width: calc(var(--gut) - .8rem); text-align: right; vertical-align: 0; }
   .thm .pg { top: .3em; }
-  .view > figure.wide, .hero > figure.wide, .view > .wide, .sec-block > figure.wide, .sec-block > .wide { clear: right; max-width: 60rem; }
-  .sub-block > figure.wide { clear: right; max-width: calc(60rem - 1.3rem); }
+  .view > figure.wide, .hero > figure.wide, .view > .wide, .sec-block > figure.wide, .sec-block > .wide { clear: right; max-width: calc(var(--col) + var(--sng) + var(--snw)); }
+  .sub-block > figure.wide { clear: right; max-width: calc(var(--col) + var(--sng) + var(--snw) - 1.3rem); }
 }
 
 /* cross-references */
@@ -509,12 +510,16 @@ details.pause summary::before { flex: none; }
 .toc-side.open .toc-head { padding-top: .7rem; }
 @media (min-width: 1300px) {
   .toc-side { display: block; }
-  .toc-side.open { position: fixed; top: calc(4rem + env(safe-area-inset-top, 0px)); left: max(10px, env(safe-area-inset-left, 0px)); right: auto; bottom: auto; width: min(18rem, calc(var(--ml) - 1.6rem)); max-height: calc(100vh - 5.5rem); border: 0; box-shadow: none; padding: 0; background: none; }
+  .toc-side.open { position: fixed; top: calc(4rem + env(safe-area-inset-top, 0px)); left: max(10px, env(safe-area-inset-left, 0px)); right: auto; bottom: auto; width: var(--tocw); max-height: calc(100vh - 5.5rem); border: 0; box-shadow: none; padding: 0; background: none; }
   .toc-btn { display: none; }
-  :root { --ml: max(calc(50vw - var(--pw) / 2), min(calc(100vw - var(--pw)), 20rem)); }
-  .toc-side { width: min(18rem, calc(var(--ml) - 1.6rem)); }
-  body.has-toc .page { margin-left: var(--ml); }
-  body.has-toc .toc-side { left: max(10px, calc(var(--ml) - 19.2rem)); }
+  /* three columns: contents | text with margin notes | minimap. The text column takes what is left, within reason. */
+  :root { --tocw: 17.5rem; --mmw: 4.75rem; --gut: 6.2rem; --snw: 13rem; --sng: 2.6rem;
+          --avail: calc(100vw - var(--tocw) - 1.6rem - var(--mmw));
+          --col: clamp(36rem, calc(var(--avail) - var(--gut) - var(--snw) - var(--sng) - 1rem), 50rem);
+          --pml: calc(var(--tocw) + 1.6rem + max(0px, (var(--avail) - var(--pw)) / 2)); }
+  .toc-side { width: var(--tocw); }
+  body.has-toc .page { margin-left: var(--pml); }
+  body.has-toc .toc-side { left: max(10px, calc(var(--pml) - var(--tocw) - 1.2rem)); }
 }
 
 /* side panel and notes drawer */
@@ -534,8 +539,7 @@ details.pause summary::before { flex: none; }
 .side-ib .thm, .side-ib aside.bg, .side-ib figure, .side-ib .disp { margin: .3rem 0; max-width: 100%; }
 .side-ib .pg, .side-ib .qed { display: none; }
 .side-ib figure .fig-body { display: none; }
-@media (min-width: 1300px) and (max-width: 1439px) { :root { --col: 39rem; --pw: 63.5rem; } }
-@media (min-width: 1300px) { body.side-open .page { margin-right: min(30rem, 40vw); margin-left: max(18.6rem, calc(50vw - 33rem - 18.6rem)); } body.side-open .sidenote { display: none; } body.side-open .view figure.wide { max-width: var(--col); } }
+@media (min-width: 1300px) { body.side-open .page { margin-right: min(30rem, 40vw); margin-left: calc(var(--tocw) + 1.6rem); } body.side-open .sidenote { display: none; } body.side-open .view figure.wide { max-width: var(--col); } }
 .nd-where { font-size: .88rem; color: var(--ink-soft); font-style: italic; margin: .6rem 0 .4rem; }
 .nd-empty { font-size: .95rem; color: var(--ink-soft); }
 .nd-g { font-family: var(--sc); letter-spacing: .05em; font-size: .85rem; color: var(--ink-soft); margin: 1.1rem 0 .3rem; }
@@ -648,14 +652,14 @@ details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-w
 .sub-block { position: relative; margin: 2rem 0 1.6rem; padding-left: 1.15rem; border-left: 1px solid var(--rule); }
 .sub-block > h3 { margin-top: 0; padding-top: .1rem; }
 .sub-block > h3::before { content: ""; position: absolute; left: -5px; top: .55rem; width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink-soft); }
-.sub-block .pg { left: -6.15rem; }
+.sub-block .pg { left: calc(-1 * var(--gut) - 1.15rem); }
 
 /* results get a ruled box whose colour says what kind they are */
 .thm { padding: .7rem .95rem .75rem 1.05rem; border-left: 3px solid var(--blue); background: color-mix(in srgb, var(--blue-wash) 45%, transparent); border-radius: 0 10px 10px 0; }
 .thm.k-def { border-left-color: var(--ochre); background: color-mix(in srgb, var(--ochre-wash) 40%, transparent); }
 .thm.k-ex { border-left: 2px dashed var(--ink-soft); background: transparent; padding-top: .35rem; padding-bottom: .4rem; }
-.thm .pg { left: calc(-5rem - 1.05rem - 3px); }
-.sub-block .thm .pg { left: calc(-6.15rem - 1.05rem - 3px); }
+.thm .pg { left: calc(-1 * var(--gut) - 1.05rem - 3px); }
+.sub-block .thm .pg { left: calc(-1 * var(--gut) - 1.15rem - 1.05rem - 3px); }
 .xcard .thm, .side-ib .thm { padding: .4rem .7rem; }
 
 /* a proof hangs off the result it proves: indented, ruled, opened by "Proof." and closed by ∎ */
@@ -674,6 +678,39 @@ details.hint[open] { padding-left: .8rem; border-left: 1.5px solid var(--ochre-w
   .proof { margin-left: .55rem; padding: .45rem .5rem .45rem .75rem; }
   .thm + .proof::before { left: -.6rem; width: .5rem; }
 }
+
+
+/* ===== roles: what a stretch of prose is for, labelled in the left gutter ===== */
+.role { position: relative; --rc: var(--ink-soft); }
+.role.r-idea, .role.r-reading { --rc: var(--blue); }
+.role.r-why, .role.r-technique, .role.r-question { --rc: var(--ochre); }
+.role.r-example, .role.r-payoff { --rc: var(--green); }
+.role.r-caution { --rc: var(--red); }
+.role.r-link, .role.r-roadmap, .role.r-recap { --rc: color-mix(in srgb, var(--blue) 50%, var(--red)); }
+.role-l { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: .64rem; line-height: 1.25; color: var(--rc); letter-spacing: .02em; }
+.role-k { display: block; text-transform: lowercase; font-weight: 600; }
+.role-a { display: block; font-family: var(--serif); font-variation-settings: normal; font-style: italic; font-size: .78rem; color: var(--ink-soft); letter-spacing: 0; margin-top: .1rem; }
+.role-a a.xref { color: inherit; }
+.role > p:last-child { margin-bottom: 1.1rem; }
+@media (min-width: 1120px) {
+  .role::before { content: ""; position: absolute; left: -.85rem; top: .45rem; bottom: 1.2rem; border-left: 1.5px solid var(--rc); opacity: .55; border-radius: 1px; }
+  .role-l { position: absolute; left: calc(-1 * var(--gut) + .2rem); width: calc(var(--gut) - 1.3rem); top: .35rem; text-align: right; }
+  .sub-block .role-l { left: calc(-1 * var(--gut) + .2rem - 1.15rem); }
+  .role-l[data-tip] { cursor: help; }
+}
+@media (max-width: 1119px) {
+  .role { border-left: 1.5px solid color-mix(in srgb, var(--rc) 55%, transparent); padding-left: .75rem; overflow-x: clip; }
+  .role-l { display: flex; flex-wrap: wrap; gap: .1rem .5rem; align-items: baseline; margin-bottom: .2rem; }
+  .role-k, .role-a { display: inline; }
+}
+@media (max-width: 640px) { .proof .nw, .role .nw, .thm .nw, .sub-block .nw { white-space: normal; } }
+
+
+/* minimap */
+.minimap { display: none; position: fixed; z-index: 25; right: 10px; top: calc(var(--topbar-h, 2.6rem) + env(safe-area-inset-top, 0px) + 14px); bottom: 14px; width: calc(var(--mmw, 4.75rem) - 1.2rem); cursor: pointer; user-select: none; touch-action: none; }
+.minimap canvas { display: block; }
+.mm-view { position: absolute; left: -3px; right: -3px; top: 0; background: color-mix(in srgb, var(--blue) 12%, transparent); border: 1px solid color-mix(in srgb, var(--blue) 45%, transparent); border-radius: 3px; pointer-events: none; }
+@media (min-width: 1300px) { body.has-toc .minimap { display: block; } body.side-open .minimap, body:has(.notes-drawer:not([hidden])) .minimap { display: none; } }
 
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */

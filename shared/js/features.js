@@ -535,3 +535,83 @@ showView = function (id) {
 initNotes();
 function setTopH() { const t = $('.topbar'); if (t) document.documentElement.style.setProperty('--topbar-h', t.offsetHeight + 'px'); }
 setTopH(); window.addEventListener('resize', setTopH);
+
+/* ---------- minimap: the whole chapter in miniature, with the visible part outlined (as in a code editor) ---------- */
+const mm = h('div', 'minimap'); mm.setAttribute('aria-hidden', 'true');
+const mmc = document.createElement('canvas'); mm.appendChild(mmc);
+const mmv = h('div', 'mm-view'); mm.appendChild(mmv);
+document.body.appendChild(mm);
+let MM = null, mmT = 0;
+const MM_BOX = 'figure, .thm, .proof, aside.bg, details.pause, .sq, .algo, .sheet-prompt, header.ch-head';
+function layoutMinimap() {
+  MM = null;
+  const v = currentView && document.getElementById(currentView);
+  if (!v || !document.body.classList.contains('has-toc') || getComputedStyle(mm).display === 'none') return;
+  const W = mm.clientWidth, H = mm.clientHeight; if (!W || !H) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  mmc.width = W * dpr; mmc.height = H * dpr; mmc.style.width = W + 'px'; mmc.style.height = H + 'px';
+  const g = mmc.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const cs = getComputedStyle(document.body), col = n => cs.getPropertyValue(n).trim();
+  const vr = v.getBoundingClientRect(), top0 = vr.top + window.scrollY, docH = Math.max(1, v.scrollHeight);
+  const ref = v.querySelector('.sec-block > p, .view > p') || v;
+  const rr = ref.getBoundingClientRect(), x0 = rr.left, colW = rr.width;
+  const sx = (W - 6) / (colW * 1.38), sy = H / docH;
+  const X = x => 3 + (x - x0) * sx, Y = y => (y + window.scrollY - top0) * sy;
+  const rect = (r, fill, alpha) => { g.globalAlpha = alpha; g.fillStyle = fill; g.fillRect(X(r.left), Y(r.top), Math.max(1, r.width * sx), Math.max(1, r.height * sy)); };
+  const boxes = $$(MM_BOX, v).filter(e => !e.parentElement.closest(MM_BOX) || e.matches('.proof'));
+  boxes.forEach(e => {
+    const r = e.getBoundingClientRect(); if (!r.height) return;
+    if (e.matches('header.ch-head')) return rect(r, col('--ink'), .12);
+    if (e.matches('figure')) { rect(r, col('--paper-2'), 1); g.globalAlpha = .5; g.strokeStyle = col('--ink-soft'); g.lineWidth = .6; g.strokeRect(X(r.left) + .5, Y(r.top) + .5, r.width * sx - 1, Math.max(1, r.height * sy - 1)); return; }
+    if (e.matches('.thm')) { const c = e.classList.contains('k-def') ? col('--ochre') : e.classList.contains('k-ex') ? col('--ink-soft') : col('--blue'); rect(r, c, .22); g.globalAlpha = .9; g.fillStyle = c; g.fillRect(X(r.left), Y(r.top), 1.5, Math.max(1, r.height * sy)); return; }
+    if (e.matches('.proof')) { g.globalAlpha = .7; g.fillStyle = col('--blue'); g.fillRect(X(r.left), Y(r.top), 1, Math.max(1, r.height * sy)); rect({ left: r.left + 8, top: r.top, width: r.width - 8, height: r.height }, col('--ink'), .1); return; }
+    if (e.matches('aside.bg')) return rect(r, col('--ink-soft'), .16);
+    if (e.matches('details.pause, .sheet-prompt')) return rect(r, col('--ochre'), .25);
+    rect(r, col('--ink'), .12);
+  });
+  /* running text: one faint line per line of type, or a faint block when lines would merge */
+  $$('p, li, .disp, .sec-meta', v).forEach(e => {
+    if (e.closest(MM_BOX) || e.closest('.for-llms')) return;
+    const r = e.getBoundingClientRect(); if (!r.height) return;
+    const lh = parseFloat(getComputedStyle(e).lineHeight) || 28, n = Math.max(1, Math.round(r.height / lh));
+    g.fillStyle = col('--ink');
+    if (lh * sy >= 1.6) { for (let k = 0; k < n; k++) { g.globalAlpha = .28; const w = k === n - 1 && n > 1 ? .6 : 1; g.fillRect(X(r.left), Y(r.top + k * lh + lh * .35), r.width * sx * w, Math.max(.7, lh * sy * .45)); } }
+    else rect(r, col('--ink'), .2);
+  });
+  $$('.role', v).forEach(e => { const r = e.getBoundingClientRect(); const c = getComputedStyle(e).getPropertyValue('--rc').trim(); g.globalAlpha = .8; g.fillStyle = c || col('--ink-soft'); g.fillRect(X(r.left) - 2.5, Y(r.top), 1.2, Math.max(1, r.height * sy)); });
+  /* headings with their numbers */
+  g.font = '600 8px Recursive, ui-monospace, monospace'; g.textBaseline = 'middle';
+  $$('h2, h3', v).forEach(e => {
+    const r = e.getBoundingClientRect(); if (!r.height) return;
+    const isH2 = e.tagName === 'H2';
+    g.globalAlpha = isH2 ? .9 : .55; g.fillStyle = col('--ink');
+    g.fillRect(X(r.left), Y(r.top + r.height / 2) - (isH2 ? 1.2 : .6), (isH2 ? .9 : .6) * colW * sx, isH2 ? 2.4 : 1.2);
+    const sec = e.querySelector('.sec');
+    if (isH2 && sec) { g.globalAlpha = 1; g.fillStyle = col('--paper'); const t = sec.textContent.trim(), tw = g.measureText(t).width; const ty = Y(r.top + r.height / 2); g.fillRect(W - tw - 6, ty - 5, tw + 5, 10); g.fillStyle = col('--ink'); g.fillText(t, W - tw - 3.5, ty + .5); }
+  });
+  $$('mark.unote, .unote-m', v).forEach(e => { const r = e.getBoundingClientRect(); g.globalAlpha = 1; g.fillStyle = col('--ochre'); g.fillRect(W - 3, Y(r.top), 3, Math.max(2, r.height * sy)); });
+  g.globalAlpha = 1;
+  MM = { top0, sy, docH };
+  updateMinimap();
+}
+function updateMinimap() {
+  if (!MM) return;
+  const y = (window.scrollY - MM.top0) * MM.sy, hh = Math.max(8, window.innerHeight * MM.sy);
+  mmv.style.transform = 'translateY(' + y.toFixed(1) + 'px)'; mmv.style.height = hh.toFixed(1) + 'px';
+}
+function scheduleMinimap(ms) { clearTimeout(mmT); mmT = setTimeout(layoutMinimap, ms == null ? 120 : ms); }
+let mmDrag = null;
+mm.addEventListener('pointerdown', e => {
+  if (!MM) return; e.preventDefault();
+  const r = mm.getBoundingClientRect(), y = e.clientY - r.top, vt = (window.scrollY - MM.top0) * MM.sy, vh = window.innerHeight * MM.sy;
+  mmDrag = (y >= vt && y <= vt + vh) ? y - vt : vh / 2;
+  mm.setPointerCapture(e.pointerId); mmMove(e);
+});
+function mmMove(e) { if (mmDrag == null || !MM) return; const r = mm.getBoundingClientRect(); window.scrollTo(0, MM.top0 + (e.clientY - r.top - mmDrag) / MM.sy); }
+mm.addEventListener('pointermove', mmMove);
+mm.addEventListener('pointerup', () => { mmDrag = null; });
+window.addEventListener('scroll', () => requestAnimationFrame(updateMinimap), { passive: true });
+window.addEventListener('resize', () => scheduleMinimap(200));
+if (window.ResizeObserver) new ResizeObserver(() => scheduleMinimap(250)).observe(document.querySelector('.page') || document.body);
+const _showViewMM = showView;
+showView = function (id) { const r = _showViewMM(id); MM = null; scheduleMinimap(60); r.then(() => scheduleMinimap(300)); return r; };
