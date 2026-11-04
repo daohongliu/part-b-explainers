@@ -24,7 +24,7 @@ Suppose that $\{\F_j\}_{j \in J}$ is a non-empty family of $\sigma$-algebras on 
 ::::
 
 ::::question{#sheet1-a2 label="A2" pending="measurable functions (Chapter 2)"}
-Let $(f_n)$ be a sequence of measurable functions on $(\Omega, \F)$ taking values in $\R$. Show that $f_1 + f_2$, $\max\{f_1, f_2\}$ and $\sup_n f_n$ are all measurable functions.
+Let $(f_n)$ be a sequence of measurable functions on $(\Omega, \F)$ taking values in $\Rbar$. Show that $f_1 + f_2$, $\max\{f_1, f_2\}$ and $\sup_n f_n$ are all measurable functions.
 ::::
 
 ::::question{#sheet1-a3 label="A3" uses="ch1-def-measure-space ch1-def-algebra"}
@@ -36,7 +36,7 @@ On $\R$ consider the $\sigma$-algebra $\A$ of sets which are either countable or
 :::sheetsection{letter=B title="Section B (to be handed in)"}
 
 ::::question{#sheet1-b1 label="B1" uses="ch1-def-algebra"}
-Let $P = \{P_j\}_{j \in J}$ be a partition of a set $\Omega$ (that is, a collection of disjoint non-empty sets with union $\Omega$). Show that the set $U(P)$ consisting of all possible unions of sets $P_j$ is a $\sigma$-algebra on $\Omega$. Conversely, show that any $\sigma$-algebra $\F$ on a countable set $\Omega$ is of the form $U(P)$ for some partition $P$ of $\Omega$. [Warning: the converse is very far from true when $\Omega$ is uncountable.]
+Let $\mathcal{P} = \{P_j\}_{j \in J}$ be a partition of a set $\Omega$ (that is, a collection of disjoint non-empty sets with union $\Omega$). Show that the set $\mathcal{U}(\mathcal{P})$ consisting of all possible unions of sets $P_j$ is a $\sigma$-algebra on $\Omega$. Conversely, show that any $\sigma$-algebra $\F$ on a countable set $\Omega$ is of the form $\mathcal{U}(\mathcal{P})$ for some partition $\mathcal{P}$ of $\Omega$. [Warning: the converse is very far from true when $\Omega$ is uncountable.]
 ::::
 
 ::::question{#sheet1-b2 label="B2" uses="ch1-def-borel ch1-def-generated ch1-ex-pi-r"}
@@ -63,7 +63,7 @@ Show that if $\Omega$ is countable then there is a bijection between measures on
 
 :::
 
-:::sheetsection{letter=C title="Section C (extra practice, not for hand-in)"}
+:::sheetsection{letter=C title="Section C (extra practice questions, not for hand-in)"}
 
 ::::question{#sheet1-c1 label="C1" uses="ch1-def-borel ch1-def-generated ch1-ex-pi-r"}
 Show that the following sets of subsets of $\R$ all generate the same $\sigma$-algebra:

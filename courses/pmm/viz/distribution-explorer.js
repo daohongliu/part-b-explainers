@@ -150,8 +150,13 @@ export function mount(host, ctx) {
         plot.querySelector(`[aria-label="Endpoint ${name}"]`)?.focus();
       });
     }
-    const mass = hi - lo;
-    readout.innerHTML = ctx.tex(`\\mu\\bigl(${type.tex.replace('a', fmt(a)).replace('b', fmt(b))}\\bigr) = ${type.right.replace('b', 'b')} - ${type.left} = ${fmt(hi)} - ${fmt(lo)} = ${fmt(mass)}`);
+    // (a, a), [a, a) and (a, a] are empty; never report a negative mass.
+    const empty = a === b && !(type.incA && type.incB);
+    const mass = empty ? 0 : Math.max(0, hi - lo);
+    const sub = (expr) => expr.replace('a', fmt(a)).replace('b', fmt(b));
+    readout.innerHTML = ctx.tex(empty
+      ? `\\mu\\bigl(${sub(type.tex)}\\bigr) = \\mu(\\emptyset) = 0`
+      : `\\mu\\bigl(${sub(type.tex)}\\bigr) = ${sub(type.right)} - ${sub(type.left)} = ${fmt(hi)} - ${fmt(lo)} = ${fmt(mass)}`);
   }
   ctx.onTheme(draw);
   draw();

@@ -3,7 +3,8 @@
 // right continuous at 0, where Step 2 cannot be done.
 import { makeSvg, svg, el, clear, handPath } from '/assets/js/viz-kit.js';
 
-const ROWS = [1, 2, 3, 4, 8, 16, 64];
+const BASE_ROWS = [1, 2, 3, 4, 8, 16];
+const N_MAX = 5000; // run the construction until some E_n is empty (it always is, eventually)
 const XMAX = 8;
 const ATOM = 0.3;
 const Fgood = (x) => (x === Infinity ? 1 : x < 0 ? 0 : ATOM + (1 - ATOM) * (1 - Math.exp(-x / 1.5)));
@@ -26,7 +27,7 @@ const mass = (S, F) => S.reduce((m, I) => m + F(I.hi) - F(I.lo), 0);
 
 export function mount(host, ctx) {
   let step = 0, bad = false, delta = 0.2;
-  const W = 680, rowH = 30, top = 26, H = top + ROWS.length * rowH + 34, L = 70, R = 150;
+  const W = 680, rowH = 30, top = 26, H = top + (BASE_ROWS.length + 1) * rowH + 34, L = 70, R = 150;
   const xs = (x) => L + (Math.sqrt(Math.min(Math.max(x, 0), XMAX)) / Math.sqrt(XMAX)) * (W - L - R);
   const plot = el('div');
   const text = el('div', { class: 'step-text', 'aria-live': 'polite' });
@@ -54,10 +55,8 @@ export function mount(host, ctx) {
     while (F(-l) + 1 - F(l) > delta / 2 && l < XMAX - 0.5) l++;
     const rows = [];
     let D = null, E = null;
-    const maxN = ROWS[ROWS.length - 1];
-    const allC = [], allCbar = [];
-    let failN = null;
-    for (let n = 1; n <= maxN; n++) {
+    let failN = null, emptyN = null;
+    for (let n = 1; n <= N_MAX; n++) {
       const An = A(n), Bn = cut(An, l);
       const eps = delta / 2 ** (n + 2);
       // choose ã for each interval: halve the allowed gap so the strict inequality is visible
@@ -72,13 +71,14 @@ export function mount(host, ctx) {
         return { lo: I.lo + t, hi: I.hi, lc: false, hc: true, from: I.lo };
       });
       const Cbar = Cn.map((I) => ({ ...I, lc: true }));
-      allC.push(Cn); allCbar.push(Cbar);
       D = D ? meet(D, Cn) : Cn;
       E = E ? meet(E, Cbar) : Cbar;
       if (!ok && failN === null) failN = n;
-      rows.push({ n, An, Bn, Cn, Cbar, D, E, eps, ok, mA: mass(An, F), mB: mass(Bn, F), mBC: mass(Bn, F) - mass(Cn, F), mD: mass(D, F) });
+      if (!E.length && emptyN === null) emptyN = n;
+      if (BASE_ROWS.includes(n) || (!bad && emptyN === n) || (bad && n === 64)) rows.push({ n, An, Bn, Cn, Cbar, D, E, eps, ok, mA: mass(An, F), mB: mass(Bn, F), mBC: mass(Bn, F) - mass(Cn, F), mD: mass(D, F) });
+      if (n > 16 && (emptyN !== null || bad && n >= 64)) break;
     }
-    return { F, l, rows, failN };
+    return { F, l, rows, failN, emptyN };
   }
 
   function drawSet(s, S, y, colour, { closedDots = false, faint = false } = {}) {
@@ -124,9 +124,9 @@ export function mount(host, ctx) {
     }
     const head = ['µ₀(Aₙ)', 'µ₀(Bₙ)', 'µ₀(Bₙ∖Cₙ)', 'µ₀(Dₙ)', 'µ₀(Dₙ)'][step];
     svg('text', { x: W - R + 30, y: 14, 'font-size': 11, fill: c.ink2, 'font-weight': 600 }, s).textContent = head;
-    rows.filter((r) => ROWS.includes(r.n)).forEach((r, i) => {
+    rows.forEach((r, i) => {
       const y = top + i * rowH + 10;
-      const name = ['A', 'B', 'C', 'E', 'E'][step];
+      const name = ['A', 'B', 'C\u0305', 'E', 'E'][step];
       svg('text', { x: 8, y: y + 4, 'font-size': 12, 'font-style': 'italic', fill: c.ink2 }, s).textContent = `${name}${String(r.n).split('').map((d) => '₀₁₂₃₄₅₆₇₈₉'[d]).join('')}`;
       svg('line', { x1: xs(0), x2: W - R + 14, y1: y, y2: y, stroke: c.rule, 'stroke-width': 0.8 }, s);
       let val = '', warn = false;

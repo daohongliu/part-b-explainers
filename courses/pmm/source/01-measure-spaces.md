@@ -25,17 +25,15 @@ Let $\Omega$ be a set and let $\A \subseteq \Pow(\Omega)$ be a collection of sub
 
 Since intersections can be built from complements and unions ($A \cap B = (A\comp \cup B\comp)\comp$), an algebra is closed under *finite* set operations and a $\sigma$-algebra is closed under *countable* set operations. Every $\sigma$-algebra is an algebra: take $A_1 = A$, $A_2 = B$ and $A_n = \emptyset$ for $n \ge 3$. We often don't bother saying "on $\Omega$", but $A\comp$ only makes sense once we know which $\Omega$ we are in. We tend to write $\F$ for a $\sigma$-algebra (some people say *$\sigma$-field*).^[The $\sigma$ is for "sum", in the old sense of countable union, as in $F_\sigma$ sets: countable unions of closed sets.]
 
-The two smallest examples sit at the extremes: $\{\emptyset, \Omega\}$ and $\Pow(\Omega)$ are both $\sigma$-algebras. Between them, for any $A \subseteq \Omega$ the four sets $\{\emptyset, A, A\comp, \Omega\}$ form a $\sigma$-algebra, the smallest one in which "$A$ happens" is an event.
+The two extreme examples are $\{\emptyset, \Omega\}$, the smallest $\sigma$-algebra on $\Omega$, and $\Pow(\Omega)$, the largest. Between them, for any $A \subseteq \Omega$ the four sets $\{\emptyset, A, A\comp, \Omega\}$ form a $\sigma$-algebra, the smallest one in which "$A$ happens" is an event.
 
 :::exercise{#ch1-ex-cofinite title="An algebra that is not a $\sigma$-algebra" uses="ch1-def-algebra"}
-Let $\Omega = \N$ and let $\A$ be the collection of subsets $A \subseteq \N$ such that $A$ is finite or $A\comp$ is finite. Show that $\A$ is an algebra but not a $\sigma$-algebra.
+Let $\Omega = \N$ and let $\A$ be the collection of subsets $A \subseteq \N$ such that $A$ is finite or $A\comp$ is finite. This is an algebra (a quick check from the definition). Show that it is not a $\sigma$-algebra.
 :::hint
 For the failure, find countably many finite sets whose union is neither finite nor has finite complement.
 :::
 :::answer
-$\emptyset$ is finite, so $\emptyset \in \A$. If $A \in \A$ then either $A$ is finite, so $A\comp$ has finite complement, or $A\comp$ is finite; either way $A\comp \in \A$. For unions, take $A, B \in \A$. If both are finite, $A \cup B$ is finite. If one of them, say $A$, has finite complement, then $(A \cup B)\comp = A\comp \cap B\comp \subseteq A\comp$ is finite. So $A \cup B \in \A$, and $\A$ is an algebra.
-
-It is not a $\sigma$-algebra: each singleton $\{2n\}$ is finite, so lies in $\A$, but $\bigcup_{n \ge 1} \{2n\}$ is the set of positive even numbers, which is infinite and has infinite complement (it misses every odd number).
+Each singleton $\{2n\}$ is finite, so lies in $\A$, but $\bigcup_{n \ge 1} \{2n\}$ is the set of positive even numbers, which is infinite and has infinite complement (it misses every odd number).
 :::
 :::
 
@@ -101,7 +99,7 @@ The sequence $\mu(F_n)$ is increasing because $\mu$ is, so the limit is an incre
 (2) Pass to complements inside $G_k$, where everything is finite. For $n \ge k$ the sets $G_k \setminus G_n$ increase to $G_k \setminus G$, so by (1), $\mu(G_k \setminus G_n) \uparrow \mu(G_k \setminus G)$. Since $G_n \subseteq G_k$ and $\mu(G_n) \le \mu(G_k) < \infty$, additivity gives $\mu(G_k \setminus G_n) = \mu(G_k) - \mu(G_n)$, and similarly for $G$. Subtracting from the finite number $\mu(G_k)$ gives $\mu(G_n) \downarrow \mu(G)$.
 :::
 
-The condition $\mu(G_k) < \infty$ is essential in (2): take $G_n = (n, \infty) \subseteq \R$ with Lebesgue measure. Every $G_n$ has infinite measure but $\bigcap_n G_n = \emptyset$.^[viz:gn-toy|Drag $n$. However far right $G_n$ starts it still has infinite length, and no point lies in every $G_n$.] In the proof, this is where subtracting $\mu(G_n)$ from $\mu(G_k)$ breaks down: $\infty - \infty$ has no meaning.
+The condition $\mu(G_k) < \infty$ is essential in (2): take $G_n = (n, \infty) \subseteq \R$ with Lebesgue measure. Every $G_n$ has infinite measure but $\bigcap_n G_n = \emptyset$.^[viz:gn-toy|Drag $n$. Here $\lambda$ is Lebesgue measure. However far right $G_n$ starts it still has infinite length, and no point lies in every $G_n$.] In the proof, this is where subtracting $\mu(G_n)$ from $\mu(G_k)$ breaks down: $\infty - \infty$ has no meaning.
 
 The following partial converse is sometimes useful. It says that on an algebra, for a finite additive set function, countable additivity is equivalent to continuity at $\emptyset$. We will need it in the proof of [@>ch1-thm-lebesgue], where checking continuity at $\emptyset$ turns out to be easier than checking countable additivity directly.
 
@@ -109,16 +107,10 @@ The following partial converse is sometimes useful. It says that on an algebra, 
 Let $\mu : \A \to [0, \infty)$ be an additive set function on an algebra $\A$ taking only finite values. Then $\mu$ is countably additive iff for every sequence $(A_n)$ of sets in $\A$ with $A_n \downarrow \emptyset$ we have $\mu(A_n) \to 0$.
 :::
 
-:::proof{title="Proof of one direction"}
-The notes say one implication follows essentially from [@ch1-lem-monotone] and leave the other as an exercise; the exercise is Sheet 1, Question B3, so only the first is proved here.
-
-Suppose $\mu$ is countably additive and $A_n \downarrow \emptyset$ with each $A_n \in \A$. We cannot quote [@ch1-lem-monotone] directly, because $\A$ is only an algebra, but its proof goes through. The sets $D_k = A_k \setminus A_{k+1}$ lie in $\A$ and are disjoint, and since $\bigcap_k A_k = \emptyset$, for each $n$
-$$A_n = \bigcup_{k = n}^\infty D_k.$$
-The union on the right is in $\A$ because it equals $A_n$, so countable additivity applies and $\mu(A_n) = \sum_{k \ge n} \mu(D_k)$. The case $n = 1$ shows that the series $\sum_k \mu(D_k)$ converges (to $\mu(A_1) < \infty$), so its tails $\mu(A_n)$ tend to $0$.
-:::
+The notes say that one implication follows (essentially) from [@ch1-lem-monotone] and leave the other as an exercise. Both directions together are Sheet 1, Question B3, so no proof is given here. When you attempt it, keep in mind that $\A$ is only an algebra: a countable union of sets from $\A$ need not lie in $\A$, so check that every set you apply $\mu$ to does.
 
 :::sheet-prompt{q="sheet1-b3"}
-This is the other direction of [@ch1-lem-cont-empty].
+This is [@ch1-lem-cont-empty], both directions.
 :::
 
 There are many measure spaces, and several you already know. The simplest are those on countable sets, where the measure of every set is determined by the measures of points.
@@ -165,7 +157,7 @@ $$\B(\Omega) = \sigma(\T).$$
 A measure $\mu$ on $(\Omega, \B(\Omega))$ is called a [[Borel measure|t-borel-measure]] on $\Omega$.
 :::
 
-Note that $\B(\Omega)$ depends on the topology on $\Omega$, not only on the set. Usually the topology is understood: in particular, when $\Omega = \R$ we mean the usual Euclidean topology. Closed sets are Borel (they are complements of open sets), and so are countable intersections of open sets and countable unions of closed sets. In practice every subset of $\R$ you will meet in this course is Borel.
+Note that $\B(\Omega)$ depends on the topology on $\Omega$, not only on the set. Usually the topology is understood: in particular, when $\Omega = \R$ we mean the usual Euclidean topology. Closed sets are Borel (they are complements of open sets), and so are countable intersections of open sets and countable unions of closed sets. In practice the sets you write down explicitly (intervals, their countable unions and intersections, level sets of continuous functions) are Borel.
 
 Generating sets are not unique, and a good choice makes proofs easier. For uniqueness of measures the right property is closure under intersections.
 
@@ -211,7 +203,7 @@ Let $\mu_1$ and $\mu_2$ be measures on the same measurable space $(\Omega, \F)$,
 
 We will often apply the theorem to a $\pi$-system $\I$ with $\sigma(\I) = \F$, so the conclusion is that $\mu_1$ and $\mu_2$ are equal. The most important special case is that *two probability measures on $\Omega$ that agree on a $\pi$-system agree on the $\sigma$-algebra generated by it.*
 
-For a proof of [@ch1-thm-uniqueness] see Williams, *Probability with Martingales*, Appendix A1. The argument is a refined version of the "good sets" idea from [@ch1-s-generating]. The collection of sets on which $\mu_1$ and $\mu_2$ agree is closed under complements (this uses $\mu_1(\Omega) = \mu_2(\Omega) < \infty$) and under countable *disjoint* unions, but there is no reason for it to be closed under arbitrary unions, so it need not be a $\sigma$-algebra. Dynkin's lemma says that a collection with these weaker closure properties which contains a $\pi$-system $\I$ contains all of $\sigma(\I)$. Sheet 1, Question C3 works through the details.^[Both hypotheses are needed. Without finiteness, see the exercise below. Without the $\pi$-system property, Sheet 1, Question B4 asks for a counterexample on a four-point set.]
+For a proof of [@ch1-thm-uniqueness] see Williams, *Probability with Martingales*, Appendix A1. The argument is a refined version of the "good sets" idea from [@ch1-s-generating], applied to the collection of sets on which $\mu_1$ and $\mu_2$ agree. That collection need not be a $\sigma$-algebra, but it has enough closure properties for Dynkin's $\pi$-system lemma to show that it contains $\sigma(\I)$. Sheet 1, Question C3 works through the details.^[Both hypotheses are needed. Without finiteness, see the exercise below. Without the $\pi$-system property, Sheet 1, Question B4 asks for a counterexample on a four-point set.]
 
 :::sheet-prompt{q="sheet1-b4 sheet1-c3"}
 :::
@@ -221,7 +213,7 @@ Let $\lambda$ be Lebesgue measure on $(\R, \B(\R))$. Find a measure $\nu \neq \l
 :::answer
 Take $\nu = 2\lambda$, that is, $\nu(A) = 2\lambda(A)$. This is a measure (multiplying a countably additive set function by $2$ keeps it countably additive). For every $x$, $\lambda((-\infty, x]) = \infty = \nu((-\infty, x])$, and $\lambda(\R) = \infty = \nu(\R)$. But $\lambda((0,1]) = 1 \neq 2 = \nu((0, 1])$, so $\nu \neq \lambda$ on $\B(\R) = \sigma(\pi(\R))$.
 
-The failing hypothesis is $\mu_1(\Omega) = \mu_2(\Omega) < \infty$: the total masses agree but are infinite. In the proof this is where complements are lost, since $\mu(A\comp) = \mu(\Omega) - \mu(A)$ needs $\mu(\Omega) < \infty$.
+The failing hypothesis is $\mu_1(\Omega) = \mu_2(\Omega) < \infty$: the total masses agree but are infinite.
 :::
 :::
 
@@ -276,7 +268,7 @@ Any distribution function $F$ has the following properties:
 
 The first holds because $\mu$ is increasing and $(-\infty, x] \subseteq (-\infty, y]$. The second follows from [@ch1-lem-monotone] applied to $(-\infty, -n] \downarrow \emptyset$ and $(-\infty, n] \uparrow \R$ (with a short argument to pass from integers $n$ to real $x$, using that $F$ is increasing). For the third, suppose that $y_n \downarrow x$ and let $A_n = (-\infty, y_n]$. Then $A_n \downarrow A = (-\infty, x]$. Thus, by [@ch1-lem-monotone], $F(y_n) = \mu(A_n) \downarrow \mu(A) = F(x)$; the finiteness condition holds because $\mu$ is a probability measure. We often write $F(-\infty) = 0$ and $F(\infty) = 1$ as shorthand for the second property.
 
-Right continuity is the asymmetric one, and it comes from the choice of closed right endpoint in $(-\infty, x]$. Approaching $x$ from the left, $(-\infty, y_n] \uparrow (-\infty, x)$, which misses the point $x$, so [@ch1-lem-monotone] gives $F(x-) := \lim_{y \uparrow x} F(y) = \mu((-\infty, x))$. The jump $F(x) - F(x-)$ is therefore exactly $\mu(\{x\})$, the mass sitting at the point $x$.
+Right continuity is the asymmetric one, and it comes from the choice of closed right endpoint in $(-\infty, x]$. Approaching $x$ from the left, if $y_n \uparrow x$ with $y_n < x$ then $(-\infty, y_n] \uparrow (-\infty, x)$, which misses the point $x$, so [@ch1-lem-monotone] gives $F(x-) := \lim_{y \uparrow x} F(y) = \mu((-\infty, x))$. The jump $F(x) - F(x-)$ is therefore exactly $\mu(\{x\})$, the mass sitting at the point $x$.
 
 :::viz{#ch1-fig-distribution src=distribution-explorer title="Reading a measure off its distribution function" caption="Drag the endpoints $a$ and $b$, or choose another distribution. The rise of $F$ over the interval is its mass; change the interval type to see when a jump of $F$ at an endpoint is counted."}
 An interactive plot of a distribution function F. Two draggable points a and b on the horizontal axis select an interval. The vertical rise of F between them is shaded and its value is shown as the measure of the interval, with formulas F(b) minus F(a) for (a,b], F(b) minus F(a-) for [a,b], F(b-) minus F(a) for (a,b) and F(b-) minus F(a-) for [a,b). Presets: uniform on [0,1], a fair die, a mixture with an atom at 0, and the Cantor function.
@@ -317,11 +309,11 @@ Uniqueness and the last sentence are quick consequences of [@ch1-thm-uniqueness]
 :::proof
 Suppose for the moment that the existence statement holds. Since $\pi(\R) = \{(-\infty, x] : x \in \R\}$ is a $\pi$-system which generates $\B(\R)$ ([@ch1-ex-pi-r]), uniqueness follows by [@ch1-thm-uniqueness], as both measures have total mass $1$. For the final part, let $\mu$ be any Borel probability measure on $\R$ and let $F$ be its distribution function. Then $F$ has the properties required in the first part of the theorem (we checked them above), and we obtain a measure $\mu_F$ which by uniqueness is the measure $\mu$ we started with.
 
-For existence we apply [@ch1-thm-caratheodory], so first we need a suitable algebra. For $-\infty \le a \le b < \infty$ let $I_{a,b} = (a, b]$, and set $I_{a,\infty} = (a, \infty)$. So $I_{a,b} = \{x \in \R : a < x \le b\}$. Let $\I = \{I_{a,b} : -\infty \le a \le b \le \infty\}$ be the collection of intervals that are open on the left and closed on the right. Let $\A$ be the set of finite disjoint unions of elements of $\I$; then $\A$ is an algebra, and $\sigma(\A) = \sigma(\I) = \B(\R)$.^[The algebra property is Sheet 1, Question C2 restricted to a bounded window; the complement of $(a, b]$ is $(-\infty, a] \cup (b, \infty)$, again in $\A$. The generating claim is close to Sheet 1, Question B2.]
+For existence we apply [@ch1-thm-caratheodory], so first we need a suitable algebra. For $-\infty \le a \le b < \infty$ let $I_{a,b} = (a, b]$, and set $I_{a,\infty} = (a, \infty)$. So $I_{a,b} = \{x \in \R : a < x \le b\}$. Let $\I = \{I_{a,b} : -\infty \le a \le b \le \infty\}$ be the collection of intervals that are open on the left and closed on the right. Let $\A$ be the set of finite disjoint unions of elements of $\I$; then $\A$ is an algebra, and $\sigma(\A) = \sigma(\I) = \B(\R)$.^[The algebra property is the analogue on all of $\R$ of Sheet 1, Question C2, which works inside a bounded window; the complement of $(a, b]$ is $(-\infty, a] \cup (b, \infty)$, again in $\A$. The generating claim is close to Sheet 1, Question B2.]
 
 We can define a set function $\mu_0$ on $\A$ by setting
 $$\mu_0(I_{a,b}) = F(b) - F(a)$$
-for intervals, and extending it to $\A$ by defining it as the sum for disjoint unions from $\I$. It is an easy exercise to show that $\mu_0$ is well defined (it does not depend on how a set is written as a disjoint union) and finitely additive. Carathéodory's extension theorem tells us that $\mu_0$ extends to a probability measure on $\B(\R)$ *provided* that $\mu_0$ is *countably* additive on $\A$. Proving this is slightly tricky. Note that we will have to use right continuity at some point.
+for intervals, and extending it to $\A$ by defining it as the sum for disjoint unions from $\I$. It is an easy exercise to show that $\mu_0$ is well defined (it does not depend on how a set is written as a disjoint union) and finitely additive. Being additive and non-negative, $\mu_0$ is also increasing and finitely subadditive on $\A$, by the same arguments as for measures; both facts are used below. Carathéodory's extension theorem tells us that $\mu_0$ extends to a probability measure on $\B(\R)$ *provided* that $\mu_0$ is *countably* additive on $\A$. Proving this is slightly tricky. Note that we will have to use right continuity at some point.
 
 First note that by [@ch1-lem-cont-empty], since $\mu_0$ is finite and additive on $\A$, it is countably additive if and only if, for any sequence $(A_n)$ of sets from $\A$ with $A_n \downarrow \emptyset$, $\mu_0(A_n) \downarrow 0$.
 
@@ -329,13 +321,13 @@ Suppose that $F$ has the stated properties but, for a contradiction, that there 
 
 <span class="step">Step 1.</span> Replace $A_n$ by $B_n = A_n \cap (-l, l]$. Since
 $$\mu_0(A_n \setminus B_n) \le \mu_0\bigl((-\infty, -l] \cup (l, \infty)\bigr) = F(-l) + 1 - F(l),$$
-and the right-hand side tends to $0$ as $l \to \infty$, if we take $l$ large enough then $\mu_0(B_n) \ge \delta/2$ for all $n$. The first inequality holds because $\mu_0$ is increasing on $\A$, which follows from additivity exactly as for measures. Note that $l$ is chosen once and works for every $n$.
+and the right-hand side tends to $0$ as $l \to \infty$, if we take $l$ large enough then $\mu_0(B_n) \ge \delta/2$ for all $n$. Note that $l$ is chosen once and works for every $n$.
 
 <span class="step">Step 2.</span> Suppose that $B_n = \bigcup_{i=1}^{k_n} I_{a_{n,i}, b_{n,i}}$. Let $C_n = \bigcup_{i=1}^{k_n} I_{\tilde a_{n,i}, b_{n,i}}$ where $a_{n,i} < \tilde a_{n,i} < b_{n,i}$, and use right continuity of $F$ to do this in such a way that
 $$\mu_0(B_n \setminus C_n) < \frac{\delta}{2^{n+2}} \quad \text{for each } n.$$
 This is possible because $\mu_0(B_n \setminus C_n) = \sum_i \bigl(F(\tilde a_{n,i}) - F(a_{n,i})\bigr)$, and right continuity at $a_{n,i}$ makes each term as small as we like by taking $\tilde a_{n,i}$ close enough to $a_{n,i}$. Let $\overline{C}_n$ be the closure of $C_n$ (obtained by adding the points $\tilde a_{n,i}$ to $C_n$). Then $\overline{C}_n \subseteq B_n$, because $\tilde a_{n,i} > a_{n,i}$.
 
-<span class="step">Step 3.</span> The sequence $(C_n)$ need not be decreasing, so set $D_n = \bigcap_{i=1}^n C_i$ and $E_n = \bigcap_{i=1}^n \overline{C}_i$. Since $B_n \subseteq B_i$ for $i \le n$, every point of $B_n \setminus D_n$ lies in some $B_i \setminus C_i$, so
+<span class="step">Step 3.</span> The sequence $(C_n)$ need not be decreasing, so set $D_n = \bigcap_{i=1}^n C_i$ and $E_n = \bigcap_{i=1}^n \overline{C}_i$. Since $B_n \subseteq B_i$ for $i \le n$, every point of $B_n \setminus D_n$ lies in some $B_i \setminus C_i$, so by finite subadditivity
 $$\mu_0(D_n) \ge \mu_0(B_n) - \sum_{i=1}^n \mu_0(B_i \setminus C_i) \ge \frac{\delta}{2} - \sum_{i=1}^n \frac{\delta}{2^{i+2}} \ge \frac{\delta}{4},$$
 and so $D_n$ is non-empty. Thus $E_n \supseteq D_n$ is non-empty.
 
@@ -345,7 +337,7 @@ Each $E_n$ is closed and bounded, and so compact. Also, each $E_n$ is non-empty,
 The proof uses right continuity in exactly one place, Step 2, and the figure below shows that it cannot be dropped. It runs the construction on the sets $A_n = (0, 1/n] \cup (n, \infty)$, which decrease to $\emptyset$. Both ways for mass to survive are present: the piece $(n, \infty)$ runs off to infinity, and the piece $(0, 1/n]$ shrinks towards the excluded point $0$.
 
 :::viz{#ch1-fig-stepper src=compactness-stepper wide=true title="The compactness argument, step by step" caption="Step through the proof of countable additivity for $A_n = (0, 1/n] \cup (n, \infty)$. Then switch $F$ to a version that is not right continuous at $0$ and watch Step 2 fail."}
-A proof stepper with five steps showing rows for A_1 to A_6 on a number line. Step 1 truncates to (-l, l]. Step 2 shrinks each interval's left endpoint to get C_n and its closure. Step 3 forms the intersections D_n and E_n. The final step shows that E_n becomes empty, so the assumption that the masses stay above delta must fail. A toggle replaces F by a function that is left continuous at 0, where Step 2 cannot be carried out because every interval (0, a] has mass at least 0.3.
+A proof stepper with five steps showing rows for A_1, A_2, A_3, A_4, A_8, A_16 and the first n for which E_n is empty, on a number line. Step 1 truncates to (-l, l]. Step 2 shrinks each interval's left endpoint to get C_n and its closure. Step 3 forms the intersections D_n and E_n. The final step shows that E_n becomes empty, so the assumption that the masses stay above delta must fail. A toggle replaces F by a function that is left continuous at 0, where Step 2 cannot be carried out because every interval (0, a] has mass at least 0.3.
 :::
 
 ## Densities, atoms and other examples {#ch1-s-examples difficulty=1 importance=standard dnote="examples, no new proofs" inote="familiar from Prelims; the Cantor example is a useful warning"}
@@ -362,12 +354,12 @@ the distribution function is
 $$F(x) = \sum_{n : x_n \le x} p_n,$$
 which increases by jumps, the jump at $x_n$ being of height $p_n$. The picture can be complicated, for example if there is a jump at every rational: enumerate $\Q = \{q_1, q_2, \dots\}$ and put mass $2^{-n}$ at $q_n$. The resulting $F$ is strictly increasing and is discontinuous at every rational, yet it is still right continuous everywhere.
 
-There are also continuous distribution functions $F$ that don't come from any density $f$, for example the Devil's staircase, which corresponds (roughly speaking) to the uniform distribution on the Cantor set. It is continuous, increases from $0$ to $1$, and is constant on each of the removed middle thirds, so $F' = 0$ on a set of Lebesgue measure $1$. If it had a density $f$, then $f = F' = 0$ almost everywhere, and $\int f = 0 \ne 1$. You can see it among the presets in the figure in [@ch1-s-distribution].
+There are also continuous distribution functions $F$ that don't come from any density $f$, for example the Devil's staircase, which corresponds (roughly speaking) to the uniform distribution on the Cantor set. It is continuous, increases from $0$ to $1$, and is constant on each of the removed middle thirds and on the two half-lines outside $[0, 1]$, so $F' = 0$ off the Cantor set, which has Lebesgue measure zero. If it had a density $f$, then $f = F' = 0$ almost everywhere, and $\int f = 0 \ne 1$. You can see it among the presets in the figure in [@ch1-s-distribution].
 
 :::exercise{#ch1-ex-cantor-mass title="Where the Cantor measure lives" uses="ch1-def-distribution-function ch1-lem-monotone"}
 Let $F$ be the Devil's staircase and $\mu = \mu_F$. On the first removed middle third $(\tfrac13, \tfrac23)$, $F$ is constant, equal to $\tfrac12$. What is $\mu\bigl((\tfrac13, \tfrac23)\bigr)$? What is $\mu(\{x\})$ for a single point $x$?
 :::answer
-$\mu\bigl((\tfrac13, \tfrac23)\bigr) = F(\tfrac23 -) - F(\tfrac13) = \tfrac12 - \tfrac12 = 0$, using the formula for an open interval. The same holds on every removed interval, so (by countable additivity over the countably many removed intervals) $\mu$ gives the complement of the Cantor set measure $0$: all the mass lives on the Cantor set.
+$\mu\bigl((\tfrac13, \tfrac23)\bigr) = F(\tfrac23 -) - F(\tfrac13) = \tfrac12 - \tfrac12 = 0$, using the formula for an open interval. The same holds on every removed interval, and also $\mu((-\infty, 0)) = F(0-) = 0$ and $\mu((1, \infty)) = 1 - F(1) = 0$. The complement of the Cantor set in $\R$ is the union of these two half-lines and the countably many removed intervals, so by countable additivity it has measure $0$: all the mass lives on the Cantor set.
 
 Since $F$ is continuous, $\mu(\{x\}) = F(x) - F(x-) = 0$ for every $x$. So $\mu$ has no atoms, gives full mass to a set of Lebesgue measure zero, and is neither discrete nor given by a density.
 :::
