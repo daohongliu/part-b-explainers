@@ -26,9 +26,14 @@ Everything ships as ONE artifact (both courses), notes stored in the artifact's 
       (select text or double-click a formula → ✎ note; db `notes` owner-only, localStorage fallback; drawer with export .md), LLM note per view.
 - [x] PMM sheets 1–4 transcribed (`courses/pmm/src/sheetN.src`, `<qn n= t=>`), prompts `<sheet n= qs=>` in chapters,
       all exercises named, new fun exercises in ch0, ch2, ch3, ch4, ch5.
-- [ ] CLT Chapters 1–5 + figures (one three.js) + sheets 1–4 (PDF text extracted on device at /tmp/t/*.txt; re-run pdftotext if gone).
-- [ ] Publish artifact (same file path: scratchpad pmm/measure-spaces.html, written by build.py) with capabilities
-      {db:{rules:[{path:"notes",read:"owner",write:"owner"}]}, downloads:true}; then ArtifactData list check.
+- [x] CLT Chapters 1–5 with 12 figures (Fig 3.3 uses three.js r128, loaded lazily), sheets 1–4 with the official hints folded, prompts in chapters.
+- [x] Published as version 6 of https://claude.ai/artifact/8fUSQZVyo5a4ii591VfEvY with capabilities
+      {db:{rules:[{path:"notes",read:"owner",write:"owner"}]}, downloads:true}; db checked (empty `notes`).
+
+## Ideas not done yet
+- PMM Chapters 6–7 (martingales, applications); CLT Chapters 6–9.
+- An independent read-through of the CLT chapters for maths slips (the PMM chapters had one).
+- Mobile check of every figure at 390px.
 
 ## Testing
 `node <scratchpad>/t3.js "" view1,view2 [notes]` (run from the scratchpad dir) screenshots desk 1440 and phone 390.
