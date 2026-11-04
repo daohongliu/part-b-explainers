@@ -59,7 +59,7 @@ Second, the $G_n$ shrink down to the event we care about. As $n$ grows the union
 Now put the two together. Since $\sum_{n=1}^\infty\PP[A_n]<\infty$, the tails of the series go to zero:
 $$\sum_{m=n}^\infty\PP[A_m]\to0\qquad\text{as }n\to\infty.$$
 And so
-$$\PP\big[\limsup_{n\to\infty}A_n\big]=\lim_{n\to\infty}\PP[G_n]=0.$$
+$$\begin{aligned}\PP\Big[\limsup_{n\to\infty}A_n\Big]&=\lim_{n\to\infty}\PP[G_n]&&\why{continuity from above}\\&\le\lim_{n\to\infty}\sum_{m=n}^\infty\PP[A_m]&&\why{subadditivity}\\&=0.&&\why{tails of a convergent series}\end{aligned}$$
 </pf>
 <role r="technique" a="counting events with MCT">
 
