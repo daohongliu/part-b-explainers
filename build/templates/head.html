@@ -775,15 +775,6 @@ body.has-toc .cmap-btn:not([hidden]) ~ .minimap, body:has(.cmap-btn:not([hidden]
 .sb-empty { padding: 1rem .8rem; color: var(--ink-soft); font-style: italic; }
 .sb-foot { font-family: var(--mono); font-size: .64rem; color: var(--ink-soft); padding: .35rem .8rem .5rem; border-top: 1px solid var(--rule); }
 
-
-/* flashcard button */
-.thm, .algo { position: relative; }
-.fc-btn { position: absolute; right: .45rem; top: .35rem; font-family: var(--mono); font-size: .62rem; padding: .12rem .45rem; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--ink-soft); cursor: pointer; opacity: 0; transition: opacity .15s; }
-.thm:hover .fc-btn, .algo:hover .fc-btn, .fc-btn:focus, .fc-btn.ok { opacity: 1; }
-.fc-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
-.fc-btn.ok { color: var(--blue); }
-@media (hover: none) { .fc-btn { opacity: .7; } }
-
 /* ===== course variations ===== */
 /* Learning Theory: a cooler, greener paper, teal ink, coral accents, dotted rather than squared figure paper, and a mono display face for chapter titles. */
 body[data-course="clt"] {
