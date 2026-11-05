@@ -1,0 +1,414 @@
+@num 3
+@title Optimal Codes and Shannon’s first theorem
+@titlehtml Optimal codes and <em>Shannon’s first theorem</em>
+@pages 25–36
+@dek No uniquely decodable code beats the entropy on average, and long blocks get you arbitrarily close to it. Then the practical question: how to actually build good codes. Shannon’s, Fano’s, Huffman’s (which is optimal), Elias’, arithmetic coding, and Tunstall’s code, which turns the problem around.
+---
+## 3.1 Optimality of codes {25} [d2 i3]
+<role r="question" a="what is the shortest possible code?">
+
+In this chapter symbol codes are used to **compress**: to give every element of $\X$ a short string of bits (or of letters from some other alphabet $\mathcal Y$), so that messages come out short on average.
+</role>
+
+<thm k="Definition 3.1" nm="Optimal code" pg="25">
+A symbol code $c:\X\to\mathcal Y^*$ is **optimal** for a random variable $X$ with pmf $p$ on $\X$ if it minimises the expected codeword length $\E[|c'(X)|]$ among all uniquely decodable codes $c':\X\to\mathcal Y^*$.
+</thm>
+<role r="setup" a="an integer programme">
+
+By the Kraft–McMillan theorem, the possible codeword lengths of uniquely decodable codes are exactly the lists satisfying the Kraft inequality. So, with $d=|\mathcal Y|$, finding an optimal code means solving
+
+$$#eq3-1-1 \text{minimise }\sum_{x\in\X}p(x)\,l_x\qquad\text{subject to}\qquad\sum_{x:\,p(x)>0}d^{-l_x}\le1,\quad(l_x)_{x\in\X}\subseteq\N. \tag{3.1.1}$$
+
+This is an **integer programming** problem, and such problems are in general computationally hard.
+</role>
+<role r="idea" a="relax, and the answer is the entropy">
+
+To see what to expect, drop the integer constraint for a moment, and assume the budget is used exactly, $\sum_xd^{-l_x}=1$. Now it is an ordinary constrained minimisation. With a Lagrange multiplier $\lambda$, differentiate
+$$\sum_{x\in\X}p(x)\,l_x-\lambda\Big(\sum_{x\in\X}d^{-l_x}-1\Big)$$
+in $l_x$ and set the derivative to zero: $p(x)+\lambda\ln d\cdot d^{-l_x}=0$, so $d^{-l_x}$ is proportional to $p(x)$. The constraint fixes the constant, giving $d^{-l_x}=p(x)$, that is,
+$$l_x=-\log_dp(x).$$
+Every symbol gets a codeword as long as its surprise, measured in base $d$. The expected length is then $-\sum_xp(x)\log_dp(x)=H_d(X)$, the entropy in base $d$. Rather than checking this is a minimum, we prove the bound directly, using only Chapter 1.
+</role>
+
+<bg id="bg-lagrange" t="Lagrange multipliers" lead="From Part A">
+To minimise $f(l)$ subject to $g(l)=0$, look for points where $\nabla f=\lambda\nabla g$ for some number $\lambda$. At a constrained minimum the level set of $f$ must touch the constraint surface rather than cross it, so the two gradients are parallel. Here $f(l)=\sum_xp(x)l_x$ is linear and $g(l)=\sum_xd^{-l_x}-1$ is convex, so the one critical point is the minimum.
+</bg>
+
+<thm k="Theorem 3.2" nm="Source coding for symbol codes" pg="25" it>
+Let $X$ be a random variable taking values in a finite set $\X$, and let $c$ be a uniquely decodable $d$-ary code. Then
+$$H_d(X)\le\E[|c(X)|],$$
+with equality iff $|c(x)|=-\log_d\PP(X=x)$ for every $x$.
+</thm>
+<role r="reading" a="Theorem 3.2">
+
+No uniquely decodable code beats the entropy on average. Equality needs every probability to be an exact power of $1/d$.
+</role>
+
+<pf>
+Write $l_x=|c(x)|$, and turn the lengths into a pmf by normalising:
+$$q(x)=\frac{d^{-l_x}}{\sum_{x'\in\X}d^{-l_{x'}}}.$$
+Then $d^{-l_x}=q(x)\sum_{x'}d^{-l_{x'}}$, and
+$$\begin{aligned}\E[|c(X)|]-H_d(X)&=\sum_xp(x)\,l_x+\sum_xp(x)\log_dp(x)\\&=-\sum_xp(x)\log_d\big(d^{-l_x}\big)+\sum_xp(x)\log_dp(x)\\&=-\sum_xp(x)\log_d\Big(q(x)\sum_{x'}d^{-l_{x'}}\Big)+\sum_xp(x)\log_dp(x)\\&=-\log_d\Big(\sum_{x'}d^{-l_{x'}}\Big)+\sum_xp(x)\log_d\frac{p(x)}{q(x)}\\&=-\log_d\Big(\sum_{x'}d^{-l_{x'}}\Big)+D_d(p\|q)\\&\ge0.\end{aligned}$$
+Both terms in the second-last line are non-negative. The first is because $\sum_{x'}d^{-l_{x'}}\le1$ by the Kraft–McMillan inequality <a class="xref" href="#eq2-1-1">(2.1.1)</a>, so its logarithm is $\le0$. The second is because divergence is non-negative (Theorem 1.16). Equality needs both to vanish: $\sum_{x'}d^{-l_{x'}}=1$ and $D(p\|q)=0$, that is, $p=q$. Together these say $p(x)=d^{-l_x}$, which is the claim.
+</pf>
+
+<role r="why" a="the integer constraint costs at most one symbol">
+
+Codeword lengths must be whole numbers, so $-\log_dp(x)$ usually can't be used exactly. The obvious fix is to round up. The next result shows this loses less than one symbol on average.
+</role>
+
+<thm k="Proposition 3.3" d="An optimal prefix code exists, and is within 1 of the entropy" pg="26" it>
+Let $X$ be a random variable taking values in a finite set $\X$, and $\mathcal Y$ a $d$-ary set. There is an optimal code $\bar c$, which is a prefix code, with
+
+$$#eq3-1-2 H_d(X)\le\E[|\bar c(X)|]<H_d(X)+1. \tag{3.1.2}$$
+</thm>
+
+<pf>
+**A good code exists.** Set $l_x:=\lceil-\log_dp(x)\rceil$ for $p(x)>0$, rounding the ideal length up to an integer. Since $l_x\ge-\log_dp(x)$,
+$$\sum_xd^{-l_x}\le\sum_xd^{\log_dp(x)}=\sum_xp(x)=1.$$
+By Kraft–McMillan (Theorem 2.5) there is a prefix code $c$ with these lengths. It need not be optimal, but by definition of the ceiling,
+$$-\log_dp(x)\le l_x<-\log_dp(x)+1.$$
+Multiply by $p(x)$ and sum over $x$: $H_d(X)\le\E[|c(X)|]<H_d(X)+1$.
+
+**An optimal code exists.** The minimum in (3.1.1) is over infinitely many codes, so we must check that it is attained. Since $\X$ is finite, $\bar p:=\min_{x:\,p(x)>0}p(x)>0$. Any code at least as good as $c$ has, for each $x$ with $p(x)>0$,
+$$\bar p\,l_x\le p(x)\,l_x\le\E[\text{length}]<H_d(X)+1,$$
+so all its codewords for such $x$ are shorter than $(H_d(X)+1)/\bar p$. There are only finitely many such codes (ignoring the codewords of symbols with $p(x)=0$, which don't affect the expected length), and $c$ is one of them. So one of them has the smallest expected length. By Kraft–McMillan we may take it to be a prefix code. Its expected length is less than $H_d(X)+1$ because $c$'s is, and at least $H_d(X)$ by Theorem 3.2.
+</pf>
+
+<pause n="Rounding up" q="Take $p=(0.4,0.3,0.2,0.1)$ and binary codes. Compute $H(p)$, the lengths $\lceil-\log p(x)\rceil$, and the expected length of a prefix code with those lengths.">
+$H(p)=0.4\log\frac1{0.4}+0.3\log\frac1{0.3}+0.2\log\frac1{0.2}+0.1\log\frac1{0.1}\approx0.529+0.521+0.464+0.332=1.846$ bits. The surprises are $1.32,1.74,2.32,3.32$, so the lengths are $2,2,3,4$, with Kraft sum $\frac14+\frac14+\frac18+\frac1{16}=\frac{11}{16}<1$: budget is wasted. The expected length is $0.8+0.6+0.6+0.4=2.4$, inside $[H,H+1)$ but well above $H$. (A Huffman code, Section 3.5, does better: lengths $1,2,3,3$ and expected length $1.9$.)
+</pause>
+
+## 3.2 Approaching the lower bound by block codes {27} [d2 i3]
+<role r="question" a="removing the +1">
+
+An optimal code is only guaranteed to satisfy $H_d(X)\le\E[|c(X)|]<H_d(X)+1$. The overhead of up to one symbol is negligible if $H_d(X)$ is large, but it can dominate when the entropy is small. A coin with $\PP(H)=0.99$ has entropy $0.08$ bits, yet any code for single flips uses at least one bit per flip. Also, so far we only know that good codes exist, not how to build them.
+</role>
+<role r="idea" a="code blocks, not symbols">
+
+The fix is to encode **blocks**. Apply Proposition 3.3 not to $X$ but to the $\X^n$-valued random variable $(X_1,\dots,X_n)$, with the $X_i$ i.i.d. copies of $X$. That gives a code $c_n:\X^n\to\mathcal Y^*$ with
+$$\E[|c_n(X_1,\dots,X_n)|]<H_d(X_1,\dots,X_n)+1=nH_d(X)+1,$$
+using <a class="xref" href="#eq1-1-4">(1.1.4)</a> for the entropy of independent variables. Per source symbol,
+$$\frac1n\E[|c_n(X_1,\dots,X_n)|]<H_d(X)+\frac1n\to H_d(X)\qquad\text{as }n\to\infty.$$
+The overhead of one symbol is shared among $n$ source symbols. So at least $H_d(X)$ code symbols are needed per source symbol, and this is attainable, at least asymptotically. A code that encodes fixed-length blocks is a **block code**. Figure 3.1 shows the per-symbol length of an optimal block code falling towards the entropy as the blocks grow.
+</role>
+
+@@it-fig3-2@@
+
+<role r="why" a="the typical set gives a direct construction">
+
+The AEP gives a more explicit construction, and the cleanest statement. For large $n$ almost all the probability sits on the typical set, which has only about $2^{nH(X)}$ elements. So give typical blocks short codewords (about $nH(X)$ bits each) and atypical blocks long ones; the long ones are rarely used.
+</role>
+
+<thm k="Theorem 3.4" nm="Source coding theorem, Shannon’s first theorem (1948)" pg="27" it>
+Let $X_1,X_2,\dots$ be i.i.d. discrete random variables with values in $\X$. For every $\eps>0$ there are an integer $n$ and a map $c:\X^n\to\{0,1\}^*$ such that
+
+<ol><li>the induced map on strings whose length is a multiple of $n$,
+$$\bigcup_{k\ge0}\X^{nk}\to\{0,1\}^*,\qquad(x_1,\dots,x_{nk})\mapsto c(x_1,\dots,x_n)\,c(x_{n+1},\dots,x_{2n})\cdots c(x_{(k-1)n+1},\dots,x_{nk}),$$
+is injective;</li><li>$\frac1n\E\big[|c(X_1,\dots,X_n)|\big]\le H(X)+\eps$.</li></ol>
+</thm>
+<role r="reading" a="Theorem 3.4">
+
+Part 1 says the block code can be decoded when blocks are concatenated. Part 2 says it uses at most $H(X)+\eps$ bits per source symbol on average.
+</role>
+
+<pf>
+**The code.** Fix $\eps_0>0$, to be chosen later, and split $\X^n$ into the typical set $T_n^{\eps_0}$ and the rest, $\X^n\setminus T_n^{\eps_0}$. List the elements of each part in some order, say lexicographic.
+
+<ul><li>By the AEP there are at most $2^{n(H(X)+\eps_0)}$ typical sequences, so we can give each one a different string of $l_1:=\lceil n(H(X)+\eps_0)\rceil$ bits.</li><li>There are at most $|\X|^n$ atypical sequences, so we can give each one a different string of $l_2:=\lceil n\log|\X|\rceil$ bits.</li></ul>
+
+Let $c(x_1,\dots,x_n)$ be that string, with a $0$ in front if the block is typical and a $1$ in front if not.
+
+**It decodes.** The first bit says whether $l_1$ or $l_2$ bits follow, and those bits identify the block. So the code is a prefix code (every codeword of each kind has the same length), and prefix codes concatenate unambiguously. That gives part 1.
+
+**It is short.** Write $p(x)$ for the pmf of the block. Then
+$$\begin{aligned}\E\big[|c(X_1,\dots,X_n)|\big]&=\sum_{x\in T_n^{\eps_0}}p(x)(l_1+1)+\sum_{x\notin T_n^{\eps_0}}p(x)(l_2+1)\\&\le\sum_{x\in T_n^{\eps_0}}p(x)\big(n(H(X)+\eps_0)+2\big)+\sum_{x\notin T_n^{\eps_0}}p(x)\big(n\log|\X|+2\big)\\&=\PP\big(T_n^{\eps_0}\big)\big(n(H(X)+\eps_0)+2\big)+\PP\big(\X^n\setminus T_n^{\eps_0}\big)\big(n\log|\X|+2\big).\end{aligned}$$
+For $n$ large, the AEP (Theorem 2.12) gives $\PP(\X^n\setminus T_n^{\eps_0})\le\eps_0$, and $\PP(T_n^{\eps_0})\le1$. So
+$$\E\big[|c(X_1,\dots,X_n)|\big]\le n(H(X)+\eps_0)+2+\eps_0\big(n\log|\X|+2\big)=n\big(H(X)+\eps_1\big),$$
+where
+$$\eps_1:=\eps_0\big(1+\log|\X|\big)+\frac{2+2\eps_0}n.$$
+**Choosing the constants.** Given $\eps>0$, first choose $\eps_0\le1$ so small that $\eps_0(1+\log|\X|)<\eps/2$, then $n$ so large that the AEP bound holds and $\frac4n\le\eps/2$. Then $\eps_1<\eps$, which is part 2.[[The notes write $\eps_1=\eps_0(1+\log|\X|)+\frac2n$, dropping the small term $2\eps_0/n$; it makes no difference to the argument.]]
+</pf>
+
+<role r="payoff" a="entropy as a compression limit">
+
+Shannon's first theorem shows that by concentrating on typical sequences we can encode $X_1,\dots,X_n$ with, on average, not much more than $nH(X)$ bits: about $H(X)$ bits per symbol. Theorem 3.2, applied to blocks, shows we can't do better: $\E[|c_n|]\ge H(X_1,\dots,X_n)=nH(X)$. This is the operational meaning of entropy: **the compression limit for messages generated by i.i.d. sampling**.
+</role>
+
+<thm k="Remark 3.5" d="Padding, and sources that are not i.i.d." pg="28">
+<ol><li>The construction only handles strings whose length is a multiple of $n$. That is rarely a problem: pad any string on the right with a repeated symbol until its length is a multiple of $n$.</li><li>The assumption that the source is i.i.d. is usually unrealistic: the letters of a sentence are far from independent. But it can be weakened a great deal. The Shannon–McMillan–Breiman theorem, in Chapter 5, extends the AEP to stationary ergodic sources.</li></ol>
+</thm>
+
+## 3.3 Shannon’s code (1948) {28} [d2 i2]
+<role r="question" a="a code you can actually write down">
+
+The AEP argument is elegant, but it gives no practical code unless we are willing to list the typical sequences. Theorem 3.2 suggests a direct approach: give $x$ a codeword of length $\lceil-\log p(x)\rceil$. Shannon gave an explicit way to do this in his 1948 paper, using exactly the construction from the proof of the Kraft–McMillan theorem.
+</role>
+<role r="setup" a="the construction">
+
+Let $p$ be a pmf on $\X=\{x_1,\dots,x_m\}$, write $p_i=p(x_i)$, and let $\mathcal Y$ be a finite set with $d$ elements.
+
+<ol class="parts"><li>Relabel so the probabilities decrease: $p_1\ge p_2\ge\dots\ge p_m$.</li><li>Let $\alpha_r:=\sum_{i=1}^{r-1}p_i$, the cumulative probability before $x_r$. Define the codeword $c_S(x_r)$ to be the first $l_r:=\lceil-\log_dp_r\rceil$ digits of the $d$-ary expansion of $\alpha_r$.</li></ol>
+
+This is the **Shannon code** $c_S$. It is a prefix code, by the argument of Theorem 2.5. Since the $p_r$ decrease, the lengths increase, and for $s>r$,
+$$\alpha_s-\alpha_r\ge p_r\ge d^{-l_r},$$
+the last step because $l_r\ge-\log_dp_r$. If $c_S(x_r)$ were a prefix of $c_S(x_s)$, then $\alpha_s$ and $\alpha_r$ would share their first $l_r$ digits, so would differ by less than $d^{-l_r}$. As in Proposition 3.3, $H_d(X)\le\E[|c_S(X)|]<H_d(X)+1$.
+</role>
+<role r="caution" a="two drawbacks">
+
+<ul><li>The Shannon code is in general **not optimal**: rounding every length up wastes budget, as in Exercise "Rounding up".</li><li>It needs the probabilities **sorted**, which takes $O(k\log k)$ steps for $k$ symbols. Combined with the block trick that is hopeless: blocks of length $n$ need $|\X|^n$ probabilities sorted and stored. For capital English letters and blocks of length $100$ that is $26^{100}\approx10^{141}$ numbers, many more than there are particles in the known universe.</li></ul>
+</role>
+
+<role r="why" a="what if we guess the distribution wrong?">
+
+The Shannon code depends heavily on the distribution of $X$, which in practice we must estimate: first read the whole message and estimate $p$, then build a code for the estimate. The estimate has errors, so we should ask how much a wrong distribution costs. The answer is exactly the divergence.
+</role>
+
+<thm k="Proposition 3.6" d="Coding with the wrong distribution costs the divergence" pg="29" it>
+Let $p$ and $q$ be pmfs on $\X$, let $X\sim p$, and let $\mathcal Y$ have $d$ elements. If $c_q:\X\to\mathcal Y^*$ is a Shannon code for the distribution $q$, then
+$$H_d(X)+D_d(p\|q)\le\E[|c_q(X)|]<H_d(X)+D_d(p\|q)+1.$$
+</thm>
+<role r="reading" a="Proposition 3.6">
+
+This is the second reading of divergence promised in Chapter 1: $D(p\|q)$ is the number of extra bits per symbol you pay for believing the source is $q$ when it is really $p$.
+</role>
+
+<pf>
+The codeword for $x$ has length $\lceil-\log_dq(x)\rceil$, so
+$$\begin{aligned}\E[|c_q(X)|]&=\sum_{x}p(x)\big\lceil-\log_dq(x)\big\rceil\\&<\sum_xp(x)\big(-\log_dq(x)+1\big)\\&=\sum_xp(x)\log_d\Big(\frac{p(x)}{q(x)}\cdot\frac1{p(x)}\Big)+1\\&=\sum_xp(x)\log_d\frac{p(x)}{q(x)}+\sum_xp(x)\log_d\frac1{p(x)}+1\\&=D_d(p\|q)+H_d(X)+1.\end{aligned}$$
+For the lower bound, use $\lceil-\log_dq(x)\rceil\ge-\log_dq(x)$ in the second line instead; the same computation gives $\E[|c_q(X)|]\ge D_d(p\|q)+H_d(X)$, with equality iff every $-\log_dq(x)$ is an integer.
+</pf>
+
+## 3.4 Fano’s code (1949) {29} [d1 i1]
+<role r="aside" a="not examinable">
+
+Fano suggested a different construction, also very simple. In the binary case, given $p_i=p(x_i)$:
+
+<ol class="parts"><li>sort and relabel the symbols so that $p_1\ge\dots\ge p_m$;</li><li>find the $r$ that minimises $\big|\sum_{i\le r}p_i-\sum_{i>r}p_i\big|$, and split $\X$ into $\X_0=\{x_i:i\le r\}$ and $\X_1=\{x_i:i>r\}$, two groups of nearly equal probability;</li><li>let the first digit of the codewords be $0$ for $\X_0$ and $1$ for $\X_1$;</li><li>repeat steps 2 and 3 inside each group until no group can be split.</li></ol>
+
+This is the **Fano code** (also called the Shannon–Fano code) $c_F$. It builds the code tree from the root down, asking at each step the yes/no question whose answer is closest to a fair coin flip. One can show that it is a prefix code, that $\E[|c_F(X)|]\le H_d(X)+2$, and that it is not optimal in general.
+</role>
+
+## 3.5 Huffman codes (1952) {30} [d3 i3]
+<role r="history" a="build the tree from the leaves">
+
+David Huffman, then a graduate student in Fano's information theory class at MIT, realised that prefix codes correspond to **rooted trees**, and that constructions like Fano's build the tree starting from the root. In 1952 he showed that starting instead from the **leaves** gives a very simple algorithm, and that it produces an optimal code. (Fano had offered the class a term paper on finding the most efficient binary code instead of the final exam; Huffman took the paper.)
+</role>
+
+<thm k="Definition 3.7" nm="Graphs" pg="30">
+An undirected **graph** $(V,E)$ consists of a set $V$ of **vertices** and a set $E$ of **edges**, each edge being an unordered pair $\{v_1,v_2\}$ of distinct vertices. The **degree** $\deg(v)$ of a vertex $v$ is the number of edges containing it. A graph is **$d$-ary** if its maximal degree is $d$.
+</thm>
+
+<thm k="Definition 3.8" nm="Rooted trees" pg="30">
+The set $\mathcal T$ of **rooted trees** is defined recursively.
+
+<ol><li>The graph consisting of a single vertex $r$ is a rooted tree; $r$ is both its **root** and its only **leaf**.</li><li>If $\tau_1,\dots,\tau_n\in\mathcal T$, then the graph formed by taking a new vertex $r$ and adding an edge from $r$ to the root of each $\tau_i$ is a rooted tree. Its root is $r$, and its leaves are the leaves of $\tau_1,\dots,\tau_n$.</li></ol>
+
+A rooted tree is **$d$-ary** if each vertex has at most $d$ edges leading away from the root, and **labelled** if each such edge carries a number from $\{1,\dots,d\}$, with no two edges leaving the same vertex carrying the same number.
+</thm>
+<role r="idea" a="codes are trees">
+
+A prefix code is the same thing as a labelled rooted tree. The root is the empty string. From each vertex, the edge labelled $j$ means "append the letter $j$". The codewords are the leaves: since a leaf has nothing below it, no codeword is the prefix of another. Conversely, the codewords of a prefix code and all their prefixes form such a tree.
+</role>
+
+<thm k="Lemma 3.9" d="Prefix codes are labelled trees" pg="30">
+There is a bijection between $d$-ary prefix codes and labelled $d$-ary rooted trees.
+</thm>
+
+<role r="setup" a="the algorithm">
+
+Finding the prefix code of least expected length is the integer programme <a class="xref" href="#eq3-1-1">(3.1.1)</a>. Surprisingly, a simple algorithm solves it, in time linear in the number of symbols once they are sorted. Fix a pmf $p$ on $\X=\{x_1,\dots,x_m\}$, relabelled so that $p_1\ge\dots\ge p_m$. The binary **Huffman code** is built as follows.
+
+<ol class="parts"><li>Make the two least likely symbols into two leaves, joined to a new vertex.</li><li>Replace them by a single new symbol whose probability is the sum of theirs, $p'_{m-1}:=p_{m-1}+p_m$, keeping $p'_i=p_i$ for $i\le m-2$. Re-sort the $m-1$ probabilities.</li><li>Repeat until one symbol, the root, is left.</li></ol>
+
+Figure 3.2 runs the algorithm on a distribution you choose.
+</role>
+
+@@it-fig3-1@@
+
+<role r="reading" a="remarks on the algorithm">
+
+<ul><li>The algorithm builds the code tree **from the bottom up**: each merge joins two subtrees under a new vertex.</li><li>It stops after $|\X|-1$ merges. Then read off the code by labelling the two branches at each vertex $0$ and $1$. Given a sorted pmf this takes $O(|\X|)$ steps; with sorting, $O(|\X|\log|\X|)$.</li><li>If two symbols have the same probability at some stage, the Huffman code may not be unique. But every version has the same expected length.</li><li>For $d$-ary codes merge $d$ vertices at each step. There may not be enough to merge $d$ at the last step, in which case add dummy symbols of probability $0$ first (see Cover and Thomas, §5.6).</li></ul>
+</role>
+
+<thm k="Proposition 3.10" d="Huffman codes are optimal" pg="31" it>
+Let $\X,\mathcal Y$ be finite sets, $p$ a pmf on $\X$ and $X\sim p$. The Huffman code $c:\X\to\mathcal Y^*$ for $p$ is optimal: if $c':\X\to\mathcal Y^*$ is any uniquely decodable code, then
+$$\E[|c(X)|]\le\E[|c'(X)|].$$
+</thm>
+<role r="roadmap" a="strategy of the proof">
+
+The proof uses a lemma about the shape of optimal codes. The lemma is not about any particular code: it says that *some* optimal code has the same local structure as Huffman's, namely that the two least likely symbols are siblings at the bottom of the tree. Then an induction on the number of symbols does the rest.
+</role>
+
+<thm k="Lemma 3.11" nm="Canonical codes" pg="31" it>
+Let $p$ be a pmf on $\X=\{x_1,\dots,x_m\}$ with $p_1\ge\dots\ge p_m$, where $p_i=p(x_i)$. Then there is an optimal prefix code, and every optimal prefix code $c$ satisfies:
+
+<ol><li>if $p_j>p_k$ then $|c(x_j)|\le|c(x_k)|$;</li><li>there are at least two longest codewords;</li><li>the longest codewords come in pairs that differ only in the last digit.</li></ol>
+
+A code with these properties is called a **canonical code** for $p$.
+</thm>
+
+<pf>
+An optimal prefix code exists by Proposition 3.3.
+
+**Part 1: likelier symbols get shorter codewords.** Let $c$ be an optimal prefix code, and let $c'$ be $c$ with the codewords of $x_j$ and $x_k$ swapped, where $p_j>p_k$. Since $c$ is optimal,
+$$\begin{aligned}0&\le\sum_ip_i|c'(x_i)|-\sum_ip_i|c(x_i)|\\&=p_j|c(x_k)|+p_k|c(x_j)|-p_j|c(x_j)|-p_k|c(x_k)|\\&=(p_j-p_k)\big(|c(x_k)|-|c(x_j)|\big).\end{aligned}$$
+As $p_j-p_k>0$, this forces $|c(x_k)|\ge|c(x_j)|$.
+
+**Part 2: the longest codeword is not alone.** If there were a single longest codeword, delete its last digit. The result is still a prefix code: the shortened word is not a prefix of any other codeword (they are all shorter than it, or equal in length and different), and no other codeword is a prefix of it (that one would then be a prefix of the original). The new code has strictly smaller expected length, contradicting optimality.
+
+**Part 3: longest codewords have siblings.** Think of the code as a tree. A leaf $\ell$ of maximal depth must have a sibling, a leaf hanging from the same vertex; otherwise its parent has only the one child, and replacing $\ell$ by its parent (deleting the last digit) gives a shorter prefix code, as in part 2. Since $\ell$ is at maximal depth, its sibling is a leaf too, a longest codeword differing from $\ell$ only in the last digit.
+</pf>
+
+<pf h="Proof of Proposition 3.10.">
+We prove the binary case. Fix a pmf $p$ with $p_1\ge\dots\ge p_m$ on $m$ symbols, and let $p'$ be the pmf on $m-1$ symbols obtained by merging the two least likely ones: $p'_i=p_i$ for $i\le m-2$ and $p'_{m-1}=p_{m-1}+p_m$. Write $L(c)=\sum_ip_i|c(x_i)|$ for the expected length of a code $c$.
+
+**Shrinking an optimal code for $p$.** Let $c^p$ be a canonical optimal code for $p$. By Lemma 3.11 we may assume the leaves of $x_{m-1}$ and $x_m$ are siblings at the maximal depth $l$. (Parts 1 to 3 put the two least likely symbols among the longest codewords, and we can swap codewords of equal length freely.) Merge the two leaves into their parent, a leaf of depth $l-1$ for the merged symbol. This gives a code $c^{p'}$ for $p'$, and
+
+$$#eq3-5-1 L(c^p)-L(c^{p'})=p_{m-1}l+p_ml-p'_{m-1}(l-1) \tag{3.5.1}$$
+$$#eq3-5-2 \qquad\qquad=p_{m-1}+p_m. \tag{3.5.2}$$
+
+**Expanding an optimal code for $p'$.** Now let $e^{p'}$ be any optimal prefix code for $p'$. Replace the leaf of the merged symbol by a vertex with two leaves, for $x_{m-1}$ and $x_m$. This gives a code $e^p$ for $p$, and by the same computation
+
+$$#eq3-5-3 L(e^p)-L(e^{p'})=p_{m-1}+p_m. \tag{3.5.3}$$
+
+**Comparing.** Subtracting <a class="xref" href="#eq3-5-1">(3.5.1)</a> from <a class="xref" href="#eq3-5-3">(3.5.3)</a>,
+$$\big(L(e^p)-L(c^p)\big)+\big(L(c^{p'})-L(e^{p'})\big)=0.$$
+Both brackets are $\ge0$: the first because $c^p$ is optimal for $p$, the second because $e^{p'}$ is optimal for $p'$. So both are $0$. In particular $L(e^p)=L(c^p)$, so $e^p$ is optimal for $p$.
+
+**Induction.** We have shown: expanding any optimal code for $p'$ gives an optimal code for $p$. Each stage of Huffman's algorithm, read from the root down, is exactly such an expansion. For $m=2$ the Huffman code $\{0,1\}$ is clearly optimal. So by induction on $m$ the Huffman code is optimal for every $m$.
+</pf>
+
+<role r="caution" a="optimal is not the end of the story">
+
+The Huffman code is simple and optimal, and it is used inside mainstream formats such as gzip, JPEG, MP3 and PNG. But it is not the final answer to source coding.
+
+<ul><li>**Not every optimal code is Huffman.** For $p=(0.3,0.3,0.2,0.2)$ the code $00,10,01,11$ is optimal (every codeword has length 2, as in the Huffman code). But it is not a Huffman code: Huffman always makes the two $0.2$ symbols siblings, and here they are not ($00$ and $01$ pair a $0.3$ with a $0.2$).</li><li>Huffman, like every code so far, needs the probabilities **sorted**, and the full codebook must be stored to decode. And optimality is for i.i.d. symbols. Text is not like that: the probability of "e" is much higher after "th" than after "xy".</li><li>Optimality only guarantees $H_d(X)\le\E[|c(X)|]<H_d(X)+1$. For small entropies the $+1$ dominates. The block trick of Section 3.2 cuts the overhead to $\frac1n$, but at the price of sorting $|\X|^n$ probabilities.</li></ul>
+</role>
+
+<pause n="Huffman by hand" q="Build a binary Huffman code for $p=(0.4,0.3,0.2,0.1)$ and compare its expected length with $H(p)\approx1.846$.">
+Merge $0.1$ and $0.2$ into $0.3$. Now $(0.4,0.3,0.3)$: merge the two $0.3$s into $0.6$. Finally merge $0.6$ and $0.4$. Reading down from the root: $0.4\mapsto0$, $0.3\mapsto10$, $0.2\mapsto110$, $0.1\mapsto111$, with expected length $0.4+0.6+0.6+0.3=1.9$ bits, only $0.054$ above the entropy.
+</pause>
+
+<sheet n="2" qs="7,8">Huffman codes by hand, binary against quaternary (Question 7), and against Morse code (Question 8).</sheet>
+
+## 3.6 Elias’ code {33} [d2 i2]
+<role r="setup" a="no sorting needed">
+
+Again take a pmf $p$ on $\X=\{x_1,\dots,x_m\}$, now in any order, with $p_i=p(x_i)$, and a set $\mathcal Y$ with $d$ elements. Associate with $x_r$ the **midpoint** of its interval in the cumulative distribution,
+$$\bar F(x_r):=\sum_{i<r}p_i+\frac{p_r}2.$$
+The number for $x_r$ differs from the number for any other symbol by at least $\frac{p_r}2$, so the two expansions differ within the first $\lceil-\log_dp_r\rceil+1$ digits. The **Elias code** (or Shannon–Fano–Elias code) $c_E(x_r)$ is the first $\lceil-\log_dp_r\rceil+1$ digits of the $d$-ary expansion of $\bar F(x_r)$.
+</role>
+<role r="reading" a="trading a bit for convenience">
+
+One can show $H_d(X)+1\le\E[|c_E(X)|]<H_d(X)+2$: a whole digit worse than the bound for optimal codes. In exchange, there is no need to **sort** the symbols by probability, and, given the probabilities in order, no need to **store a codebook** either, unlike Huffman (whose code is not even unique). And the idea grows into arithmetic coding, which is efficient.
+</role>
+
+<pause n="An Elias code" q="Build the binary Elias code for $p=(0.25,0.5,0.125,0.125)$, in that order.">
+The midpoints are $0.125$, $0.5$, $0.8125$, $0.9375$, with lengths $\lceil\log\frac1{p}\rceil+1=3,2,4,4$. In binary, $0.125=0.001$, $0.5=0.10$, $0.8125=0.1101$, $0.9375=0.1111$. So the codewords are $001,10,1101,1111$: a prefix code, with expected length $0.75+1+0.5+0.5=2.75$ bits, against $H(p)=1.75$.
+</pause>
+
+## 3.7 Arithmetic codes (1970s) {33} [d2 i2]
+<role r="history" a="discovered several times">
+
+Arithmetic codes are block codes with a simple construction that compress optimally in the limit. They were discovered several times, including in unpublished work of Elias, by Rissanen (1976) and by Pasco (1976).
+</role>
+<role r="idea" a="nested intervals">
+
+The aim is to cut $[0,1)$ into pieces, one for each message. Take $\X=\{1,\dots,m\}$, $\mathcal Y=\{1,\dots,d\}$, and the distribution function $F(x)=\sum_{k\le x}p_k$. Give the symbol $x$ the interval $[F(x-1),F(x))$, of length $p_x$. Elias' code encodes the midpoint of this interval with $\lceil-\log_dp_x\rceil+1$ digits, which identifies the interval uniquely and gives a prefix code.
+
+Arithmetic coding does the same for **blocks**, in lexicographic order, but without listing all the blocks. To encode $x_1x_2$, first find the interval $[F(x_1-1),F(x_1))$ of $x_1$, and then cut *that* interval up in the same proportions as $[0,1)$ was. If the symbols are independent, $x_1x_2$ gets the interval
+$$\Big[F(x_1-1)+F(x_2-1)\big(F(x_1)-F(x_1-1)\big),\;F(x_1-1)+F(x_2)\big(F(x_1)-F(x_1-1)\big)\Big).$$
+Each further symbol zooms in again. If the symbols are not independent, say they come from a Markov chain, use the conditional distribution function of $x_2$ given $x_1$ instead of $F$. Figure 3.3 shows the zooming.
+</role>
+
+@@it-fig3-3@@
+
+<role r="reading" a="practicalities">
+
+Decoding is easy in principle: find which interval the code point lies in, symbol by symbol. In practice, tricks are needed to avoid ever-growing precision, so a good implementation is not straightforward. The advantages are real, though.
+
+<ul><li>It is a prefix code within blocks, and you can decode the first symbol early: you only need to know the message lies in $[F(x_1-1),F(x_1))$. Yet no code length is "wasted" on a symbol boundary, because each digit helps pin down later symbols too.</li><li>For independent symbols no codebook is stored: it is rebuilt from the single-symbol probabilities and their order.</li><li>It can encode arbitrarily long messages, not just fixed blocks, provided an "end of message" symbol is added or the length is known. (Otherwise the code point is also consistent with any number of extra $x_1$'s at the end.)</li><li>Blocks can be ordered so that similar messages get nearby intervals, or so that they are far apart, which makes transmission errors easier to spot from context.</li><li>The probabilities can **change at every step**: conditional on the previous symbols (a Markov source), or updated from the symbols seen so far (adaptive coding).</li></ul>
+</role>
+
+<thm k="Theorem 3.12" d="Arithmetic coding is within 2 bits per block of the entropy" pg="34" it>
+Let $X_1,\dots,X_n$ be i.i.d. random variables with values in $\X$ and pmf $p$. The arithmetic code for blocks of length $n$ has expected codeword length at most $H(X_1,\dots,X_n)+2$, so at most $H(X)+\frac2n$ bits per symbol.
+</thm>
+
+<pf>
+By independence, the block $x_1\cdots x_n$ occurs with probability $\prod_{i\le n}p(x_i)$, which by construction is the length of its interval. We encode the midpoint of the interval with a string of length
+$$\Big\lceil-\log\prod_{i\le n}p(x_i)\Big\rceil+1\le-\log\prod_{i\le n}p(x_i)+2.$$
+Averaging over blocks, the expected codeword length is at most
+$$-\sum_{x_1,\dots,x_n}\prod_{i\le n}p(x_i)\log\prod_{i\le n}p(x_i)+2=H(X_1,\dots,X_n)+2=nH(X)+2.$$
+Dividing by $n$ gives the bound per symbol.
+</pf>
+
+<role r="link" a="from a fair coin to any coin">
+
+The same nested-interval picture works in reverse: Problem Sheet 2, Question 5 turns fair coin flips into a biased coin by reading them as the binary digits of a uniform random number, and stopping as soon as its interval is decided. On average this needs at most two flips.
+</role>
+
+<sheet n="2" qs="5">Simulating a biased coin with a fair one, by binary expansions.</sheet>
+
+## 3.8 Variable-to-fixed codes {34} [d2 i1]
+<role r="question" a="turning the problem around">
+
+All codes so far are **fixed-to-variable**: they take a fixed-length input (a symbol, or a block in $\X^n$) and return an output of variable length in $\mathcal Y^*$. For some uses the other way round is more convenient: a **variable**-length piece of input goes to a **fixed**-length output. Then a transmission error can only damage the current output block; it cannot shift the boundaries of everything after it.
+</role>
+<role r="setup" a="proper and complete dictionaries">
+
+Take binary outputs, $|\mathcal Y|=2$, of length $d$, and $\X=\{1,\dots,m\}$. There are $2^d$ possible outputs. We want a set of input strings $\mathcal W\subseteq\X^*$, a **dictionary**, with $|\mathcal W|=K\le2^d$, which is
+
+<ul><li>**proper**: no element of $\mathcal W$ is a prefix of another, so parsing is unambiguous, and</li><li>**complete** (or exhaustive): every string in $\X^*$ that is long enough has a prefix in $\mathcal W$, so parsing never gets stuck.</li></ul>
+
+Then any long input can be parsed uniquely into dictionary words, and each word is sent as its $d$-bit index. If $K=2^d$, every output word is used.
+</role>
+
+### 3.8.1 Tunstall’s code (1967)
+<role r="setup" a="grow the likeliest leaf">
+
+Tunstall's code builds an $m$-ary tree of input strings, a little like Fano's code but in reverse. Start with a root and one leaf for each symbol of $\X$. Then repeatedly find the leaf whose string is most likely, and split it into $m$ new leaves by appending each symbol. Each split removes one leaf and adds $m$, so after $k$ splits there are $k(m-1)+m$ leaves. We can split
+$$k=\Big\lfloor\frac{2^d-m}{m-1}\Big\rfloor$$
+times before running out of output words. Finally give each leaf a $d$-bit codeword.
+</role>
+
+<thm k="Example 3.13" d="Tunstall’s code for a 0.7/0.3 source and 3-bit outputs" pg="35">
+Let $d=3$ and $\X=\{a,b\}$ with $\PP(X=a)=0.7$. The iteration runs as follows; at each step the likeliest leaf is split.
+
+<table class="tunstall"><thead><tr><th>step</th><th colspan="8">leaves (probability)</th></tr></thead><tbody>
+<tr><td>1</td><td>a (0.7)</td><td>b (0.3)</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td>aa (0.49)</td><td>b (0.3)</td><td>ab (0.21)</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3</td><td>aaa (0.343)</td><td>b (0.3)</td><td>ab (0.21)</td><td>aab (0.147)</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td>aaaa (0.2401)</td><td>b (0.3)</td><td>ab (0.21)</td><td>aab (0.147)</td><td>aaab (0.1029)</td><td></td><td></td><td></td></tr>
+<tr><td>5</td><td>aaaa (0.2401)</td><td>ba (0.21)</td><td>ab (0.21)</td><td>aab (0.147)</td><td>aaab (0.1029)</td><td>bb (0.09)</td><td></td><td></td></tr>
+<tr><td>6</td><td>aaaaa (0.16807)</td><td>ba (0.21)</td><td>ab (0.21)</td><td>aab (0.147)</td><td>aaab (0.1029)</td><td>bb (0.09)</td><td>aaaab (0.07203)</td><td></td></tr>
+<tr><td>7</td><td>aaaaa (0.16807)</td><td>baa (0.147)</td><td>ab (0.21)</td><td>aab (0.147)</td><td>aaab (0.1029)</td><td>bb (0.09)</td><td>aaaab (0.07203)</td><td>bab (0.063)</td></tr>
+<tr class="enc"><td>code</td><td>000</td><td>001</td><td>010</td><td>011</td><td>100</td><td>101</td><td>110</td><td>111</td></tr>
+</tbody></table>
+
+On average each 3-bit output carries $3.2831$ input symbols. For example $aaababaaaaa$ parses as $aaab\,|\,ab\,|\,aaaaa$ and is encoded as $100\,010\,000$. As with block codes, the input may need padding at the end.
+</thm>
+
+@@it-fig3-4@@
+
+<role r="reading" a="where 3.2831 comes from">
+
+The expected length of the parsed word is $\sum_{\text{leaves}}\PP(\text{leaf})\cdot\text{length}$. There is a neater way to count: a string of length $L$ passes through $L$ vertices below the root, so the expected length is $1$ (for the first symbol, every word has one) plus the total probability of the internal vertices other than the root. Here those are $a,aa,aaa,aaaa,b,ba$, with probabilities summing to $0.7+0.49+0.343+0.2401+0.3+0.21=2.2831$. Adding $1$ gives $3.2831$.
+</role>
+
+<thm k="Theorem 3.14" d="Tunstall’s code is the best variable-to-fixed code" pg="35" it>
+Let $(X_i)_{i\ge1}$ be i.i.d. with values in $\X$. Among complete and proper variable-to-fixed codes into $\mathcal Y^d$, Tunstall's code is optimal: it maximises the expected length of the input string that is encoded by a single output word.
+</thm>
+
+<pf h="Proof sketch.">
+Allow a general number of output words, not just $2^d$. A complete and proper dictionary is the set of leaves of an $m$-ary tree, as for Huffman codes, and every such tree has $k(m-1)+m$ leaves, where $k$ is the number of internal vertices other than the root. Let $K(T)$ be that set of internal vertices for a tree $T$. By the counting above, the expected length of the parsed word is
+$$1+\sum_{v\in K(T)}P(v),$$
+where $P(v)$ is the probability of the string at $v$. So we want the $k$ vertices of largest total probability.
+
+View $T$ as a subtree of the infinite $m$-ary tree $T_\infty$, chosen by selecting $k$ internal vertices. Those vertices must form a tree, but ignore that for a moment and just choose any $k$ vertices of $T_\infty$ with the largest probabilities. A vertex's children are always less likely than the vertex itself, so the $k$ most likely vertices automatically include each other's ancestors: they do form a tree. Tunstall's greedy rule, always splitting the most likely leaf, selects exactly these vertices. So it is optimal.
+</pf>
+
+<role r="link" a="entropy again, and what is used in practice">
+
+Further results can be proved. For instance, if $L$ is the length of the input string encoded by one $d$-bit output, then $d/\E[L]\ge H(X)$: at least $H(X)$ output bits per input symbol, the same bound as for fixed-to-variable codes. For Example 3.13, $3/3.2831\approx0.914$, against $H(0.7)\approx0.881$. Other variable-to-fixed methods include block arithmetic codes (Boncelet, 1993), with advantages like those of arithmetic codes, and the Lempel–Ziv (1977/78) and Lempel–Ziv–Welch (1984) methods, which are **adaptive**: they learn the statistics of the source as they go, and need no knowledge of the distribution at all.
+</role>

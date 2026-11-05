@@ -1,0 +1,106 @@
+@num 1
+@title Entropy and its properties
+@source Problem Sheet 1 · MT25
+@dek Convexity inequalities, a recap of the weak law, and a lot of practice with entropy: what it ignores, when it is infinite, urns, the maximum entropy principle, English text, and a metric built from conditional entropy. Needs Chapter 1, and Section 2.2 for the last question.
+---
+## Section A · Warm-up
+
+<qn n="1" t="Polling inequalities">
+Let $a\ge0$, $b\ge0$ with $a+b>0$. Show that
+$$-(a+b)\log(a+b)\le-a\log a-b\log b\le-(a+b)\log\Big(\frac{a+b}2\Big),$$
+and that the first inequality is an equality iff $ab=0$, and the second iff $a=b$.
+
+<details class="hint"><summary>hint</summary>Divide by $a+b$ and write $t=a/(a+b)$. Both inequalities become statements about the binary entropy $H(t)$: one says it is non-negative, the other that it is at most $1$. Alternatively, the second is the log sum inequality with $b_1=b_2$.</details>
+
+<p class="uses">Uses Example 1.2, Theorem 1.19, or Lemma 1.15.</p>
+</qn>
+
+<qn n="2" t="Recap of the weak law of large numbers">
+Let $X$ be a real-valued random variable.
+
+<ol class="parts"><li>Assuming also that $X\ge0$, show that for every $x>0$, $\PP(X\ge x)\le\E[X]/x$.</li><li>Let $X$ have mean $\mu$ and variance $\sigma^2$. Show that $\PP(|X-\mu|>\eps)\le\sigma^2/\eps^2$.</li><li>Let $(X_n)_{n\ge1}$ be i.i.d. with mean $\mu$ and variance $\sigma^2$. Show that $\frac1m\sum_{n=1}^mX_n\to\mu$ in probability, that is, for every $\eps>0$,
+$$\lim_{m\to\infty}\PP\Big(\Big|\frac1m\sum_{n=1}^mX_n-\mu\Big|\le\eps\Big)=1.$$</li></ol>
+
+*Remark.* B8.1 proves the strong law: if $(X_n)$ are i.i.d. with $\E|X_1|<\infty$ and $\E X_1=\mu$, then $\PP\big(\lim_m\frac1m\sum_{n\le m}X_n=\mu\big)=1$.
+
+<p class="uses">Markov and Chebyshev, used for Theorem 2.10; see the background box in Section 2.2.</p>
+</qn>
+
+<qn n="3" t="Jensen’s inequality">
+Prove Jensen's inequality for discrete random variables: if $f$ is convex and $X$ takes values in $\X$, with $\E X$ and $\E f(X)$ existing, then
+$$f\Big(\sum_{x\in\X}p_X(x)\,x\Big)\le\sum_{x\in\X}p_X(x)f(x).$$
+If $f$ is strictly convex, equality holds iff $X$ is constant.
+
+<details class="hint"><summary>hint</summary>Induct on the number of values: write $\sum_{i\le n}p_ix_i=p_nx_n+(1-p_n)\sum_{i<n}\frac{p_i}{1-p_n}x_i$ and use the definition of convexity once. For countably many values, approximate by finite truncations.</details>
+
+<p class="uses">This is the missing proof of Lemma 1.13.</p>
+</qn>
+
+## Section B · To be handed in
+
+<qn n="4" t="What entropy ignores">
+Let $X,Y,Z$ be discrete random variables. Prove, or give a counterexample to:
+
+<ol class="parts"><li>$H(X)=H(-42X)$;</li><li>$H(X)=H(X^2)$;</li><li>$H(X|Y)\ge H(X|Y,Z)$;</li><li>$H(X,Y)=H(X)+H(Y)$.</li></ol>
+
+<p class="uses">Uses parts 2, 3 and 4 of Theorem 1.19.</p>
+</qn>
+
+<qn n="5" t="Infinite entropy">
+Is there a discrete random variable $X$ with $H(X)=+\infty$? If so, describe one as explicitly as you can.
+
+<details class="hint"><summary>hint</summary>Try $p(n)\propto\frac1{n\log^2n}$ for $n\ge2$. Check that it sums to something finite and that $\sum_np(n)\log\frac1{p(n)}$ diverges.</details>
+
+<p class="uses">Uses Definition 1.1 on a countable set.</p>
+</qn>
+
+<qn n="6" t="Drawing from an urn">
+An urn contains $r$ red, $w$ white and $b$ black balls, where $r,w,b$ are positive integers. Compute the entropy of the outcome of drawing two balls with replacement, and decide whether it is higher or lower than when the balls are drawn without replacement.
+
+<details class="hint"><summary>hint</summary>With replacement the two colours are i.i.d., so use <a class="xref" href="#it-eq1-1-5">(1.1.5)</a>. Without replacement each draw on its own has the same distribution as before, so compare using the chain rule and part 2 of Theorem 1.19.</details>
+
+<p class="uses">Uses Example 1.3 and the chain rule.</p>
+</qn>
+
+<qn n="7" t="Maximum entropy under a constraint">
+Let $\X$ be finite, $f:\X\to\R$, and $\alpha\in\R$. We want to maximise $H(X)$ over random variables $X$ with values in $\X$, subject to
+$$\E[f(X)]\le\alpha.\tag{1}$$
+Let $U$ be uniform on $\X$. Prove:
+
+<ol class="parts"><li>If $\alpha\in\big[\E[f(U)],\max_xf(x)\big]$, the entropy is maximised subject to (1) by $U$.</li><li>If $f$ is non-constant and $\alpha\in\big[\min_xf(x),\E[f(U)]\big]$, it is maximised by the random variable $Z$ with
+$$\PP(Z=x)=\frac{e^{\lambda f(x)}}{\sum_{y\in\X}e^{\lambda f(y)}},\qquad x\in\X,$$
+where $\lambda<0$ is chosen so that $\E[f(Z)]=\alpha$.</li><li>Under the assumptions of part 2, $\lambda$ is unique and $\lambda<0$.</li></ol>
+
+<details class="hint"><summary>hint</summary>For part 2, apply Gibbs' inequality with $q=p_Z$: for any admissible $X$, $H(X)\le-\E[\log p_Z(X)]$, and $-\log p_Z(x)$ is an affine function of $f(x)$ with a negative slope in $\lambda$. For part 3, show $\lambda\mapsto\E[f(Z_\lambda)]$ is strictly increasing (its derivative is a variance).</details>
+
+<p class="uses">Part 1 is part 1 of Theorem 1.19 with a constraint; part 2 is the Gibbs (or Boltzmann) distribution of statistical mechanics.</p>
+</qn>
+
+<qn n="8" t="The entropy of English">
+The file `letter counts.zip` (not included here) contains the number of times each string of up to four letters, from the 27-symbol alphabet A–Z plus underscore for a space, occurs in a corpus of Shakespeare, Montaigne (translated), Mark Twain and Walt Whitman, with punctuation removed. Suppose $X_1,X_2,X_3,X_4$ are four consecutive letters chosen at random from English text. Using the counts, estimate
+$$H(X_1),\quad H(X_2|X_1),\quad H(X_3|X_2,X_1),\quad H(X_4|X_3,X_2,X_1),$$
+and compare with the entropy of a letter chosen uniformly from the 27-letter alphabet. (Only the numbers are required.)
+
+<details class="hint"><summary>hint</summary>Use the chain rule: $H(X_k|X_{k-1},\dots,X_1)=H(X_1,\dots,X_k)-H(X_1,\dots,X_{k-1})$, and estimate each joint entropy from the $k$-letter counts. Uniform letters give $\log27\approx4.75$ bits. For comparison, Shannon (1951) estimated about $4.0$, $3.3$ and $3.1$ bits for the first three quantities with a different corpus; your numbers should decrease in a similar way.</details>
+
+<p class="uses">Uses the chain rule (Theorem 1.19, part 3) and part 2: conditioning reduces entropy.</p>
+</qn>
+
+## Section C · Extra practice
+
+<qn n="9" t="A metric from conditional entropy">
+Consider random variables on a discrete space.
+
+<ol class="parts"><li>Show that $\rho(X,Y)=H(X|Y)+H(Y|X)$ is a pseudo-metric: non-negative, symmetric, and satisfying the triangle inequality.</li><li>Show that $\rho(X,Y)=0$ iff each of $X$ and $Y$ is a function of the other (almost surely), so $\rho$ is a metric on the equivalence classes of the relation "$X\sim Y$ iff $Y=f(X)$ and $X=g(Y)$ for some $f,g$".</li></ol>
+
+<details class="hint"><summary>hint</summary>For the triangle inequality, show $H(X|Z)\le H(X|Y)+H(Y|Z)$ by bounding $H(X|Z)\le H(X,Y|Z)$ and using the chain rule.</details>
+
+<p class="uses">Uses part 2 of Theorem 1.19 and the chain rule.</p>
+</qn>
+
+<qn n="10" t="An almost sure AEP">
+Partition $[0,1]$ into $n$ disjoint intervals of lengths $p_1,\dots,p_n$. Let $X_1,X_2,\dots$ be i.i.d. uniform on $[0,1]$, and let $Z_m(i)$ be the number of $X_1,\dots,X_m$ in the $i$-th interval. Show that
+$$R_m=\prod_{i=1}^np_i^{Z_m(i)}\qquad\text{satisfies}\qquad\frac1m\log R_m\to\sum_{i=1}^np_i\log p_i\quad\text{with probability }1.$$
+
+<p class="uses">$R_m$ is the probability of the observed sequence of interval labels, so this is the AEP of Theorem 2.10 with almost sure convergence; use the strong law.</p>
+</qn>

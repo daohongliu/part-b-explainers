@@ -50,3 +50,9 @@ Everything ships as ONE artifact (both courses), notes stored in the artifact's 
 `node <scratchpad>/t3.js "" view1,view2 [notes]` (run from the scratchpad dir) screenshots desk 1440 and phone 390.
 
 - [x] Removed: private notes (features.js, topbar button, hub text) and the flashcard button, at David's request. Artifact capabilities cleared to {}.
+
+- [x] Information Theory (B8.4) added as a third course: courses/it (prefix `it-`), Introduction + Chapters 1–3 and Sheets 1–2
+      (sources on David's Desktop: Part B/Information Theory). 12 interactive figures (js/ch0–3.js, shared helpers in js/a-common.js:
+      entropy, Huffman, binomial logs), 4 chapter maps, mulberry/saffron colour scheme, 'bits' header strip.
+      Corrections vs the notes flagged in sidenotes: Remark 2.13 nats/bits; Theorem 3.4 epsilon_1 term.
+      Not done: Chapters 4–5 (channel coding). Sheet data files (letter counts, IMC.csv) are not included.

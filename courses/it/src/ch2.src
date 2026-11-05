@@ -1,0 +1,242 @@
+@num 2
+@title Codes and sequences
+@titlehtml Codes and <em>sequences</em>
+@pages 19–24
+@dek Two separate ideas that Chapter 3 will marry. First, which codeword lengths a decodable code can have: the Kraft–McMillan inequality. Second, the law of large numbers in disguise: a long random sequence is almost certainly "typical", and there are only about 2 to the nH typical sequences.
+---
+## Symbol codes {19} [d1 i3]
+<role r="question" a="writing a message in bits">
+
+Suppose we receive a sequence of symbols from a set $\X$, say letters of the Latin alphabet, and want to store it on a computer as a sequence of 0s and 1s. We need a rule for turning symbols into bits, and back again.
+</role>
+
+<thm k="Definition 2.1" nm="Strings and symbol codes" pg="19">
+For a finite set $\X$, let $\X^*$ be the set of finite sequences, or **strings**, of elements of $\X$. For $x=x_1\cdots x_n\in\X^*$ with each $x_i\in\X$, call $|x|=n$ the **length** of $x$. Given finite sets $\X$ and $\mathcal Y$, a **symbol code** is a function $c:\X\to\mathcal Y^*$, and $c(x)$ is the **codeword** of $x$. The code is **$d$-ary** if $|\mathcal Y|=d$.
+</thm>
+<role r="reading" a="Definition 2.1">
+
+To encode a whole message we simply concatenate the codewords: $x_1\cdots x_n\mapsto c(x_1)\cdots c(x_n)$. To get the message back we certainly need $c$ to be injective. That is not enough.
+</role>
+
+<thm k="Example 2.2" d="Binary expansions are not decodable" pg="19">
+Let $\X=\{1,\dots,6\}$ and let $c(x)$ be the binary expansion of $x$, so the codewords are $1,10,11,100,101,110$. Then $c$ is injective, but we cannot always recover the message: $110$ could be $x_1=6$ or $x_1x_2=12$ (that is, $1$ followed by $2$).
+</thm>
+<role r="why" a="what we want from a code">
+
+Ideally a code lets us recover the message, is easy to decode, and compresses as much as possible. A second aim is that the encoding rule should be simple to build and store. To make this precise we name three classes of codes.
+</role>
+
+<thm k="Definition 2.3" nm="Unambiguous, uniquely decodable and prefix codes" pg="19">
+Let $c:\X\to\mathcal Y^*$ be a symbol code, and let $c^*:\X^*\to\mathcal Y^*$ be its **extension**, $c^*(x_1\cdots x_n)=c(x_1)\cdots c(x_n)$. Then $c$ is
+
+<ol><li>**unambiguous** (or nonsingular) if $c$ is injective: different symbols get different codewords;</li><li>**uniquely decodable** if $c^*$ is injective: different *strings* give different bit sequences, even though the codewords are run together with no separators;</li><li>a **prefix code** (or instantaneous code) if no codeword is a prefix of another: there are no $x_1\neq x_2$ in $\X$ and $y\in\mathcal Y^*$ with $c(x_1)y=c(x_2)$.</li></ol>
+</thm>
+<role r="reading" a="Definition 2.3">
+
+Clearly
+$$\{\text{prefix codes}\}\subseteq\{\text{uniquely decodable codes}\}\subseteq\{\text{unambiguous codes}\}.$$
+Prefix codes are the easy ones to decode, and that is where the name "instantaneous" comes from. Read the bits from the left; the moment the bits read so far form a codeword, that must be the first symbol, because no other codeword starts the same way. Then start again. For a general uniquely decodable code you may have to read far ahead before knowing even the first symbol. It is not even easy to check whether a given code is uniquely decodable.
+</role>
+
+<thm k="Example 2.4" d="Uniquely decodable but not prefix" pg="20">
+Take $\X=\{A,B,C,D\}$, $\mathcal Y=\{0,1\}$ and $c(A)=0$, $c(B)=01$, $c(C)=011$, $c(D)=111$. This code is uniquely decodable, though that is not obvious, and describing a decoding algorithm is not easy either. What leads to $011\,111\,01$? What about $011\,111\,11$?
+</thm>
+
+<pause n="Decode from the right" q="Decode $01111101$ and $01111111$ in the code of Example 2.4. (Hint: look at the codewords written backwards.)">
+Written backwards the codewords are $0,10,110,111$, and that *is* a prefix code. So decode by reading from the right end. The string $01111101$ read backwards is $10111110$, which splits as $10\,|\,111\,|\,110$, that is $B,D,C$ backwards. So the message was $CDB$. Similarly $01111111$ backwards is $11111110=111\,|\,111\,|\,10$, so the message was $BDD$: $01\,111\,111$. Notice that the two strings agree in their first six bits but begin with different symbols, which is exactly why a left-to-right decoder can't commit early. A code whose reversal is a prefix code is called a **suffix code**; it is always uniquely decodable.
+</pause>
+
+## 2.1 The Kraft–McMillan Theorem {20} [d3 i3]
+<role r="question" a="which lengths are possible?">
+
+Short codewords are what compression is about, but they can't all be short: there are only two codewords of length 1, four of length 2, and so on, and a prefix code can't use both $0$ and $01$. The question is which lists of codeword lengths are possible at all. The surprising answer is that uniquely decodable codes are no better than prefix codes in this respect, so we may as well design prefix codes.
+</role>
+
+<thm k="Theorem 2.5" nm="Kraft–McMillan Theorem" pg="20" it>
+<ol><li>Let $c:\X\to\mathcal Y^*$ be uniquely decodable, and set $l_x=|c(x)|$. Then
+
+$$#eq2-1-1 \sum_{x\in\X}|\mathcal Y|^{-l_x}\le1. \tag{2.1.1}$$
+</li><li>Conversely, given lengths $(l_x)_{x\in\X}\subseteq\N$ and a finite set $\mathcal Y$ such that <a class="xref" href="#eq2-1-1">(2.1.1)</a> holds, there is a prefix code $c:\X\to\mathcal Y^*$ with $|c(x)|=l_x$ for each $x\in\X$.</li></ol>
+</thm>
+<role r="idea" a="a budget of 1">
+
+Think of <a class="xref" href="#eq2-1-1">(2.1.1)</a> as a budget. With $d=|\mathcal Y|$ letters, a codeword of length $l$ costs $d^{-l}$, and the total spend may not exceed $1$. A short codeword is expensive. For a prefix code this is easy to see: a codeword of length $l$ rules out every string that starts with it, which is a fraction $d^{-l}$ of all long strings, and different codewords rule out disjoint sets. McMillan's surprise is that unique decodability alone forces the same budget. Figure 2.1 lets you choose lengths and see the budget and the code.
+</role>
+
+@@it-fig2-1@@
+
+<pf>
+**Part 1.** Set $d=|\mathcal Y|$ and $l_{\max}=\max_x|c(x)|$. The trick is to look at strings of $n$ source symbols at once. Expanding the $n$-th power of the sum,
+$$\Big(\sum_{x\in\X}d^{-l_x}\Big)^n=\sum_{x_1,\dots,x_n\in\X}d^{-l_{x_1}}d^{-l_{x_2}}\cdots d^{-l_{x_n}}=\sum_{x_1,\dots,x_n\in\X}d^{-\sum_{i=1}^nl_{x_i}}.$$
+The exponent $k=\sum_il_{x_i}$ is the length of the encoded string $c(x_1)\cdots c(x_n)$, which lies between $1$ and $nl_{\max}$. Group the terms by $k$, and let $a(k)$ be the number of source strings of length $n$ whose encoding has length $k$. Then
+$$\Big(\sum_{x\in\X}d^{-l_x}\Big)^n=\sum_{k=1}^{nl_{\max}}a(k)\,d^{-k}.$$
+Now use unique decodability. Different source strings have different encodings, and there are only $d^k$ strings of length $k$ over $\mathcal Y$, so by the pigeonhole principle $a(k)\le d^k$. Each term of the sum is at most $1$, so
+$$\Big(\sum_{x\in\X}d^{-l_x}\Big)^n\le nl_{\max},\qquad\text{that is,}\qquad\sum_{x\in\X}d^{-l_x}\le(nl_{\max})^{1/n}.$$
+This holds for every $n$, and $(nl_{\max})^{1/n}\to1$ as $n\to\infty$. That gives <a class="xref" href="#eq2-1-1">(2.1.1)</a>. (If the sum were bigger than $1$, its $n$-th power would grow exponentially, faster than the linear bound allows.)
+
+**Part 2.** Let $(l_x)$ satisfy <a class="xref" href="#eq2-1-1">(2.1.1)</a>. Relabel so that $\X=\{1,\dots,|\X|\}$ and $l_1\le l_2\le\dots\le l_{|\X|}$: shortest codewords first. Define running totals of the budget,
+$$r_m:=\sum_{i=1}^{m-1}d^{-l_i},\qquad m=1,\dots,|\X|,$$
+so $r_1=0$ and every $r_m<1$ by assumption. Let $c(m)$ be the first $l_m$ digits of the $d$-ary expansion of $r_m$:[[With the usual convention that the expansion ends in zeros rather than in $(d-1)$s, so $\frac12$ in binary is $0.1000\ldots$ and not $0.0111\ldots$.]]
+$$c(m):=y_1\cdots y_{l_m},\qquad\text{where }r_m=\sum_{i\ge1}y_id^{-i}.$$
+In other words, cut $[0,1)$ into consecutive pieces of lengths $d^{-l_1},d^{-l_2},\dots$, and name each piece by the first $l_m$ digits of its left end.
+
+We check this is a prefix code. Since $l_i\le l_m$ for $i<m$, each term $d^{-l_i}$ of $r_m$ is a multiple of $d^{-l_m}$, so $r_m$ is too: its expansion stops within the first $l_m$ digits, and $c(m)$ records $r_m$ exactly. Suppose $c(m)$ were a prefix of $c(n)$ with $m<n$. Then $r_n$ starts with the same $l_m$ digits as $r_m$, so it lies in the interval $[r_m,r_m+d^{-l_m})$ of numbers with that start, and
+$$r_n-r_m<d^{-l_m}.$$
+But by definition
+$$r_n-r_m=\sum_{i=m}^{n-1}d^{-l_i}\ge d^{-l_m},$$
+a contradiction. And $c(n)$ can't be a prefix of $c(m)$ with $m<n$ either: $l_n\ge l_m$, so that would need $c(n)=c(m)$, which is the same contradiction.
+</pf>
+
+<thm k="Remark 2.6" d="Kraft for prefix codes, McMillan in general" pg="21">
+The inequality <a class="xref" href="#eq2-1-1">(2.1.1)</a> is called the **Kraft–McMillan inequality**. Kraft proved Theorem 2.5 for prefix codes, where part 1 has a nice proof using trees (Problem Sheet 2, Question 10). The version for uniquely decodable codes is McMillan's, building on Kraft's work.
+</thm>
+
+<thm k="Remark 2.7" d="The construction of part 2 comes back" pg="21">
+The construction in part 2, reading codewords off the expansions of cumulative sums, will come back many times: Shannon's code, Elias' code and arithmetic codes in Chapter 3 are all variations on it.
+</thm>
+
+<thm k="Corollary 2.8" d="Prefix codes lose nothing in codeword lengths" pg="21">
+For any uniquely decodable code there is a prefix code with the same codeword lengths.
+</thm>
+<role r="payoff" a="Corollary 2.8">
+
+Part 1 of the theorem says the lengths of a uniquely decodable code satisfy <a class="xref" href="#eq2-1-1">(2.1.1)</a>; part 2 builds a prefix code with those lengths. Since compression only cares about lengths, from now on we can restrict attention to prefix codes, which are the easy ones to decode.
+</role>
+
+<pause n="Is there a code with these lengths?" q="Is there a binary uniquely decodable code with codeword lengths $1,2,3,3,3$? With $1,2,3,3$? With $2,2,2,3,3$? Build a prefix code when there is one.">
+The Kraft sums are $\frac12+\frac14+\frac38=\frac98>1$, so no code exists for $1,2,3,3,3$. For $1,2,3,3$ the sum is exactly $1$, and the construction gives $r=0,\frac12,\frac34,\frac78$, so the codewords $0,10,110,111$. For $2,2,2,3,3$ the sum is $\frac34+\frac14=1$, giving $r=0,\frac14,\frac12,\frac34,\frac78$ and codewords $00,01,10,110,111$.
+</pause>
+
+<sheet n="2" qs="10">Kraft's theorem through code trees: part 1 of Theorem 2.5 for prefix codes, and part 2 by growing a tree.</sheet>
+
+## 2.2 The Asymptotic Equipartition Property {21} [d2 i3]
+<role r="question" a="one sample tells you little; many tell you a lot">
+
+Given a distribution, what can we say about one sample from it? Not much. Shannon's elementary but far-reaching insight is that this changes completely for long *sequences* of samples, because of the law of large numbers. Since we will encode sequences, this is just what we need.
+</role>
+
+<thm k="Example 2.9" d="Typical coin sequences all have probability about 2^{−nH}" pg="21">
+Let $X$ take values in $\X=\{0,1\}$, and let $X_1,\dots,X_n$ be i.i.d. copies of $X$. A particular sequence $(x_1,\dots,x_n)\in\{0,1\}^n$ occurs with probability
+
+$$#eq2-2-1 \PP\big((X_1,\dots,X_n)=(x_1,\dots,x_n)\big)=p^{\alpha(x_1,\dots,x_n)}q^{\beta(x_1,\dots,x_n)}, \tag{2.2.1}$$
+
+where $p=\PP(X=0)$, $q=1-p$, and $\alpha=\sum_i\ind_{x_i=0}$, $\beta=\sum_i\ind_{x_i=1}$ count the zeros and ones. For a "typical" sequence the law of large numbers says $\alpha\approx np$ and $\beta\approx nq$. Hence
+$$\PP\big((X_1,\dots,X_n)=(x_1,\dots,x_n)\big)\approx p^{np}q^{nq},$$
+and taking logarithms,
+$$-\log\PP\big((X_1,\dots,X_n)=(x_1,\dots,x_n)\big)\approx-np\log p-nq\log q=nH(X).$$
+So every typical sequence has probability about $2^{-nH(X)}$. Since together they carry almost all the probability, there must be about $2^{nH(X)}$ of them. Note $2^{nH(X)}\le2^n$, and the difference can be enormous.
+</thm>
+<role r="idea" a="equipartition">
+
+The informal calculation suggests splitting $\X^n$ into two sets:
+
+<ul><li>**typical sequences**: relatively few, but carrying almost all the probability, and each roughly equally likely (hence "equipartition");</li><li>**atypical sequences**: everything else, which together are unlikely.</li></ul>
+
+For a coin with $p=0.1$ and $n=100$ there are $2^{100}\approx10^{30}$ sequences, but the typical ones number about $2^{100H(0.1)}\approx2^{47}$. Figure 2.2 shows how the probability concentrates as $n$ grows. We now make this rigorous.
+</role>
+
+<bg id="bg-wlln" t="The weak law of large numbers" lead="From Prelims and B8.1">
+If $Z_1,Z_2,\dots$ are i.i.d. with finite mean $\mu$, then $\frac1n\sum_{i=1}^nZ_i\to\mu$ **in probability**: for every $\eps>0$,
+$$\PP\Big(\Big|\frac1n\sum_{i=1}^nZ_i-\mu\Big|>\eps\Big)\to0\qquad\text{as }n\to\infty.$$
+With a finite variance $\sigma^2$ this is one line from Chebyshev's inequality, since the average has variance $\sigma^2/n$; that is Problem Sheet 1, Question 2. Without a variance it is still true, and the strong law even gives almost sure convergence (B8.1, Chapter 7).
+</bg>
+
+<thm k="Theorem 2.10" nm="Weak AEP 1" pg="22" it>
+Let $X$ be a discrete random variable and $(X_i)_{i\ge1}$ i.i.d. copies of $X$. Then
+
+$$#eq2-2-2 -\frac1n\log p_{X_1,\dots,X_n}(X_1,\dots,X_n)\xrightarrow{\text{in prob.}}H(X)\qquad\text{as }n\to\infty. \tag{2.2.2}$$
+</thm>
+<role r="reading" a="Theorem 2.10">
+
+The left side is the surprise of the sequence you actually drew, per symbol. It is random, but for long sequences it is almost certainly close to the entropy.
+</role>
+
+<pf>
+By independence the joint pmf is a product, so its logarithm is a sum:
+$$-\log p_{X_1,\dots,X_n}(X_1,\dots,X_n)=-\sum_{i=1}^n\log p_X(X_i).$$
+The terms $-\log p_X(X_i)$ are i.i.d., with mean $\E[-\log p_X(X)]=H(X)$. The weak law of large numbers finishes the proof.
+</pf>
+
+<thm k="Definition 2.11" nm="Typical set" pg="22">
+For $n\in\N$ and $\eps>0$, the set of **(weakly) typical sequences** of length $n$ with error $\eps$ is
+$$T_n^\eps:=\Big\{(x_1,\dots,x_n)\in\X^n:\Big|-\frac1n\log p_{X_1,\dots,X_n}(x_1,\dots,x_n)-H(X)\Big|\le\eps\Big\}.$$
+</thm>
+<role r="reading" a="Definition 2.11">
+
+A sequence is typical if its surprise per symbol is within $\eps$ of the entropy. Equivalently, its probability lies between $2^{-n(H(X)+\eps)}$ and $2^{-n(H(X)-\eps)}$. Notice the definition says nothing about counting symbols: it only asks about the probability of the sequence.
+</role>
+
+<thm k="Theorem 2.12" nm="Weak AEP 2, Shannon 1948" pg="22" it>
+For every $\eps>0$ there is an $n_0\in\N$ such that for every $n>n_0$:
+
+<ol><li>$p_{X_1,\dots,X_n}(x_1,\dots,x_n)\in\big[2^{-n(H(X)+\eps)},2^{-n(H(X)-\eps)}\big]$ for every $(x_1,\dots,x_n)\in T_n^\eps$;</li><li>$\PP\big((X_1,\dots,X_n)\in T_n^\eps\big)\ge1-\eps$;</li><li>$|T_n^\eps|\in\big[(1-\eps)2^{n(H(X)-\eps)},\,2^{n(H(X)+\eps)}\big]$.</li></ol>
+
+For part 1 one can take $n_0=0$.
+</thm>
+<role r="reading" a="Theorem 2.12">
+
+The three parts are the three features of the informal picture, now with error bars: typical sequences are roughly equally likely (part 1), they carry almost all the probability (part 2), and there are roughly $2^{nH(X)}$ of them (part 3).
+</role>
+
+<pf>
+**Part 1** is Definition 2.11, rearranged: multiply the inequality by $-n$ and exponentiate. It holds for every $n$.
+
+**Part 2.** By Theorem 2.10, for every $\eps>0$,
+$$\PP\big((X_1,\dots,X_n)\notin T_n^\eps\big)=\PP\Big(\Big|-\frac1n\log p_{X_1,\dots,X_n}(X_1,\dots,X_n)-H(X)\Big|>\eps\Big)\to0$$
+as $n\to\infty$. So it is at most $\eps$ once $n$ is large.
+
+**Part 3, upper bound.** The total probability is $1$, and each typical sequence has probability at least $2^{-n(H(X)+\eps)}$ by part 1:
+$$1=\sum_{x\in\X^n}p(x)\ge\sum_{x\in T_n^\eps}p(x)\ge\sum_{x\in T_n^\eps}2^{-n(H(X)+\eps)}=2^{-n(H(X)+\eps)}\,|T_n^\eps|.$$
+
+**Part 3, lower bound.** For $n$ large, part 2 says the typical set has probability at least $1-\eps$, and each typical sequence has probability at most $2^{-n(H(X)-\eps)}$:
+$$1-\eps\le\PP\big((X_1,\dots,X_n)\in T_n^\eps\big)\le\sum_{x\in T_n^\eps}2^{-n(H(X)-\eps)}=2^{-n(H(X)-\eps)}\,|T_n^\eps|.$$
+Rearranging gives the lower bound.
+</pf>
+
+@@it-fig2-2@@
+
+<thm k="Remark 2.13" d="Ways to read the AEP, and a warning" pg="23">
+<ul><li>For large $n$, it is reasonable to think of $(X_1,\dots,X_n)$ as drawn uniformly from $T_n^\eps$, each typical sequence having probability about $2^{-nH(X)}$.</li><li>Theorem 2.12 does **not** say that most sequences are typical. The typical set is tiny compared with $\X^n$:
+$$\frac{|T_n^\eps|}{|\X^n|}\approx\frac{2^{nH(X)}}{2^{n\log|\X|}}=2^{-n(\log|\X|-H(X))},$$
+which tends to $0$ unless $H(X)=\log|\X|$, that is, unless $X$ is uniform (Theorem 1.19). What is true is that the typical set carries most of the *probability* (part 2).</li><li>So we can prove a property for typical sequences and conclude that it holds for the random sequence with high probability.</li><li>The single most likely sequence is in general **not** typical. Take $\X=\{0,1\}$ and $\PP(X=1)=0.9$. The most likely sequence is $(1,\dots,1)$, but its surprise per symbol is $-\log0.9\approx0.15$, while $H(X)=-0.1\log0.1-0.9\log0.9\approx0.47$.[[The notes give $0.11$ here, which is $-\ln0.9$, the value in nats; in bits it is $0.152$.]] As $n\to\infty$ the probability of every individual sequence, including the most likely one, tends to $0$.</li></ul>
+</thm>
+
+<pause n="Most likely is not typical" q="For the coin with $\PP(X=1)=0.9$ and $n=100$, how many ones does a typical sequence have, and how does the probability of $(1,\dots,1)$ compare with that of one typical sequence?">
+A typical sequence has about $90$ ones and $10$ zeros, with probability about $0.9^{90}0.1^{10}=2^{-100\cdot0.469}\approx2^{-46.9}$. The all-ones sequence has probability $0.9^{100}=2^{-15.2}$, about $2^{31.7}$ times more likely. But there is only one of it, whereas there are $\binom{100}{10}\approx1.7\times10^{13}\approx2^{44}$ sequences with exactly ten zeros. Being likely individually and being likely as a class are different things.
+</pause>
+
+<sheet n="1" qs="2,10">Question 2 is the weak law of large numbers used above. Question 10 is an almost sure version of the AEP in disguise.</sheet>
+<sheet n="2" qs="1,2,4">Question 1 is the AEP with the wrong pmf (the answer involves Definition 1.4). Question 2 counts sequences with a given number of ones, the exact version of Example 2.9.</sheet>
+
+## 2.3 Strong typicality {23} [d3 i1]
+<role r="question" a="is there a smaller set that does the job?">
+
+The last point of Remark 2.13 suggests a question. The typical set leaves out the most likely sequences. Is there a set with fewer elements than $T_n^\eps$ that still carries most of the probability?
+</role>
+
+<thm k="Definition 2.14" nm="Smallest high-probability set" pg="23">
+Let $S_n^\eps$ be the smallest subset of $\X^n$ such that
+$$\PP\big((X_1,\dots,X_n)\in S_n^\eps\big)\ge1-\eps.$$
+</thm>
+<role r="reading" a="Definition 2.14">
+
+To build it, order the sequences by probability, most likely first, and add them one at a time until the total reaches $1-\eps$. By construction no set with probability $\ge1-\eps$ is smaller.
+</role>
+
+<thm k="Proposition 2.15" d="The smallest set is no smaller to first order in the exponent" pg="23" it>
+Let $(\eps_m)_m$ be a sequence of positive numbers with $\eps_m\to0$. Then
+$$\lim_{m\to\infty}\lim_{n\to\infty}\frac1n\log\frac{|S_n^{\eps_m}|}{|T_n^{\eps_m}|}=0.$$
+</thm>
+
+<pf h="Proof sketch.">
+Write $\eps$ for $\eps_m$ and $H$ for $H(X)$. Since $S_n^\eps$ is the smallest set with probability $\ge1-\eps$, and $T_n^\eps$ is such a set for large $n$, we have $|S_n^\eps|\le|T_n^\eps|$. For the other direction, both sets have probability at least $1-\eps$, so their intersection has probability at least $1-2\eps$ (a union bound on the complements). Every element of $T_n^\eps$ has probability at most $2^{-n(H-\eps)}$. So
+$$1-2\eps\le\PP\big(S_n^\eps\cap T_n^\eps\big)\le|S_n^\eps|\,2^{-n(H-\eps)}\le\frac{|S_n^\eps|}{|T_n^\eps|}\,2^{2n\eps},$$
+using $|T_n^\eps|\le2^{n(H+\eps)}$ in the last step. Taking $\frac1n\log$ and letting $n\to\infty$ gives a limit between $-2\eps$ and $0$; then let $\eps=\eps_m\to0$. The details are Problem Sheet 2, Question 3.
+</pf>
+
+<role r="payoff" a="why we keep the typical set">
+
+So the strong and weak typical sets have the same size to first order in the exponent: both are about $2^{nH(X)}$. Nothing is gained by working with $S_n^\eps$, even though its construction looks more efficient. One might still prefer $S_n^\eps$ because its definition is simpler. But every argument that uses typical sequences needs to *count* them, and counting $T_n^\eps$ is trivial because its elements are all about equally likely, while counting $S_n^\eps$ is hard.
+</role>
+
+<sheet n="2" qs="3">Bounds on the size of the smallest high-probability set, completing the proof above.</sheet>

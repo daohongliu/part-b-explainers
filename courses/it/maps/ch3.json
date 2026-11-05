@@ -1,0 +1,17 @@
+{"nodes":[
+["opt","Optimal code: an integer programme","r3-1",1],
+["lb","H ≤ E|c(X)|","r3-2",0],
+["ub","Optimal code within 1 of H","r3-3",0],
+["blk","Block codes: overhead 1/n","s3-2",1],
+["sh1","Shannon’s first theorem","r3-4",0],
+["sc","Shannon’s code","s3-3",1],
+["wrong","Wrong distribution costs D(p||q)","r3-6",1],
+["huf","Huffman code","s3-5",0],
+["canon","Canonical optimal codes","r3-11",1],
+["hopt","Huffman is optimal","r3-10",0],
+["el","Elias’ code","s3-6",1],
+["ar","Arithmetic codes","r3-12",0],
+["tun","Tunstall: variable-to-fixed","r3-14",1]],
+"edges":[["opt","lb","relax"],["lb","ub","round up"],["ub","blk","share the +1"],["blk","sh1","typical sets"],["ub","sc","explicit"],["sc","wrong","robustness"],["canon","hopt","shape of optimal codes"],["huf","hopt","proved"],["sc","el","no sorting"],["el","ar","nested intervals"],["huf","tun","reversed"]],
+"ext":[["c2k","Kraft–McMillan","r2-5"],["c2a","AEP","r2-12"],["c1d","Divergence","r1-4"],["c1g","Gibbs’ inequality","r1-14"]],
+"extedges":[["c2k","opt","the constraint"],["c2a","sh1","used"],["c1d","wrong","the price"],["c1g","lb","proof"]]}

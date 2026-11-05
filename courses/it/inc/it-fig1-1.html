@@ -1,0 +1,11 @@
+<figure class="wide" id="fig1-1">
+  <div class="fig-body">
+    <svg id="it-be-svg" class="pt" viewBox="0 0 720 280" role="img" aria-label="Left: the surprise of heads and of tails as bars. Right: the binary entropy function, an arch with maximum 1 at p = one half."></svg>
+    <div class="controls">
+      <label class="grow" for="it-be-p">P(heads) = p <input type="range" id="it-be-p" min="0" max="1" step="0.005" value="0.2"> <output id="it-be-pv"></output></label>
+      <button type="button" id="it-be-flip">flip 40 coins</button>
+    </div>
+    <div class="readout" id="it-be-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.1</span>Entropy as average surprise, for a coin. On the left, the surprise \(-\log_2p\) of heads and \(-\log_2(1-p)\) of tails, each bar as wide as the probability of that outcome. The shaded area is the probability-weighted average of the surprises, which is the entropy \(H(p)\) of Example 1.2. On the right, \(H(p)\) as a function of \(p\). A rare outcome is very surprising but seldom happens, so it adds little on average.</figcaption>
+</figure>

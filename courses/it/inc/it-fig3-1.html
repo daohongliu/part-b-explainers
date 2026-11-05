@@ -1,0 +1,14 @@
+<figure class="wide" id="fig3-1">
+  <div class="fig-body">
+    <div class="it-lens" id="it-hf-in"></div>
+    <svg id="it-hf-svg" class="pt" viewBox="0 0 720 330" role="img" aria-label="Huffman's algorithm: the two least likely nodes are merged step by step into a binary tree, with the resulting codewords."></svg>
+    <div class="controls">
+      <button type="button" id="it-hf-step">merge next pair</button>
+      <button type="button" id="it-hf-all">finish</button>
+      <button type="button" id="it-hf-reset">restart</button>
+      <span role="group" aria-label="examples"><button type="button" data-ith="a" aria-pressed="true">notes</button><button type="button" data-ith="b" aria-pressed="false">sheet 2, Q7</button><button type="button" data-ith="c" aria-pressed="false">dyadic</button><button type="button" data-ith="d" aria-pressed="false">skewed</button></span>
+    </div>
+    <div class="readout" id="it-hf-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.2</span>Huffman’s algorithm, one merge at a time. The two least likely nodes (outlined) are joined under a new node carrying their total probability; repeat until one root remains. Edit the probabilities above (they are renormalised). The table compares the codeword lengths of Huffman’s code with Shannon’s \(\lceil-\log_2p\rceil\) and Elias’ \(\lceil-\log_2p\rceil+1\), and all three expected lengths with the entropy.</figcaption>
+</figure>

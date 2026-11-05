@@ -1,0 +1,11 @@
+<figure class="wide" id="fig3-3">
+  <div class="fig-body">
+    <svg id="it-ar-svg" class="pt" viewBox="0 0 720 320" role="img" aria-label="Arithmetic coding: the unit interval is split in proportion to the symbol probabilities, and each symbol of the message zooms into its sub-interval."></svg>
+    <div class="controls">
+      <label class="grow" for="it-ar-msg">message <input type="text" id="it-ar-msg" value="abaca" maxlength="12" spellcheck="false" autocomplete="off" style="font-family:var(--mono);width:9rem"></label>
+      <span class="lbl">symbols a, b, c with probabilities 0.6, 0.3, 0.1</span>
+    </div>
+    <div class="readout" id="it-ar-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.3</span>Arithmetic coding as repeated zooming. Each row shows the current interval, cut in proportion to \(\PP(a)=0.6\), \(\PP(b)=0.3\), \(\PP(c)=0.1\); the next symbol of the message picks out its piece, which becomes the next row. The final interval has length \(\prod_i p(x_i)\), and the code is enough binary digits of its midpoint to identify it: \(\lceil-\log_2\prod_ip(x_i)\rceil+1\) bits (Theorem 3.12). Type a message made of a, b and c.</figcaption>
+</figure>

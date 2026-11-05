@@ -1,0 +1,10 @@
+{"nodes":[
+["q","Two questions: compress, and protect","s0-1",0],
+["pic","Source → encoder → channel → decoder","fig0-1",1],
+["yn","Information = number of yes/no questions","s0-2",0],
+["uneq","Unequal odds need fewer questions","fig0-2",1],
+["H","The entropy H = −Σ p log p","s0-2",0],
+["conn","Physics, CS, statistics, gambling","s0-3",1]],
+"edges":[["q","pic","pictured"],["q","yn","first answer"],["yn","uneq","refined"],["uneq","H","the number that appears"],["H","conn","appears elsewhere"]],
+"ext":[["c1","Definition of entropy","r1-1"],["c3","Shannon’s first theorem","r3-4"],["c3h","Huffman codes","s3-5"]],
+"extedges":[["H","c1","made precise"],["uneq","c3h","best question tree"],["H","c3","compression limit"]]}

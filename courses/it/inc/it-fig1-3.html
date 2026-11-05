@@ -1,0 +1,14 @@
+<figure class="wide" id="fig1-3">
+  <div class="fig-body">
+    <div class="it-joint" id="it-joint"></div>
+    <svg id="it-ent-svg" class="pt" viewBox="0 0 720 220" role="img" aria-label="Bars showing H(X,Y) split into H(X|Y), I(X;Y) and H(Y|X), with H(X) and H(Y) bracketed above."></svg>
+    <div class="controls" role="group" aria-label="examples">
+      <button type="button" data-itj="ind" aria-pressed="false">independent</button>
+      <button type="button" data-itj="noisy" aria-pressed="true">noisy copy</button>
+      <button type="button" data-itj="copy" aria-pressed="false">Y = X</button>
+      <button type="button" data-itj="sq" aria-pressed="false">Y = X², uncorrelated</button>
+    </div>
+    <div class="readout" id="it-ent-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.3</span>How the quantities of Chapter 1 fit together. Above, a joint pmf of \((X,Y)\) on three values each; drag a cell's slider to change its weight (the table is renormalised). Below, \(H(X,Y)\) as one bar, split into \(H(X|Y)\), \(I(X;Y)\) and \(H(Y|X)\). The bracket for \(H(X)\) covers the first two pieces and the bracket for \(H(Y)\) the last two: that is \(H(X,Y)=H(X)+H(Y|X)\), and \(I(X;Y)=H(X)-H(X|Y)=H(X)+H(Y)-H(X,Y)\).</figcaption>
+</figure>

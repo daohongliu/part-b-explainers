@@ -19,7 +19,7 @@ import re, sys, json, html, pathlib
 REPO = pathlib.Path(__file__).resolve().parent.parent
 TPL = REPO / 'build' / 'templates'
 OUT = REPO / 'dist' / 'index.html'
-COURSES = ['pmm', 'clt']
+COURSES = ['pmm', 'clt', 'it']
 ROOT = None  # current course directory
 P = ''       # current course id prefix
 
@@ -427,7 +427,7 @@ def main():
         conf = json.loads((REPO / 'courses' / cid / 'course.json').read_text())
         v, pl, j, hb = build_course(cid, conf)
         views.append(v); pills.append(pl); js += j; hubs.append(hb)
-    hubp = '<span class="pillgroup hubgroup">' + ''.join(re.sub(r'.*?href="#(\w+)".*?hc-code">([^<]+).*?hc-t">([^<]+).*', r'<a href="#\1" title="\3">\2 · \3</a>', x, flags=re.S) for x in hubs) + '</span>'
+    hubp = '<span class="pillgroup hubgroup">' + ''.join(re.sub(r'.*?href="#(\w+)".*?hc-code">([^<]+).*?hc-t">([^<]+).*', r'<a href="#\1" title="\2 · \3">\3</a>', x, flags=re.S) for x in hubs) + '</span>'
     shell = (TPL / 'shell-top.html').read_text().replace('%%PILLS%%', hubp + ''.join(pills))
     hub = (TPL / 'hub.html').read_text().replace('%%COURSES%%', ''.join(hubs))
     body = shell + hub + '\n'.join(views) + (TPL / 'shell-bottom.html').read_text()

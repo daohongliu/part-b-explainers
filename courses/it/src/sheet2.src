@@ -1,0 +1,112 @@
+@num 2
+@title Typical sequences and codes
+@source Problem Sheet 2 · MT25
+@dek The AEP with the wrong distribution, counting binary sequences, the smallest high-probability set, empirical measures, a biased coin from a fair one, Huffman codes against Morse code, differential entropy, and Kraft through trees. Needs Chapters 1 to 3.
+---
+## Section A · Warm-up
+
+<qn n="1" t="The AEP with the wrong pmf, and the geometric mean">
+<ol class="parts"><li>Let $(X_i)$ be i.i.d. with values in a discrete set $\X$ and pmf $p$, and let $q$ be another pmf on $\X$, with $q(x_1,\dots,x_n)=\prod_{i=1}^nq(x_i)$. Show that, in probability,
+$$\lim_{n\to\infty}-\frac1n\log q(X_1,\dots,X_n)=D(p\|q)+H(X).$$</li><li>Let $(Y_i)$ be i.i.d. uniform on $[0,1]$, and $V_n=\prod_{i=1}^nY_i$ the volume of an $n$-dimensional box with sides $Y_i$. Let $l_n=V_n^{1/n}$ be the side of the cube with the same volume. Find $l=\lim_nl_n$ and compare it with $\lim_n(\E V_n)^{1/n}$.</li></ol>
+
+<details class="hint"><summary>hint</summary>Both parts are the weak law applied to a logarithm. In part 1 the mean of $-\log q(X)$ is the "cross-entropy" from the reading of Definition 1.4. In part 2, $\E[\ln Y]=-1$.</details>
+
+<p class="uses">Uses Theorem 2.10 and Definition 1.4.</p>
+</qn>
+
+<qn n="2" t="Counting sequences with a given number of ones">
+For $q\in[0,1]$ and $n\in\N$ with $nq$ an integer, show that
+$$\frac{2^{nH(q)}}{n+1}\le\binom n{nq}\le2^{nH(q)}.$$
+
+<details class="hint"><summary>hint</summary>Let $X_1,\dots,X_n$ be i.i.d. Bernoulli($q$). Every sequence with exactly $nq$ ones has probability $2^{-nH(q)}$. For the upper bound, their total probability is at most $1$. For the lower bound, show that $k=nq$ is the most likely number of ones, so its probability is at least $\frac1{n+1}$.</details>
+
+<p class="uses">The exact version of Example 2.9.</p>
+</qn>
+
+<qn n="3" t="The smallest high-probability set">
+Let $X$ take values in a finite set $\X$ with pmf $p$, and $\vec X=(X_1,\dots,X_n)$. Construct the smallest set $S_n^\eps\subseteq\X^n$ with $\PP(\vec X\in S_n^\eps)\ge1-\eps$ by greedily adding the most likely sequences one at a time. Show that for every $\eps>0$ there is $n_0$ such that for $n\ge n_0$,
+$$(1-2\eps)2^{n(H(X)-\eps)}\le|S_n^\eps|\le2^{n(H(X)+\eps)}.$$
+Use this to complete the proof of Proposition 2.15.
+
+<details class="hint"><summary>hint</summary>If $\PP(A)\ge1-\eps_1$ and $\PP(B)\ge1-\eps_2$ then $\PP(A\cap B)\ge1-\eps_1-\eps_2$. Use this to bound $\PP(S_n^\eps\cap T_n^\eps)$ from below.</details>
+
+<p class="uses">Uses Theorem 2.12 and Definition 2.14.</p>
+</qn>
+
+## Section B · To be handed in
+
+<qn n="4" t="Empirical measures get closer on average">
+Let $(X_i)$ be i.i.d. with values in a discrete set $\X$ and pmf $p$, and let $\hat p_n$ be the empirical measure of the first $n$ samples, $\hat p_n(x)=\frac1n\sum_{i=1}^n\ind_{X_i=x}$.
+
+<ol class="parts"><li>Show that $\hat p_n(x)\to p(x)$ in probability for each $x$.</li><li>Show that $\E D(\hat p_{2n}\|p)\le\E D(\hat p_n\|p)$.</li><li>Show that the mean divergence decreases with every extra sample: $\E D(\hat p_n\|p)\le\E D(\hat p_{n-1}\|p)$.</li></ol>
+
+<details class="hint"><summary>hint</summary>Part 2: $\hat p_{2n}$ is the average of the empirical measures of the two halves, and $D$ is convex (Theorem 1.16, part 5). Part 3: write $\hat p_n$ as the average of the $n$ empirical measures with one sample deleted.</details>
+
+<p class="uses">Uses part 5 of Theorem 1.16.</p>
+</qn>
+
+<qn n="5" t="A biased coin from a fair one">
+Given a fair coin, we want to generate $X$ with $\PP(X=1)=p$, $\PP(X=0)=1-p$, for a given $p\in(0,1)$. Let $Z_1,Z_2,\dots$ be i.i.d. fair bits, let $U=\sum_{i\ge1}Z_i2^{-i}$, and let $X=1$ if $U<p$ and $X=0$ otherwise.
+
+<ol class="parts"><li>Show that $U$ is uniform on $[0,1)$, and hence that $X$ has the right distribution.</li><li>Let $I$ be the least $n$ such that $Z_1,\dots,Z_n$ already decide whether $U<p$. Compute $\E[I]$ and show $\E[I]\le2$.</li></ol>
+
+<details class="hint"><summary>hint</summary>After $n$ flips you know $U$ lies in a dyadic interval of length $2^{-n}$. You are undecided exactly when that interval contains $p$, and that happens with probability $2^{-n}$ (for $p$ not a dyadic rational).</details>
+
+<p class="uses">The nested intervals of Section 3.7, run backwards.</p>
+</qn>
+
+<qn n="6" t="Entropy of a mixture">
+Let $X_1$ take values in $\{1,\dots,m\}$ and $X_2$ in $\{m+1,\dots,n\}$, and let $\theta$ be independent of both with $\PP(\theta=1)=\alpha$, $\PP(\theta=2)=1-\alpha$. Let $X=X_\theta$.
+
+<ol class="parts"><li>Express $H(X)$ in terms of $H(X_1)$, $H(X_2)$ and $H(\theta)$.</li><li>Show that $2^{H(X)}\le2^{H(X_1)}+2^{H(X_2)}$. Can equality hold?</li></ol>
+
+<details class="hint"><summary>hint</summary>The ranges are disjoint, so $\theta$ is a function of $X$. Use the chain rule on $H(X,\theta)$ in both orders. For part 2, maximise the expression from part 1 over $\alpha$.</details>
+
+<p class="uses">Uses the chain rule and part 4 of Theorem 1.19.</p>
+</qn>
+
+<qn n="7" t="Binary against quaternary Huffman codes">
+<ol class="parts"><li>Let $X$ take the six values $A,B,C,D,E,F$ with probabilities $0.5,0.25,0.1,0.05,0.05,0.05$.
+<ol class="parts"><li>Construct a binary Huffman code for $X$ and compute its expected length.</li><li>Construct a quaternary Huffman code (letters $a,b,c,d$) and compute its expected length.</li><li>Convert the quaternary code to binary by $a\mapsto00$, $b\mapsto01$, $c\mapsto10$, $d\mapsto11$. What is the expected length now?</li></ol></li><li>For a general $X$:
+<ol class="parts"><li>Let $L_H$ be the expected length of the binary Huffman code and $L_{QB}$ that of the converted quaternary code. Show $L_H\le L_{QB}<L_H+2$.</li><li>Give an example where $L_H=L_{QB}$.</li><li>In fact $L_{QB}\le L_H+1$. Can you find an example where this is tight?</li></ol></li></ol>
+
+<details class="hint"><summary>hint</summary>For the quaternary code with six symbols, add dummy symbols of probability $0$ so that each merge combines four. For part 2(i), compare both lengths with the entropy: $L_{QB}=2L_Q$ and $H_4(X)=\frac12H_2(X)$.</details>
+
+<p class="uses">Uses Section 3.5 and Proposition 3.3. Figure 3.2 can check your binary code.</p>
+</qn>
+
+<qn n="8" t="Huffman against Morse">
+International Morse code is a ternary encoding of the alphabet: dots, dashes and pauses. In the file `IMC.csv` (not included here) a dot is written $10$, a dash $1110$, and the pause between letters $0000000$.
+
+<ol class="parts"><li>Explain why Morse code is a prefix code, but not uniquely decodable if the pauses at the ends of letters are left out.</li><li>Using single-letter counts and the Huffman algorithm, find a binary code encoding each character as one block.</li><li>Using single-letter counts, find a binary Huffman code for pairs of characters, assuming they are independent.</li><li>Using the counts of pairs of consecutive letters, find a binary Huffman code for pairs.</li><li>Using the pair counts, compute the average message length of each code above, and of Morse code, on pairs of consecutive English characters.</li></ol>
+
+(Only parts 1 and 5 need to be submitted.)
+
+<p class="uses">Uses Sections 3.2 and 3.5; part 4 shows why dependence between letters matters.</p>
+</qn>
+
+## Section C · Extra practice
+
+<qn n="9" t="Differential entropy">
+The **differential entropy** of an $\R^n$-valued random variable $X$ with density $f$ is
+$$h(X):=-\int_{\R^n}f(x)\log f(x)\,dx,$$
+with $0\log0=0$.
+
+<ol class="parts"><li>Compute $h(X)$ for $n=1$ when $X$ is (1) uniform on $[a,b]$; (2) standard normal; (3) exponential with parameter $\lambda>0$.</li><li>For general $n$, if $\E[X]=0$ and $X$ has covariance matrix $K$, show that
+$$h(X)\le n\log\sqrt{2\pi e}+\log\sqrt{|K|},$$
+with equality iff $X$ is multivariate normal.</li></ol>
+
+<details class="hint"><summary>hint</summary>First prove Gibbs' inequality for densities: $-\int f\log f\le-\int f\log g$ for any densities $f,g$. Take $g$ the normal density with covariance $K$, and use $\E[X^\top K^{-1}X]=n$. Note that the uniform case can give a negative answer: differential entropy is not a number of bits.</details>
+
+<p class="uses">The continuous analogue of Lemma 1.14 and part 1 of Theorem 1.19.</p>
+</qn>
+
+<qn n="10" t="Kraft’s theorem with trees">
+Prove the weaker version of the Kraft–McMillan theorem, Kraft's theorem, using rooted trees.
+
+<ol class="parts"><li>Let $c:\X\to\{0,\dots,d-1\}^*$ be a prefix code. Consider its code tree and argue that $\sum_{x\in\X}d^{-|c(x)|}\le1$. (The prefix assumption is crucial: without it the code tree is not even defined. The theorem in the notes only needs unique decodability.)</li><li>Suppose $\sum_{x\in\X}d^{-l_x}\le1$ with $l_x\in\N$. Show there is a prefix code with $|c(x)|=l_x$ by constructing a rooted tree.</li></ol>
+
+<details class="hint"><summary>hint</summary>Extend the tree to the full $d$-ary tree of depth $l_{\max}$. The codeword at depth $l$ owns $d^{l_{\max}-l}$ of the $d^{l_{\max}}$ bottom vertices, and different codewords own disjoint sets. For part 2, place codewords greedily, shortest first, at the leftmost free vertex of the right depth.</details>
+
+<p class="uses">Remark 2.6 and Lemma 3.9; Figure 2.1 draws the tree.</p>
+</qn>

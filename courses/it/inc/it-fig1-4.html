@@ -1,0 +1,11 @@
+<figure class="wide" id="fig1-4">
+  <div class="fig-body">
+    <svg id="it-fano-svg" class="pt" viewBox="0 0 720 280" role="img" aria-label="The Fano bound as a curve in the plane of error probability against conditional entropy; points above the curve are impossible."></svg>
+    <div class="controls">
+      <label class="grow" for="it-fano-k">alphabet size |𝒳| <input type="range" id="it-fano-k" min="2" max="32" step="1" value="8"> <output id="it-fano-kv"></output></label>
+      <label class="grow" for="it-fano-h">H(X|Y) <input type="range" id="it-fano-h" min="0" max="5" step="0.01" value="1.5"> <output id="it-fano-hv"></output></label>
+    </div>
+    <div class="readout" id="it-fano-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.4</span>What Fano’s inequality rules out. The curve is \(H(P_e)+P_e\log(|\X|-1)\), the largest \(H(X|Y)\) compatible with error probability \(P_e=\PP(X\neq Y)\). Points above it are impossible. So if the remaining uncertainty \(H(X|Y)\) is fixed (the horizontal line), every guess has error probability at least where the line meets the curve. The dashed line is the cruder bound of Corollary 1.22.</figcaption>
+</figure>

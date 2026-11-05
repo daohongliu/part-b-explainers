@@ -1,0 +1,13 @@
+{"nodes":[
+["sym","Symbol codes","r2-1",1],
+["cls","Prefix ⊂ uniquely decodable ⊂ unambiguous","r2-3",0],
+["kraft","Kraft–McMillan inequality","r2-5",0],
+["cor","Prefix codes suffice","r2-8",1],
+["ex","Coin sequences: probability ≈ 2^−nH","r2-9",1],
+["aep1","Weak AEP 1","r2-10",0],
+["typ","Typical set","r2-11",0],
+["aep2","Weak AEP 2: size ≈ 2^nH","r2-12",0],
+["strong","Smallest high-probability set","r2-15",1]],
+"edges":[["sym","cls","classes"],["cls","kraft","which lengths?"],["kraft","cor","converse"],["ex","aep1","law of large numbers"],["aep1","typ","suggests"],["typ","aep2","counted"],["aep2","strong","no smaller to first order"]],
+"ext":[["c1","Entropy","r1-1"],["c3","Source coding bound","r3-2"],["c3s","Shannon’s first theorem","r3-4"]],
+"extedges":[["c1","ex","rate"],["kraft","c3","the constraint"],["aep2","c3s","short codes for typical blocks"]]}

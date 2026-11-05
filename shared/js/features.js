@@ -37,13 +37,33 @@ function loadThree() {
   return threeP;
 }
 
+const COURSE_NAME = { pmm: 'Probability, Measure and Martingales', clt: 'Computational Learning Theory', it: 'Information Theory' };
+const COURSE_SHORT = { pmm: 'PMM', clt: 'Learning Theory', it: 'Information Theory' };
 /* ---------- header strips: random walks for PMM, labelled points for CLT ---------- */
 function drawStrip(c) {
   const dpr = Math.min(2, window.devicePixelRatio || 1), W = c.clientWidth || 600, H = 120;
   c.width = W * dpr; c.height = H * dpr; const g = c.getContext('2d'); g.scale(dpr, dpr);
   const cs = getComputedStyle(document.body);
   const col = n => cs.getPropertyValue(n).trim();
-  const R = rng(c.dataset.motif === 'points' ? 11 : 7);
+  const R = rng(c.dataset.motif === 'points' ? 11 : c.dataset.motif === 'bits' ? 5 : 7);
+  if (c.dataset.motif === 'bits') {
+    /* a stream of source symbols above, its prefix-code bits below: frequent symbols get short codewords */
+    const syms = ['e', 't', 'a', 'o', 'n', 's', 'h', 'r', 'd', 'l', 'u', '_'], code = ['00', '010', '011', '100', '1010', '1011', '1100', '1101', '11100', '11101', '11110', '11111'];
+    const pr = [.2, .14, .12, .11, .09, .08, .07, .06, .05, .03, .03, .02];
+    let x = 6, k = 0; g.font = '13px ' + (cs.getPropertyValue('--serif') || 'serif'); g.textBaseline = 'middle';
+    while (x < W - 10 && k < 400) {
+      let u = R(), i = 0; while (i < pr.length - 1 && u > pr[i]) { u -= pr[i]; i++; }
+      const bits = code[i], w = bits.length * 7.2 + 6;
+      g.globalAlpha = .85; g.fillStyle = col('--ink'); g.fillText(syms[i], x + w / 2 - 3, 30);
+      g.globalAlpha = .35; g.strokeStyle = col('--ink-soft'); g.lineWidth = .8; g.beginPath(); g.moveTo(x + 1, 46); g.lineTo(x + w - 3, 46); g.stroke();
+      g.font = '11px ' + (cs.getPropertyValue('--mono') || 'monospace');
+      for (let j = 0; j < bits.length; j++) { g.globalAlpha = .9; g.fillStyle = bits[j] === '1' ? col('--blue') : col('--ochre'); g.fillText(bits[j], x + 3 + j * 7.2, 64); }
+      g.globalAlpha = .18; g.fillStyle = col('--blue'); g.fillRect(x + 1, 80, w - 4, 6 + 26 * (1 - bits.length / 6));
+      g.font = '13px ' + (cs.getPropertyValue('--serif') || 'serif');
+      x += w; k++;
+    }
+    g.globalAlpha = 1; return;
+  }
   if (c.dataset.motif === 'points') {
     /* a hidden threshold concept: points left of it are one label, right of it the other; a few sampled points are circled */
     const th = W * (.38 + .2 * R());
@@ -125,7 +145,7 @@ function buildToc(v) {
     const sub = h('ul', 'tl-sub'), subs = [];
     if (!isSheet) {
       const next = tops[i + 1];
-      $$('h3[id], .thm[id^="' + (v.dataset.course === 'clt' ? 'clt-' : '') + 'r"]', v).forEach(x => {
+      $$('h3[id], .thm[id^="' + (v.dataset.course && v.dataset.course !== 'pmm' ? v.dataset.course + '-' : '') + 'r"]', v).forEach(x => {
         if (!(hd.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_FOLLOWING)) return;
         if (next && !(next.compareDocumentPosition(x) & Node.DOCUMENT_POSITION_PRECEDING)) return;
         if (x.closest('.xcard, .side-panel')) return;
@@ -144,7 +164,7 @@ function buildToc(v) {
   tocSide.appendChild(ul);
   const foot = h('div', 'toc-foot');
   const course = v.dataset.course;
-  const home = h('a', '', '↖ ' + (course === 'clt' ? 'Learning Theory' : 'PMM') + ' contents'); home.href = '#' + course;
+  const home = h('a', '', '↖ ' + (COURSE_SHORT[course] || course) + ' contents'); home.href = '#' + course;
   foot.appendChild(home); tocSide.appendChild(foot);
   ul.addEventListener('click', e => { if (e.target.closest('a')) closeToc(); });
   TS = { v, secs, meta, ul, rail, prog: prog.firstChild, total: secs.reduce((s, x) => s + x.min, 0), isSheet };
@@ -261,7 +281,7 @@ showView = function (id) {
   const r = _showView(id);
   const v = document.getElementById(currentView);
   document.body.dataset.course = (v && v.dataset.course) || '';
-  document.title = v ? (v.classList.contains('hub') ? 'Part B, slowly' : v.dataset.title + ' · ' + (v.dataset.course === 'clt' ? 'Computational Learning Theory' : 'Probability, Measure and Martingales')) : document.title;
+  document.title = v ? (v.classList.contains('hub') ? 'Part B, slowly' : v.dataset.title + ' · ' + (COURSE_NAME[v.dataset.course] || '')) : document.title;
   $$('.topbar .pills a').forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + currentView)));
   buildToc(v);
   walkStrip();
@@ -359,7 +379,7 @@ const cmapBody = h('div', 'cmap-b'); cmap.appendChild(cmapHead); cmap.appendChil
 const cmapBtn = h('button', 'cmap-btn', 'map'); cmapBtn.type = 'button'; cmapBtn.title = 'Map of the chapter'; cmapBtn.hidden = true;
 document.body.appendChild(cmap); document.body.appendChild(cmapBtn);
 let CM = null, cmOpen = false;
-function chNum(id) { const m = /(?:^|-)(?:r|s|h|fig|alg|ch|eq)(\d+)/.exec(id.replace(/^clt-/, '')); return m ? +m[1] : null; }
+function chNum(id) { const m = /(?:^|-)(?:r|s|h|fig|alg|ch|eq)(\d+)/.exec(id.replace(/^(clt|it)-/, '')); return m ? +m[1] : null; }
 function wrapText(t, w, px) { const words = t.split(' '), lines = []; let cur = ''; const cw = px * .5; words.forEach(x => { const nx = cur ? cur + ' ' + x : x; if (nx.length * cw > w && cur) { lines.push(cur); cur = x; } else cur = nx; }); if (cur) lines.push(cur); return lines; }
 function placeCmap() {
   const v = currentView && document.getElementById(currentView);
@@ -501,7 +521,7 @@ function buildIndex() {
   SRCH.idx = idx;
 }
 const sbox = h('div', 'search-box'); sbox.hidden = true; sbox.setAttribute('role', 'dialog'); sbox.setAttribute('aria-label', 'Search');
-sbox.innerHTML = '<div class="sb-in"><input type="search" placeholder="Search both courses: a result, a word, “Fatou”, “VC dimension”, “4.9”…" aria-label="Search" autocomplete="off" spellcheck="false"><div class="sb-filt" role="group"><button type="button" data-sf="" aria-pressed="true">all</button><button type="button" data-sf="pmm" aria-pressed="false">PMM</button><button type="button" data-sf="clt" aria-pressed="false">CLT</button></div></div><div class="sb-res" role="listbox"></div><div class="sb-foot">↑↓ to move · enter to go · esc to close</div>';
+sbox.innerHTML = '<div class="sb-in"><input type="search" placeholder="Search every course: a result, a word, “Fatou”, “VC dimension”, “4.9”…" aria-label="Search" autocomplete="off" spellcheck="false"><div class="sb-filt" role="group"><button type="button" data-sf="" aria-pressed="true">all</button><button type="button" data-sf="pmm" aria-pressed="false">PMM</button><button type="button" data-sf="clt" aria-pressed="false">CLT</button><button type=\"button\" data-sf=\"it\" aria-pressed=\"false\">IT</button></div></div><div class="sb-res" role="listbox"></div><div class="sb-foot">↑↓ to move · enter to go · esc to close</div>';
 const sback = h('div', 'search-back'); sback.hidden = true;
 document.body.appendChild(sback); document.body.appendChild(sbox);
 const sin = $('input', sbox), sres = $('.sb-res', sbox); let sel = 0, hits = [], sfilt = '';

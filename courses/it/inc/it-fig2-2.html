@@ -1,0 +1,12 @@
+<figure class="wide" id="fig2-2">
+  <div class="fig-body">
+    <svg id="it-aep-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Histogram of the surprise per symbol of a random coin sequence, concentrating around the entropy as n grows; the typical band is shaded."></svg>
+    <div class="controls">
+      <label class="grow" for="it-aep-n">length n <input type="range" id="it-aep-n" min="1" max="1000" step="1" value="25"> <output id="it-aep-nv"></output></label>
+      <label class="grow" for="it-aep-p">P(1) <input type="range" id="it-aep-p" min="0.02" max="0.5" step="0.01" value="0.2"> <output id="it-aep-pv"></output></label>
+      <label class="grow" for="it-aep-e">ε <input type="range" id="it-aep-e" min="0.01" max="0.3" step="0.01" value="0.1"> <output id="it-aep-ev"></output></label>
+    </div>
+    <div class="readout" id="it-aep-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 2.2</span>The asymptotic equipartition property, computed exactly for a coin. A sequence with \(k\) ones has surprise per symbol \(-\frac1n\log\big(p^k(1-p)^{n-k}\big)\). Each bar is the probability of getting \(k\) ones, placed at that surprise. As \(n\) grows the mass piles up around \(H(p)\) (the vertical line): almost every sequence is in the typical band \(H\pm\eps\), even though the band holds a vanishing fraction of all \(2^n\) sequences.</figcaption>
+</figure>

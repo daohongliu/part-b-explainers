@@ -1,0 +1,14 @@
+{"nodes":[
+["sur","Surprise −log P","s1-1",1],
+["ent","Entropy = average surprise","r1-1",0],
+["div","Divergence D(p||q)","r1-4",0],
+["mi","Mutual information I(X;Y)","r1-7",0],
+["cond","Conditional versions & chain rule","r1-8",1],
+["jen","Jensen, Gibbs, log sum","s1-2",0],
+["dprop","Divergence properties","r1-16",1],
+["mprop","MI properties, data processing","r1-17",0],
+["eprop","Entropy properties","r1-19",0],
+["fano","Fano’s inequality","r1-21",0]],
+"edges":[["sur","ent","averaged"],["ent","div","compare two pmfs"],["div","mi","joint vs product"],["ent","cond","condition"],["jen","dprop","Gibbs ⇒ D ≥ 0"],["dprop","mprop","I = D(p_XY||p_X p_Y)"],["mprop","eprop","H(X|Y) ≤ H(X)"],["eprop","fano","error bound"],["cond","mprop","chain rule"]],
+"ext":[["c2","AEP","r2-12"],["c3","Source coding bound","r3-2"],["c3w","Wrong-distribution penalty","r3-6"]],
+"extedges":[["ent","c2","typical sets"],["div","c3","proof"],["div","c3w","costs D(p||q)"]]}

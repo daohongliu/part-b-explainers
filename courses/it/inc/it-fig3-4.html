@@ -1,0 +1,12 @@
+<figure class="wide" id="fig3-4">
+  <div class="fig-body">
+    <svg id="it-tu-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="Tunstall's tree for a source with P(a) = 0.7: at each step the most likely leaf is split into two."></svg>
+    <div class="controls">
+      <button type="button" id="it-tu-step">split the likeliest leaf</button>
+      <button type="button" id="it-tu-reset">restart</button>
+      <label class="grow" for="it-tu-p">P(a) <input type="range" id="it-tu-p" min="0.5" max="0.95" step="0.05" value="0.7"> <output id="it-tu-pv"></output></label>
+    </div>
+    <div class="readout" id="it-tu-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 3.4</span>Tunstall’s code grows a tree of input strings, always splitting the most likely leaf. With 3-bit outputs there is room for 8 leaves, so 6 splits; with \(\PP(a)=0.7\) this is Example 3.13. The readout gives the expected number of input symbols per output word, \(1+\sum\) (probabilities of the internal nodes below the root), against the limit \(3/H\).</figcaption>
+</figure>

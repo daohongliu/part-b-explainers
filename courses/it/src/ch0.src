@@ -1,0 +1,55 @@
+@num 0
+@title Introduction
+@titlehtml Two <em>questions</em>
+@pages 5–6
+@dek Every phone call, zip file and streamed film rests on two questions: how much information is in a message, and how much of it can survive a noisy wire. This course answers the first and starts on the second.
+---
+## 0.1 Two questions {5} [d1 i3]
+<role r="question" a="source coding and channel coding">
+
+Communication theory is a young subject, and it shaped the digital age. Whenever you store a file, make a call or stream a film, algorithms based on this course are running. But the mathematics arises on its own as soon as one tries to think precisely about "information": what it is, how to write it down, and how to send it somewhere. A large part of the course is about two questions.
+
+<ol class="parts"><li>**How much information is contained in a message?** If you want to store a text, how few bits can you get away with? This is *source coding*, or compression.</li><li>**What are the limits to sending information over a channel that is subject to noise?** If some bits get flipped on the way, how fast can you still communicate reliably? This is *channel coding*.</li></ol>
+</role>
+
+@@it-fig0-1@@
+
+<role r="roadmap" a="what the chapters do">
+
+Both questions need new mathematical objects. Chapter 1 builds them: **entropy**, which measures how unpredictable a random variable is; **divergence**, which measures how different two distributions are; and **mutual information**, which measures how much one random variable tells you about another. Chapter 2 introduces codes and the key probabilistic fact behind compression, that long random sequences are almost all "typical". Chapter 3 puts the two together and proves Shannon's first theorem: a source can be compressed to its entropy, and no further. Chapters 4 and 5 of the notes (channel coding, Shannon's second theorem) are not written up here yet.
+</role>
+
+## 0.2 A first guess at measuring information {5} [d1 i3]
+<role r="idea" a="information as the number of yes/no questions">
+
+Before any definitions, here is the idea that the whole course makes precise. I think of a number between 1 and 64, and you may ask yes/no questions. The best strategy halves the possibilities each time ("is it at most 32?"), and finds the number in exactly $6=\log_264$ questions. With $N$ equally likely possibilities you need about $\log_2N$ questions. So a sensible first measure of the information in the answer is $\log_2N$ **bits**: one bit is the answer to one well-chosen yes/no question.
+</role>
+<role r="question" a="what if the outcomes are not equally likely?">
+
+Now suppose the possibilities are *not* equally likely. If I almost always pick 7, you should ask "is it 7?" first, and usually you are done after one question. On average you need fewer questions than $\log_2N$, because the answer was less uncertain to begin with. Figure 0.2 lets you try this. Pick a distribution and see the best question tree: likely outcomes are reached with few questions, unlikely ones with more.
+</role>
+
+@@it-fig0-2@@
+
+<role r="payoff" a="the number that appears">
+
+The average number of questions in the best tree is always close to one particular number computed from the probabilities,
+$$H=-\sum_xp(x)\log_2p(x),$$
+which is the **entropy** of the distribution. For the uniform distribution on $N$ outcomes it is exactly $\log_2N$. Chapter 1 defines entropy properly and studies it; Chapter 3 proves that the best average number of yes/no questions (equivalently, the best average length of a binary code) lies between $H$ and $H+1$.
+</role>
+
+<pause n="Twenty questions" q="In the game of twenty questions you may ask 20 yes/no questions. Roughly how many equally likely objects can a perfect player distinguish? And if the objects are not equally likely, could a clever player handle even more of them?">
+With 20 questions, each halving the possibilities, a perfect player can separate $2^{20}=1{,}048{,}576$ equally likely objects, about a million. If the objects are not equally likely, the player can tolerate many more of them in the list, as long as the rare ones are rare enough: the question tree can give long paths to rare objects and short ones to common ones. What matters is the entropy of the distribution, not the number of objects. (Strictly, a game with a hard limit of 20 questions must still separate every object, so it is the *average* number of questions that drops, not the worst case.)
+</pause>
+
+## 0.3 Connections and books {5} [d1 i1]
+<role r="link" a="where else entropy appears">
+
+Information theory gives new interpretations of results in probability, and it is closely tied to
+
+<ul><li>**physics**: thermodynamics, statistical mechanics, quantum theory;</li><li>**computer science**: Kolmogorov complexity, data compression, error-correcting codes;</li><li>**statistics and machine learning**: the log-loss, cross-entropy and Kullback–Leibler divergence are all objects from Chapter 1;</li><li>**large deviation theory**;</li><li>**economics, finance and gambling**.</li></ul>
+</role>
+<role r="aside" a="textbooks">
+
+The course mostly follows the classic textbook by Cover and Thomas, *Elements of Information Theory* (2nd edition, 2006). MacKay's *Information Theory, Inference and Learning Algorithms* (2003) is more informal, full of applications, and free online. Csiszár and Körner's *Information Theory: Coding Theorems for Discrete Memoryless Systems* (2011) is a concise, theory-first treatment.
+</role>

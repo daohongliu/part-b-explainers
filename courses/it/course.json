@@ -1,0 +1,13 @@
+{
+ "prefix": "it-",
+ "code": "B8.4",
+ "short": "IT",
+ "title": "Information Theory",
+ "titlehtml": "Information <em>Theory</em>",
+ "eyebrow": "Michaelmas Term 2026",
+ "after": "after the B8.4 lecture notes",
+ "dek": "How much information a message carries, how far it can be squeezed, and what that has to do with surprise. Written for someone who knows Prelims probability and nothing else.",
+ "blurb": "Entropy, divergence and mutual information, typical sequences, and the codes that compress a source down to its entropy.",
+ "motif": "bits",
+ "colophon": "<p>Based on the lecture notes for <em>B8.4 Information Theory</em> (adapted from those of Harald Oberhauser, Hanqing Jin and Sam Cohen), which follow Cover and Thomas, <em>Elements of Information Theory</em>. Numbering follows the notes. The introduction and Chapters 1 to 3 are here; channel coding (Chapters 4 and 5) is not written yet. The background boxes, figures and exercises are additions; errors in them are new.</p>"
+}

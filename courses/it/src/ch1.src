@@ -1,0 +1,440 @@
+@num 1
+@title Entropy, Divergence and Mutual Information
+@titlehtml Entropy, <em>divergence</em> and mutual information
+@pages 7–18
+@dek Three numbers, all built from one function, the logarithm of a probability. Entropy measures how unpredictable one random variable is, divergence how far apart two distributions are, and mutual information how much one variable tells you about another.
+---
+<role r="setup" a="discrete random variables">
+
+Most of this course is about sequences that are not perfectly predictable: letters of a text, or noisy readings of a signal. We model the randomness with a probability space $(\Omega,\F,\PP)$, as in B8.1, and random variables on it. In fact we will hardly ever look at $\Omega$. We work with **discrete** random variables, taking values in a finite or countable set $\X$, and describe each one by its **probability mass function** (pmf)
+$$p(x)=\PP(X=x),\qquad x\in\X.$$
+When several random variables are around we write $p_X$, $p_Y$, $p_{X,Y}$ for the pmfs of $X$, $Y$ and the pair $(X,Y)$.
+</role>
+
+<bg id="bg-law" t="Laws, and what depends only on them" lead="From Prelims">
+The **law** (or distribution) of $X$ is the probability measure $\PP_X=\PP\circ X^{-1}$ on the values of $X$: it says how likely each set of values is, and forgets everything else about $\Omega$. For a discrete random variable the law is the same information as the pmf.
+
+Many quantities depend only on the law. The expectation $\E[X]=\sum_xx\,p(x)$ is one: two random variables with the same pmf have the same mean, even if they live on different probability spaces. Other properties need more. Whether $X$ and $Y$ are independent cannot be read off from $p_X$ and $p_Y$ separately; it depends on the **joint** law of $(X,Y)$, through $p_{X,Y}(x,y)=p_X(x)p_Y(y)$ for all $x,y$.
+</bg>
+
+## 1.1 Basic definitions in information theory {7} [d2 i3]
+<role r="history" a="where the word comes from">
+
+The first challenge is to define the "level of randomness" of a random variable. The notion we use, **entropy**, goes back to Boltzmann, Gibbs and Maxwell's work on the statistical mechanics of gases; the word was coined by Clausius in 1865, from the Greek for "in-turning". Claude Shannon adapted these ideas to random signals in the late 1940s, which founded information theory. Von Neumann reportedly suggested the name to Shannon, on the grounds that "no one knows what entropy really is", so he would always win an argument.[[Why the letter H? Boltzmann used E. Around 1900 Gibbs or Zermelo switched to a capital eta, which looks like H, for reasons nobody knows, and Shannon followed the usage of his day, which referred to Boltzmann's H-theorem.]]
+</role>
+<role r="why" a="measuring surprise">
+
+We want $H(X)$ to measure our average uncertainty about $X$: the less sure we are of its value, the bigger $H(X)$. One way in is to first measure the **surprise** $s(A)$ of seeing the event $\{X\in A\}$. It seems natural to ask that
+
+<ol class="parts"><li>$s(A)$ depends continuously on $\PP(X\in A)$, and on nothing else;</li><li>$s(A)$ is decreasing in $\PP(X\in A)$: rarer events are more surprising;</li><li>surprises of independent events add: $s(A\cap B)=s(A)+s(B)$ whenever $\PP(X\in A\cap B)=\PP(X\in A)\PP(X\in B)$.</li></ol>
+
+Writing $s(A)=g(\PP(X\in A))$, the third condition says $g(uv)=g(u)+g(v)$: $g$ turns products into sums. The logarithm does this, and a classical result of Cauchy says that, among continuous functions, only multiples of the logarithm do. Decreasing forces a negative multiple, so
+$$s(A)=-\log\PP(X\in A),$$
+up to the choice of base. This is sometimes called the **Shannon information content** of the outcome. An event of probability $\frac12$ carries one bit of surprise, an event of probability $\frac18$ three bits, and a certain event none.
+</role>
+
+<pause n="Why the logarithm is forced" q="Let $g:(0,1]\to\R$ be continuous with $g(uv)=g(u)+g(v)$. Show that $g(u)=c\log u$ for some constant $c$.">
+Put $u=e^{-s}$ and $f(s)=g(e^{-s})$ for $s\ge0$. Then $f$ is continuous and $f(s+t)=f(s)+f(t)$. By induction $f(ns)=nf(s)$, so $f(m/n)=\frac mnf(1)$ for positive integers $m,n$: $f$ is linear on the positive rationals. By continuity $f(s)=f(1)s$ for all $s\ge0$. So $g(u)=f(-\ln u)=-f(1)\ln u$, a multiple of the logarithm. If $g$ is decreasing, then $f(1)>0$ and the multiple is negative, as claimed.
+</pause>
+<role r="idea" a="entropy is average surprise">
+
+Entropy is the *average* surprise: weight the surprise $-\log p(x)$ of each value by how often it happens.
+</role>
+
+<thm k="Definition 1.1" nm="Entropy" pg="8">
+The **entropy** in base $b$ of a discrete random variable $X$ is
+
+$$#eq1-1-1 H_b(X)=-\sum_{x\in\X}\PP(X=x)\log_b\PP(X=x), \tag{1.1.1}$$
+
+with the convention $0\cdot\log_b0=0$. We usually work in base 2 and write $H(X)$ for $H_2(X)$ and $\log$ for $\log_2$.
+</thm>
+<role r="reading" a="Definition 1.1">
+
+The convention $0\log0=0$ says that values which never happen contribute nothing; it is also the limit of $p\log p$ as $p\downarrow0$. Some remarks on the definition:
+
+<ul><li>The notation $H(X)$ is a little misleading: $H$ depends only on the **law** of $X$, not on $X$ itself. Two random variables with the same pmf have the same entropy, just as they have the same mean. So it is also natural to write $H(p_X)$ or $H(\PP_X)$.</li><li>As an expectation, $H(X)=-\E[\log p(X)]$, where $p=p_X$ is the pmf. Here $p(X)$ is a random variable: first draw $X$, then look up the probability of the value you drew.[[Careful with the notation: $p_X:\X\to[0,1]$ is an ordinary, non-random function. Only once you plug in the random $X$ do you get something random.]]</li><li>The base only changes the unit. Since $\log_bx=\log_ax/\log_ab$, we have $H_b(X)=H_a(X)/\log_ab$. In base 2 the unit is the **bit**, in base $e$ the **nat**, in base 256 the **byte**.</li></ul>
+</role>
+
+<thm k="Example 1.2" d="Entropy of a biased coin" pg="9">
+If $\X=\{H,T\}$ and $\PP(X=H)=p$, then
+
+$$#eq1-1-2 H(X)=-p\log p-(1-p)\log(1-p). \tag{1.1.2}$$
+
+If $p\in\{0,1\}$ then $H(X)=0$. Differentiating in $p$ shows that $H(X)$ increases on $(0,\frac12)$ and decreases on $(\frac12,1)$, so it is maximised at $p=\frac12$, where $H(X)=\log2=1$ bit. This case comes up so often that we also write
+$$H(p)=-p\log p-(1-p)\log(1-p),$$
+the **binary entropy function**. So $H(X)=H(p)=H(p_X)=H(\PP_X)$, which is notation at its most confusing.
+</thm>
+
+@@it-fig1-1@@
+
+<pause n="A fair die" q="What is the entropy of a fair six-sided die? And of the number of sixes in two throws?">
+For a fair die, every face has surprise $\log6$, so $H=\log6\approx2.585$ bits. The number of sixes $N$ in two throws takes the values $0,1,2$ with probabilities $\frac{25}{36},\frac{10}{36},\frac1{36}$, so
+$$H(N)=\tfrac{25}{36}\log\tfrac{36}{25}+\tfrac{10}{36}\log\tfrac{36}{10}+\tfrac1{36}\log36\approx0.365+0.513+0.144=1.02\text{ bits}.$$
+That is far less than $\log3\approx1.585$, because the outcome is usually $0$.
+</pause>
+
+<thm k="Example 1.3" d="Entropy of a pair, and of independent pairs" pg="9">
+If $X=(X_1,X_2)$ with $X_i\in\X_i$, then
+
+$$#eq1-1-3 H(X)=H(X_1,X_2)=-\sum_{x_1\in\X_1,\,x_2\in\X_2}p_{X_1,X_2}(x_1,x_2)\log p_{X_1,X_2}(x_1,x_2). \tag{1.1.3}$$
+
+If $X_1$ and $X_2$ are independent, so $p_{X_1,X_2}(x_1,x_2)=p_{X_1}(x_1)p_{X_2}(x_2)$, then
+
+$$#eq1-1-4 H(X)=H(X_1)+H(X_2), \tag{1.1.4}$$
+
+and if they are independent and identically distributed (i.i.d.), then
+
+$$#eq1-1-5 H(X)=2H(X_1)=2H(X_2). \tag{1.1.5}$$
+</thm>
+<role r="idea" a="entropy as a storage bound">
+
+Here is a second reading of entropy, which the course will make rigorous. Suppose we want to store the results of $n$ independent flips of the coin of Example 1.2, knowing $p$. If $p\in\{0,1\}$ the results are certain and need no storage at all, matching $H(X)=0$. If $p=\frac12$ every sequence of $n$ flips is equally likely, and it is intuitive that we need $n$ bits, matching $nH(X)=n$. In between, Chapter 3 will show that about $nH(p)$ bits are needed and suffice. So entropy is also a **compression bound**.
+</role>
+
+<role r="why" a="comparing two distributions">
+
+Entropy measures one distribution. The next quantity compares two pmfs $p$ and $q$ on the same set. It will tell us, for instance, how much we lose by designing a code for the wrong distribution (Proposition 3.6).
+</role>
+
+<thm k="Definition 1.4" nm="Divergence" pg="9">
+Let $p$ and $q$ be pmfs on $\X$. The **divergence** between $p$ and $q$ is
+
+$$#eq1-1-6 D(p\|q)=\sum_{x\in\X}p(x)\log\frac{p(x)}{q(x)}, \tag{1.1.6}$$
+
+with the conventions $0\log0=0$ (terms with $p(x)=0$ contribute nothing) and $D(p\|q)=\infty$ if there is an $x$ with $q(x)=0$ but $p(x)>0$. It is also called **Kullback–Leibler divergence**, **relative entropy** or **information divergence**.
+</thm>
+<role r="reading" a="Definition 1.4 as extra surprise">
+
+If $X\sim p$ (meaning $X$ has pmf $p$), then
+$$\begin{aligned}D(p\|q)&=\E\Big[\log\frac{p(X)}{q(X)}\Big]\\&=\E\Big[\log\frac1{q(X)}\Big]-\E\Big[\log\frac1{p(X)}\Big]\\&=\E\Big[\log\frac1{q(X)}\Big]-H(X).\end{aligned}$$
+In words: $\E[\log\frac1{q(X)}]$ is the average surprise of someone who *believes* the pmf is $q$ while the truth is $p$, and $D(p\|q)$ is how much more surprised they are, on average, than someone who knows the truth. We will show it is never negative. But it is **not a metric**: in general $D(p\|q)\neq D(q\|p)$, and it can be infinite. The next example shows these are features, not bugs.
+</role>
+
+<thm k="Example 1.5" d="Asymmetry and infinite values are useful" pg="10">
+Let $\X=\{0,1\}$, with $p(0)=\frac12$ and $q(0)=1$. We see independent samples from one of the two distributions, but don't know which. If we observe $0000001$, we immediately know the source is $p$, since $q$ never produces a $1$. If we observe $0000000$, the source is probably $q$, but we can't rule out $p$. The divergence reflects this: $D(p\|q)=\infty$, since $q(1)=0<p(1)$, while $D(q\|p)=1\cdot\log\frac1{1/2}=1$.
+</thm>
+
+<thm k="Example 1.6" d="Divergence from the uniform distribution" pg="10">
+If $q$ is the uniform distribution on a finite set $\X$, then $D(p\|q)=\log|\X|-H(X)$, where $X\sim p$.
+</thm>
+<role r="reading" a="Example 1.6">
+
+Indeed $\log\frac1{q(x)}=\log|\X|$ for every $x$, so the first term in the identity above is $\log|\X|$. So entropy is "$\log|\X|$ minus the distance from uniform": the closer $p$ is to uniform, the larger its entropy.
+</role>
+
+@@it-fig1-2@@
+
+<pause n="Divergence between two coins" q="Compute $D(p\|q)$ and $D(q\|p)$ for coins with heads probability $\frac12$ and $\frac14$.">
+With $p=(\frac12,\frac12)$ and $q=(\frac14,\frac34)$,
+$$D(p\|q)=\tfrac12\log\tfrac{1/2}{1/4}+\tfrac12\log\tfrac{1/2}{3/4}=\tfrac12-\tfrac12\log\tfrac32\approx0.5-0.292=0.208,$$
+$$D(q\|p)=\tfrac14\log\tfrac{1/4}{1/2}+\tfrac34\log\tfrac{3/4}{1/2}=-\tfrac14+\tfrac34\log\tfrac32\approx-0.25+0.439=0.189.$$
+Both positive, and different.
+</pause>
+
+<role r="why" a="how much does Y tell us about X?">
+
+The third quantity measures dependence. If $X$ and $Y$ are independent, $p_{X,Y}=p_Xp_Y$. So one natural measure of dependence is how far the joint pmf is from the product of its marginals, measured by divergence.
+</role>
+
+<thm k="Definition 1.7" nm="Mutual information" pg="10">
+Let $X,Y$ be discrete random variables taking values in $\X$ and $\mathcal Y$. The **mutual information** between $X$ and $Y$ is
+$$I(X;Y)=\sum_{x\in\X}\sum_{y\in\mathcal Y}\PP(X=x,Y=y)\log\frac{\PP(X=x,Y=y)}{\PP(X=x)\PP(Y=y)}.$$
+</thm>
+<role r="reading" a="four ways to see Definition 1.7">
+
+<ul><li>It is exactly the divergence described above: $I(X;Y)=D(p_{X,Y}\|p_Xp_Y)$. So it measures how much dependence there is between $X$ and $Y$.</li><li>Unlike the covariance $\mathrm{Cov}(X,Y)=\E[(X-\E X)(Y-\E Y)]$, which only sees linear (second-order) dependence, mutual information sees every kind of dependence. Exercise "Uncorrelated but dependent" below gives an example.</li><li>It is symmetric: $I(X;Y)=I(Y;X)$, since the formula is.</li><li>In terms of entropies,
+$$\begin{aligned}I(X;Y)&=\E\Big[\log\frac{p_{X,Y}(X,Y)}{p_X(X)p_Y(Y)}\Big]\\&=\E\big[\log p_{X,Y}(X,Y)-\log p_X(X)-\log p_Y(Y)\big]\\&=H(X)+H(Y)-H(X,Y).\end{aligned}$$
+So $I(X;Y)$ is the amount by which the entropies of $X$ and $Y$ "overlap".</li></ul>
+</role>
+
+<pause n="Uncorrelated but dependent" q="Let $X$ be uniform on $\{-1,0,1\}$ and $Y=X^2$. Show that $\mathrm{Cov}(X,Y)=0$, but compute $I(X;Y)$.">
+$\E[X]=0$ and $\E[XY]=\E[X^3]=0$, so $\mathrm{Cov}(X,Y)=0$. But $Y$ is a function of $X$, so knowing $X$ removes all uncertainty about $Y$. Using the formula above, $H(X,Y)=H(X)$ (the pair takes three values, each with probability $\frac13$), so
+$$I(X;Y)=H(X)+H(Y)-H(X,Y)=H(Y)=H(\tfrac13)\approx0.918\text{ bits}.$$
+</pause>
+
+### 1.1.1 Conditional entropy, divergence and mutual information
+<role r="why" a="conditioning on extra knowledge">
+
+Often we know something extra, such as the value of another random variable. So we want versions of entropy, divergence and mutual information that condition on it.
+</role>
+
+<thm k="Definition 1.8" nm="Conditional entropy" pg="11">
+Let $X,Y$ be discrete random variables taking values in $\X$. The **conditional entropy** of $Y$ given $X$ is
+$$\begin{aligned}H(Y|X)&=-\sum_{x\in\X}\sum_{y\in\X}\PP(X=x,Y=y)\log\PP(Y=y|X=x)\\&=-\sum_{x\in\X}\sum_{y\in\X}\PP(X=x,Y=y)\log\frac{\PP(Y=y,X=x)}{\PP(X=x)}.\end{aligned}$$
+</thm>
+<role r="reading" a="Definition 1.8 as an average">
+
+Grouping the terms by the value of $X$ shows it is an average of ordinary entropies:
+$$\begin{aligned}H(Y|X)&=-\sum_{x}\PP(X=x)\sum_{y}\PP(Y=y|X=x)\log\PP(Y=y|X=x)\\&=\sum_{x}\PP(X=x)\,H(Y|X=x)\\&=-\E\big[\log p_{Y|X}(Y|X)\big].\end{aligned}$$
+Here $H(Y|X=x)$ is the entropy of the conditional pmf of $Y$ given $X=x$. So $H(Y|X)$ is the surprise we still have about $Y$ after seeing $X$, averaged over what we see. If $Y=X$ there is none left.
+</role>
+<role r="payoff" a="the chain rule">
+
+Writing $\PP(Y=y|X=x)=\PP(X=x,Y=y)/\PP(X=x)$ inside the logarithm and splitting gives the **chain rule** for entropy:
+$$H(Y|X)=H(X,Y)-H(X),\qquad\text{that is,}\qquad H(X,Y)=H(X)+H(Y|X).$$
+The uncertainty in the pair is the uncertainty in $X$, plus what remains about $Y$ once $X$ is known.
+</role>
+
+<thm k="Definition 1.9" nm="Conditional divergence" pg="11">
+Let $p_X$ be a pmf on a discrete space $\X$, and for each $x\in\X$ let $p(\cdot|x)$ and $q(\cdot|x)$ be pmfs. The **conditional divergence** of $p(\cdot|X)$ from $q(\cdot|X)$ given $p_X$ is
+$$D(p_{Y|X}\|q_{Y|X}\,|\,p_X)=\sum_{x\in\X}p_X(x)\,D\big(p(\cdot|x)\,\big\|\,q(\cdot|x)\big).$$
+</thm>
+<role r="reading" a="Definition 1.9">
+
+So it compares the two conditional pmfs for each value $x$, and averages the answers using the weights $p_X(x)$. Note that the weights come from $p_X$ only; there is no "$q_X$".
+</role>
+
+<thm k="Definition 1.10" nm="Conditional divergence, with random variables" pg="11">
+Let $X$ and $Y_1,Y_2$ be discrete random variables, with joint pmfs $p_{X,Y_i}$. The divergence between $p_{Y_1}$ and $p_{Y_2}$ conditioned on $X$ is
+$$D(p_{Y_1|X}\|p_{Y_2|X}\,|\,p_X)=\sum_{x\in\X}p_X(x)\,D(p_{Y_1|X=x}\|p_{Y_2|X=x})=\E\Big[D\big(p_{Y_1|X}(\cdot|X)\,\big\|\,p_{Y_2|X}(\cdot|X)\big)\Big].$$
+</thm>
+
+<thm k="Definition 1.11" nm="Conditional mutual information" pg="12">
+Let $X,Y,Z$ be discrete random variables. The **conditional mutual information** between $X$ and $Y$ given $Z$ is
+$$I(X;Y|Z):=H(X|Z)-H(X|Y,Z).$$
+</thm>
+<role r="reading" a="Definition 1.11">
+
+It is the reduction in uncertainty about $X$ from learning $Y$, when $Z$ is known already. Expanding the entropies, as for $I(X;Y)$,
+$$I(X;Y|Z)=\E\Big[\log\frac{p_{X,Y|Z}(X,Y|Z)}{p_{X|Z}(X|Z)\,p_{Y|Z}(Y|Z)}\Big],$$
+which shows that $I(X;Y|Z)=I(Y;X|Z)$. It measures how dependent $X$ and $Y$ are once $Z$ is known.
+</role>
+
+<role r="idea" a="a picture of the relations">
+
+All the identities so far fit into one picture. Take the entropy $H(X,Y)$ of the pair as a bar. It splits into three pieces: the part only $X$ knows about, $H(X|Y)$; the shared part, $I(X;Y)$; and the part only $Y$ knows about, $H(Y|X)$. The entropy of $X$ is the first two pieces, the entropy of $Y$ the last two. Figure 1.3 draws this for a joint pmf you can change.
+</role>
+
+@@it-fig1-3@@
+
+<pause n="A noisy bit" q="Let $X$ be a fair bit, and let $Y=X$ with probability $1-f$ and $Y=1-X$ with probability $f$, independently of $X$. Compute $H(Y)$, $H(Y|X)$ and $I(X;Y)$.">
+$Y$ is again a fair bit (by symmetry), so $H(Y)=1$. Given $X=x$, $Y$ is $x$ or $1-x$ with probabilities $1-f$ and $f$, so $H(Y|X=x)=H(f)$ for both $x$, and $H(Y|X)=H(f)$. Hence
+$$I(X;Y)=H(Y)-H(Y|X)=1-H(f).$$
+With $f=0$ the channel is perfect and $I=1$ bit; with $f=\frac12$ the output is pure noise and $I=0$. This quantity is the capacity of the binary symmetric channel, the star of Chapter 4.
+</pause>
+
+## 1.2 Basic properties and inequalities {12} [d2 i3]
+<role r="roadmap" a="three inequalities first">
+
+We now prove the basic properties of entropy, divergence and mutual information. Almost all of them come from three elementary inequalities: Jensen's, Gibbs' and the log sum inequality. All three are about convexity.
+</role>
+
+<thm k="Definition 1.12" nm="Convex function" pg="12">
+Let $I\subseteq\R$. A function $f:I\to\R$ is **convex** if
+$$f(\lambda x+(1-\lambda)y)\le\lambda f(x)+(1-\lambda)f(y)$$
+for all $x,y\in I$ and $\lambda\in[0,1]$. It is **strictly convex** if the inequality is strict for all $\lambda\in(0,1)$ whenever $x\neq y$. A function $f$ is **concave** if $-f$ is convex.
+</thm>
+<role r="reading" a="Definition 1.12">
+
+Geometrically: a convex function lies below each of its chords. The point $\lambda x+(1-\lambda)y$ is between $x$ and $y$, and the right side is the height of the chord at that point. The functions we meet most are $-\log x$ and $x\log x$ (strictly convex on $(0,\infty)$), and $\log x$ and $-x\log x$ (strictly concave).
+</role>
+
+<thm k="Lemma 1.13" nm="Jensen’s inequality" pg="12" it>
+If $f$ is convex and $X$ is a random variable taking values in $\X$ with pmf $p$, such that $\E X=\sum_xxp(x)$ and $\E f(X)=\sum_xf(x)p(x)$ exist, then
+$$f\Big(\sum_{x\in\X}xp(x)\Big)=f(\E X)\le\E f(X)=\sum_{x\in\X}f(x)p(x).$$
+If $f$ is strictly convex, equality holds if and only if $X$ is constant (with probability one).
+</thm>
+
+<pf h="Proof sketch.">
+For a pmf on two points this is exactly the definition of convexity, with $\lambda=p(x)$. For a pmf on finitely many points, induct on the number of points: split off one point and write the rest as a single weighted average. The countable case needs one more limiting step. The details are Problem Sheet 1, Question 3.
+</pf>
+
+<sheet n="1" qs="3">Jensen's inequality for discrete random variables, the induction above.</sheet>
+
+<thm k="Lemma 1.14" nm="Gibbs’ inequality" pg="12" it>
+Let $p$ and $q$ be pmfs on $\X$. Then
+$$-\sum_{x\in\X}p(x)\log p(x)\le-\sum_{x\in\X}p(x)\log q(x),$$
+with equality if and only if $p\equiv q$.
+</thm>
+<role r="reading" a="Lemma 1.14">
+
+In words: if you code your surprise using the wrong pmf $q$, you are on average more surprised than with the true pmf $p$. Equivalently, the map $q\mapsto-\E[\log q(X)]$, with $X\sim p$, is minimised exactly at $q=p_X$, and the minimum value is $H(X)$.
+</role>
+
+<pf>
+Let $X$ have pmf $p$. Adding $\sum_xp(x)\log p(x)$ to both sides, we must show that $\sum_xp(x)\log\frac{p(x)}{q(x)}\ge0$. The sums run over $x$ with $p(x)>0$, and if $q(x)=0$ for one of those the left side is $+\infty$, so assume not. Then
+$$\begin{aligned}\sum_{x\in\X}p(x)\log\frac{p(x)}{q(x)}&=\E\Big[-\log\frac{q(X)}{p(X)}\Big]\\&\ge-\log\E\Big[\frac{q(X)}{p(X)}\Big]&&\why{Jensen, with $f=-\log$}\\&=-\log\Big(\sum_{x:\,p(x)>0}p(x)\frac{q(x)}{p(x)}\Big)\\&\ge-\log1=0.&&\why{the sum is at most $1$}\end{aligned}$$
+For equality we need equality in both steps. Since $-\log$ is strictly convex, the first is an equality only if $q(X)/p(X)$ is constant, so $q=cp$ on the support of $p$. The second needs $q$ to put all its mass on that support. Together these force $c=1$ and $q\equiv p$.
+</pf>
+
+<thm k="Lemma 1.15" nm="Log sum inequality" pg="13" it>
+Let $a_1,\dots,a_n$ and $b_1,\dots,b_n$ be non-negative. Then
+$$\sum_{i=1}^na_i\log\frac{a_i}{b_i}\ge\Big(\sum_{i=1}^na_i\Big)\log\frac{\sum_{i=1}^na_i}{\sum_{i=1}^nb_i},$$
+with equality if and only if $a_i/b_i$ is constant.
+</thm>
+<role r="reading" a="Lemma 1.15">
+
+The usual conventions apply: $0\log\frac0b=0$, and $a\log\frac a0=\infty$ for $a>0$. The notes state this without proof; it is Gibbs' inequality in disguise.
+</role>
+
+<pf>
+Write $A=\sum_ia_i$ and $B=\sum_ib_i$. If $A=0$ both sides are $0$; if $B=0<A$ both sides are $+\infty$. Otherwise $a_i/A$ and $b_i/B$ are pmfs on $\{1,\dots,n\}$, and
+$$\sum_ia_i\log\frac{a_i}{b_i}-A\log\frac AB=A\sum_i\frac{a_i}A\log\frac{a_i/A}{b_i/B}=A\,D\Big(\frac aA\,\Big\|\,\frac bB\Big)\ge0$$
+by Gibbs' inequality, with equality iff $a_i/A=b_i/B$ for all $i$, that is, iff $a_i/b_i=A/B$ is constant.
+</pf>
+
+<sheet n="1" qs="1">The "polling inequalities" are the log sum inequality with $n=2$, read two ways.</sheet>
+
+### 1.2.1 Divergence properties
+
+<thm k="Theorem 1.16" nm="Divergence properties" pg="13" it>
+Let $(X,Y)$ and $(\tilde X,\tilde Y)$ be discrete random vectors taking values in $\X\times\mathcal Y$. Then
+
+<ol><li>**(Information inequality)** $D(p_X\|p_{\tilde X})\ge0$, with equality iff $p_X=p_{\tilde X}$.</li><li>**(Chain rule)** $D(p_{X,Y}\|p_{\tilde X,\tilde Y})=D(p_{Y|X}\|p_{\tilde Y|\tilde X}\,|\,p_X)+D(p_X\|p_{\tilde X})$.</li><li>$D(p_{X,Y}\|p_{\tilde X,\tilde Y})\ge D(p_X\|p_{\tilde X})$.</li><li>$D(p_{Y|X}\|p_{\tilde Y|\tilde X}\,|\,p_X)=D(p_Xp_{Y|X}\,\|\,p_Xp_{\tilde Y|\tilde X})$.</li><li>**(Convexity)** For pmfs $p_1,p_2,q_1,q_2$ and $\lambda\in[0,1]$,
+$$D\big(\lambda p_1+(1-\lambda)p_2\,\big\|\,\lambda q_1+(1-\lambda)q_2\big)\le\lambda D(p_1\|q_1)+(1-\lambda)D(p_2\|q_2).$$</li></ol>
+</thm>
+<role r="reading" a="Theorem 1.16">
+
+Part 2 says divergence between joint laws splits like entropy does: first compare the first coordinates, then compare the second coordinates given the first. Part 3 says comparing more coordinates can only reveal more difference. Part 5 says that mixing two pairs of distributions makes them harder to tell apart.
+</role>
+
+<pf>
+**Part 1** is Gibbs' inequality, rearranged.
+
+**Part 2.** Factor each joint pmf as marginal times conditional, then split the logarithm:
+$$\begin{aligned}D(p_{X,Y}\|p_{\tilde X,\tilde Y})&=\sum_{x,y}p_{X,Y}(x,y)\log\frac{p_X(x)\,p_{Y|X}(y|x)}{p_{\tilde X}(x)\,p_{\tilde Y|\tilde X}(y|x)}\\&=\sum_{x,y}p_{X,Y}(x,y)\log\frac{p_{Y|X}(y|x)}{p_{\tilde Y|\tilde X}(y|x)}+\sum_{x,y}p_{X,Y}(x,y)\log\frac{p_X(x)}{p_{\tilde X}(x)}\\&=\sum_xp_X(x)\sum_yp_{Y|X}(y|x)\log\frac{p_{Y|X}(y|x)}{p_{\tilde Y|\tilde X}(y|x)}+D(p_X\|p_{\tilde X})\\&=\sum_xp_X(x)\,D(p_{Y|X=x}\|p_{\tilde Y|\tilde X=x})+D(p_X\|p_{\tilde X})\\&=D(p_{Y|X}\|p_{\tilde Y|\tilde X}\,|\,p_X)+D(p_X\|p_{\tilde X}).\end{aligned}$$
+In the third line, the second sum only depends on $x$, so summing out $y$ leaves $\sum_xp_X(x)\log\frac{p_X(x)}{p_{\tilde X}(x)}$.
+
+**Part 3.** The conditional divergence is an average of divergences, each $\ge0$ by part 1, so it is $\ge0$. Drop it from part 2.
+
+**Part 4.** Both sides are the same expectation:
+$$\begin{aligned}D(p_{Y|X}\|p_{\tilde Y|\tilde X}\,|\,p_X)&=\E\Big[\log\frac{p_{Y|X}(Y|X)}{p_{\tilde Y|\tilde X}(Y|X)}\Big]\\&=\E\Big[\log\frac{p_X(X)\,p_{Y|X}(Y|X)}{p_X(X)\,p_{\tilde Y|\tilde X}(Y|X)}\Big]=D(p_Xp_{Y|X}\,\|\,p_Xp_{\tilde Y|\tilde X}).\end{aligned}$$
+
+**Part 5.** For each $x$, apply the log sum inequality with $n=2$ and
+$$a_1=\lambda p_1(x),\quad a_2=(1-\lambda)p_2(x),\quad b_1=\lambda q_1(x),\quad b_2=(1-\lambda)q_2(x).$$
+It gives
+$$\big(\lambda p_1(x)+(1-\lambda)p_2(x)\big)\log\frac{\lambda p_1(x)+(1-\lambda)p_2(x)}{\lambda q_1(x)+(1-\lambda)q_2(x)}\le\lambda p_1(x)\log\frac{p_1(x)}{q_1(x)}+(1-\lambda)p_2(x)\log\frac{p_2(x)}{q_2(x)}.$$
+Now sum over $x\in\X$.
+</pf>
+
+### 1.2.2 Mutual information properties
+<role r="setup" a="conditional independence and Markov chains">
+
+The next theorem includes a chain rule and the data processing inequality. For those we need one more notion. $X$ and $Z$ are **conditionally independent given $Y$**, written $(X\perp Z)\,|\,Y$, if
+$$p_{(X,Z)|Y}(x,z|y)=p_{X|Y}(x|y)\,p_{Z|Y}(z|y)\qquad\text{for all }x,y,z.$$
+This is the same as saying that $X\to Y\to Z$ is a **Markov chain** with three time steps: $p_{X,Y,Z}(x,y,z)=p(x)\,p(y|x)\,p(z|y)$. Once you know $Y$, knowing $X$ as well tells you nothing more about $Z$.
+</role>
+
+<thm k="Theorem 1.17" nm="Mutual information properties" pg="14" it>
+<ol><li>$I(X;Y)\ge0$, with equality iff $X$ and $Y$ are independent.</li><li>$I(X;Y)=I(Y;X)=H(X)-H(X|Y)=H(Y)-H(Y|X)$.</li><li>**(Information chain rule)**
+$$I(X_1,\dots,X_n;Y)=\sum_{i=1}^nI(X_i;Y\,|\,X_{i-1},\dots,X_1).$$</li><li>**(Data processing inequality)** If $(X\perp Z)\,|\,Y$, then $I(X;Y)\ge I(X;Z)$.</li><li>If $f:\mathcal Y\to\mathcal Z$, then $I(X;Y)\ge I(X;f(Y))$.</li></ol>
+</thm>
+
+<pf>
+**Part 1.** $I(X;Y)=D(p_{X,Y}\|p_Xp_Y)\ge0$ by the information inequality (Theorem 1.16), with equality iff $p_{X,Y}=p_Xp_Y$, which is independence.
+
+**Part 2.** The first equality holds because the definition is symmetric. For the others, we saw after Definition 1.7 that
+$$I(X;Y)=\E\Big[\log\frac{p_{X,Y}(X,Y)}{p_X(X)p_Y(Y)}\Big]=H(X)+H(Y)-H(X,Y),$$
+and the chain rule for entropy says
+$$\begin{aligned}H(X,Y)&=-\sum_{x,y}\PP(X=x,Y=y)\log\PP(X=x,Y=y)\\&=-\sum_{x,y}\PP(X=x,Y=y)\big[\log\PP(Y=y|X=x)+\log\PP(X=x)\big]\\&=H(Y|X)+H(X).\end{aligned}$$
+Substituting gives $I(X;Y)=H(Y)-H(Y|X)$, and by symmetry $I(X;Y)=H(X)-H(X|Y)$.
+
+**An aside: the chain rule for many variables.** Applying the two-variable chain rule repeatedly, with $(X_1,\dots,X_{n-1})$ playing the part of $X$,
+$$H(X_1,\dots,X_n)=H(X_n|X_{n-1},\dots,X_1)+H(X_{n-1},\dots,X_1)=\sum_{i=1}^nH(X_i|X_{i-1},\dots,X_1),$$
+with the convention $H(X_1|X_0)=H(X_1)$. The same argument, conditioning everything on $Y$, gives
+$$H(X_1,\dots,X_n\,|\,Y)=\sum_{i=1}^nH(X_i|X_{i-1},\dots,X_1,Y).$$
+
+**Part 3.** Subtract the two chain rules term by term:
+$$\begin{aligned}I(X_1,\dots,X_n;Y)&=H(X_1,\dots,X_n)-H(X_1,\dots,X_n\,|\,Y)\\&=\sum_{i=1}^n\big\{H(X_i|X_{i-1},\dots,X_1)-H(X_i|X_{i-1},\dots,X_1,Y)\big\}\\&=\sum_{i=1}^nI(X_i;Y\,|\,X_{i-1},\dots,X_1),\end{aligned}$$
+the last step by the definition of conditional mutual information.
+
+**Part 4.** Expand $I(Y,Z;X)$ with the chain rule in two orders. Conditioning on $Y$ first,
+$$I(Y,Z;X)=I(Y;X)+I(Z;X|Y)=I(Y;X),$$
+because $I(Z;X|Y)=0$ when $X$ and $Z$ are conditionally independent given $Y$ (the conditional version of part 1). Conditioning on $Z$ first,
+$$I(Y,Z;X)=I(Z;X)+I(Y;X|Z)\ge I(Z;X).$$
+Comparing the two gives $I(X;Y)\ge I(X;Z)$.
+
+**Part 5.** Take $Z=f(Y)$ in part 4. Given $Y$, $Z$ is fixed, so it is certainly conditionally independent of $X$.
+</pf>
+
+<thm k="Remark 1.18" d="Self-information, and what the data processing inequality says" pg="15">
+<ul><li>Part 2 with $Y=X$ gives $I(X;X)=H(X)$, which is why entropy is sometimes called **self-information**.</li><li>Part 2 also says $I(X;Y)$ is the **reduction in uncertainty** about either variable from learning the other.</li><li>The data processing inequality formalises a simple but fundamental idea: **post-processing cannot create information**. If $Z$ depends on $X$ only through $Y$, then $Z$ cannot know more about $X$ than $Y$ does. No clever computation on your data can tell you more about the world than the data itself.</li><li>In statistics, a statistic $T(X)$ is **sufficient** for a parameter $\theta$ if, given $T(X)$, the law of $X$ does not depend on $\theta$. This is equivalent to $I(\theta;X)=I(\theta;T(X))$ for every prior on $\theta$: the statistic keeps all the information the data have about the parameter, so the data processing inequality is an equality.</li></ul>
+</thm>
+
+### 1.2.3 Entropy properties
+
+<thm k="Theorem 1.19" nm="Entropy properties" pg="16" it>
+Let $X,Y$ be discrete random variables taking values in $\X$, and write $|\X|$ for the number of elements of $\X$.
+
+<ol><li>$0\le H(X)\le\log|\X|$. The upper bound is attained iff $X$ is uniform on $\X$; the lower bound iff $X$ is constant with probability one.</li><li>$0\le H(X|Y)\le H(X)$. $H(X|Y)=H(X)$ iff $X$ and $Y$ are independent, and $H(X|Y)=0$ iff $X=f(Y)$ for some function $f$.</li><li>**(Chain rule)** $H(X_1,\dots,X_n)=\sum_{i=1}^nH(X_i|X_{i-1},\dots,X_1)\le\sum_{i=1}^nH(X_i)$, with equality iff the $X_i$ are independent.</li><li>For $f:\X\to\mathcal Y$, $H(f(X))\le H(X)$, with equality iff $f$ is injective on the values $X$ takes.</li><li>If $X$ and $Y$ are i.i.d., then $\PP(X=Y)\ge2^{-H(X)}$, with equality iff $X$ is uniform on the set of values it takes.</li><li>$H(X)$ is a concave function of $p_X$.</li></ol>
+</thm>
+<role r="reading" a="Theorem 1.19">
+
+Each part is a piece of common sense about "average surprise". Part 1: you can't be less than certain, and the most uncertain you can be about $|\X|$ possibilities is when they are equally likely. Part 2: on average, extra information can only help ("information can't hurt"). Part 3: the uncertainty of a list is at most the sum of the uncertainties of its entries. Part 4: relabelling outcomes does not change entropy, and merging outcomes can only reduce it. Part 5: low entropy makes collisions likely. Part 6: mixing distributions increases uncertainty.
+</role>
+
+<pf>
+**Part 1.** Every term $-p(x)\log p(x)$ is $\ge0$, since $\log p(x)\le0$, so $H(X)\ge0$; and it is $0$ only if $p(x)\in\{0,1\}$. Since the $p(x)$ sum to $1$, all terms vanish iff exactly one $x$ has $p(x)=1$, that is, iff $X$ is constant. For the upper bound, apply Gibbs' inequality with the uniform pmf $q(x)=|\X|^{-1}$:
+$$H(X)\le-\sum_{x\in\X}p(x)\log q(x)=\log|\X|,$$
+with equality iff $p_X=q$, that is, iff $X$ is uniform.
+
+**Part 2.** By Theorem 1.17, $0\le I(X;Y)=H(X)-H(X|Y)$, which gives the upper bound, with equality iff $X$ and $Y$ are independent. For the lower bound, by definition
+$$H(X|Y)=\sum_{y}p_Y(y)\,H(X|Y=y),\qquad H(X|Y=y)=-\sum_xp_{X|Y}(x|y)\log p_{X|Y}(x|y),$$
+and each $H(X|Y=y)\ge0$ by part 1. So $H(X|Y)=0$ iff $H(X|Y=y)=0$ for every $y$ that $Y$ takes. By part 1 that happens iff, for each such $y$, $\PP(X=x|Y=y)=1$ for a single value $x=f(y)$. That is exactly $X=f(Y)$ almost surely.
+
+**Part 3.** The equality is the chain rule from the proof of Theorem 1.17. For the inequality, each $H(X_i|X_{i-1},\dots,X_1)\le H(X_i)$ by part 2, with equality iff $X_i$ is independent of $(X_{i-1},\dots,X_1)$; this holds for all $i$ iff the $X_i$ are independent.
+
+**Part 4.** Expand $H(X,f(X))$ with the chain rule in two orders. First,
+$$H(X,f(X))=H(X)+H(f(X)|X)=H(X),$$
+since $f(X)$ is a function of $X$ and part 2 gives $H(f(X)|X)=0$. Second,
+$$H(X,f(X))=H(f(X))+H(X|f(X))\ge H(f(X)).$$
+So $H(f(X))\le H(X)$, with equality iff $H(X|f(X))=0$, that is, iff $X$ can be recovered from $f(X)$: $f$ is injective on the values $X$ takes.
+
+**Part 5.** The function $t\mapsto2^t$ is convex, so by Jensen's inequality
+$$2^{-H(X)}=2^{\E[\log p_X(X)]}\le\E\big[2^{\log p_X(X)}\big]=\E[p_X(X)]=\sum_xp_X(x)^2=\PP(X=Y).$$
+The last step uses independence: $\PP(X=Y)=\sum_x\PP(X=x)\PP(Y=x)$. Since $2^t$ is strictly convex, equality holds iff $p_X(X)$ is constant, that is, iff $X$ is uniform on the values it takes.
+
+**Part 6.** $H(p)=\sum_xg(p(x))$ with $g(t)=-t\log t$, which is concave on $[0,1]$. A sum of concave functions of the coordinates is concave.
+</pf>
+
+<thm k="Remark 1.20" d="Readings of the entropy properties" pg="17">
+Part 1 is intuitive if entropy is average surprise; part 2 formalises "more information is better"; part 4 shows that entropy is unchanged by relabelling the values.
+</thm>
+
+<pause n="Is entropy just a property of the values?" q="True or false: $H(X)=H(2X)$, $H(X)=H(X^2)$, $H(X|Y)\ge H(X|Y,Z)$. Think before opening, then compare with Sheet 1, Question 4.">
+$H(X)=H(2X)$ is true: $x\mapsto2x$ is injective, so part 4 gives equality. $H(X)=H(X^2)$ can fail: if $X$ is uniform on $\{-1,1\}$ then $H(X)=1$ but $X^2=1$ is constant, so $H(X^2)=0$. It holds when $X$ takes only non-negative values (or more generally when $x\mapsto x^2$ is injective on the values of $X$). $H(X|Y)\ge H(X|Y,Z)$ is true: it is part 2 applied conditionally on $Y$ ("conditioning reduces entropy"), or equivalently $I(X;Z|Y)\ge0$.
+</pause>
+
+<sheet n="1" qs="4,5,6,7,8,9">Questions 4 to 9 are all about the properties in this section. Question 7 is the maximum entropy principle, a constrained version of part 1 of Theorem 1.19.</sheet>
+<sheet n="2" qs="6,9">Question 6 is a "grouping" identity for mixtures. Question 9 extends entropy to densities; its hint is Gibbs' inequality for densities.</sheet>
+
+## 1.3 Fano’s inequality {17} [d2 i2]
+<role r="question" a="guessing X from Y">
+
+A common situation: we observe $Y$ and use it to guess the value of $X$. If the guess is always right, $\PP(X\neq Y)=0$, then $X$ is a function of $Y$ and $H(X|Y)=0$ by part 2 of Theorem 1.19. We should expect that if the guess is *usually* right, $H(X|Y)$ is small. Fano's inequality makes this precise.
+</role>
+
+<thm k="Theorem 1.21" nm="Fano’s inequality, 1966" pg="17" it>
+Let $X,Y$ be discrete random variables taking values in $\X$. Then
+$$H(X|Y)\le H(\ind_{X\neq Y})+\PP(X\neq Y)\log(|\X|-1).$$
+</thm>
+<role r="reading" a="Theorem 1.21">
+
+Read the right side as a two-stage description of $X$ for someone who already knows $Y$. First say whether the guess $Y$ was right: that costs at most $H(\ind_{X\neq Y})$ bits. If it was right you are done. If it was wrong (probability $\PP(X\neq Y)$), say which of the other $|\X|-1$ values $X$ took, at most $\log(|\X|-1)$ bits. Turned around, the inequality is a **lower bound on the error probability**: if $H(X|Y)$ is large, no way of guessing $X$ from $Y$ can be reliable. This is how it will be used for noisy channels.
+</role>
+
+<pf>
+Let $Z=\ind_{X\neq Y}$ be the indicator of an error. Given both $X$ and $Y$, $Z$ is determined, so $H(Z|X,Y)=0$. Then
+$$\begin{aligned}H(X|Y)&=H(X|Y)+H(Z|X,Y)\\&=H(X,Z|Y)&&\why{chain rule, given $Y$}\\&=H(Z|Y)+H(X|Y,Z)&&\why{chain rule the other way}\\&\le H(Z)+H(X|Y,Z).&&\why{conditioning reduces entropy}\end{aligned}$$
+Now split the last term according to the values of $Y$ and $Z$:
+$$H(X|Y,Z)=\sum_{y\in\X}\Big[\PP(Y=y,Z=0)\,H(X|Y=y,Z=0)+\PP(Y=y,Z=1)\,H(X|Y=y,Z=1)\Big].$$
+<ul><li>On $\{Y=y,Z=0\}$ the guess was right, so $X=y$, and $H(X|Y=y,Z=0)=0$.</li><li>On $\{Y=y,Z=1\}$ the guess was wrong, so $X\in\X\setminus\{y\}$, a set of $|\X|-1$ elements. By part 1 of Theorem 1.19, $H(X|Y=y,Z=1)\le\log(|\X|-1)$.</li></ul>
+Therefore
+$$H(X|Y)\le H(Z)+\sum_{y\in\X}\PP(Y=y,Z=1)\log(|\X|-1)=H(Z)+\PP(Z=1)\log(|\X|-1).$$
+</pf>
+
+<thm k="Corollary 1.22" d="Fano with the binary entropy bounded by 1" pg="18">
+$H(X|Y)\le1+\PP(X\neq Y)\log(|\X|-1)$.
+</thm>
+<role r="reading" a="Corollary 1.22">
+
+This follows because $Z$ takes two values, so $H(Z)\le\log2=1$ by part 1 of Theorem 1.19. Rearranged, it gives a clean lower bound on the error probability:
+$$\PP(X\neq Y)\ge\frac{H(X|Y)-1}{\log(|\X|-1)}.$$
+Figure 1.4 shows the exact region that Fano's inequality allows.
+</role>
+
+@@it-fig1-4@@
+
+<pause n="Fano for a noisy bit" q="In Exercise 'A noisy bit' above, guess $X$ by $Y$ itself. What does Fano's inequality say, and is it tight?">
+Here $|\X|=2$, so $\log(|\X|-1)=0$ and Fano reads $H(X|Y)\le H(\ind_{X\neq Y})=H(f)$, since the guess is wrong with probability $f$. By symmetry $H(X|Y)=H(Y|X)=H(f)$ (both equal $H(X,Y)-1$). So Fano holds with equality: for binary variables the inequality is tight whenever errors are independent of the guess.
+</pause>

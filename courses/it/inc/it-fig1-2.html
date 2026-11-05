@@ -1,0 +1,11 @@
+<figure class="wide" id="fig1-2">
+  <div class="fig-body">
+    <svg id="it-kl-svg" class="pt" viewBox="0 0 720 290" role="img" aria-label="Two coins p and q drawn as bars, and the curves D(p||q) and D(q||p) as q varies."></svg>
+    <div class="controls">
+      <label class="grow" for="it-kl-p">p(heads) <input type="range" id="it-kl-p" min="0" max="1" step="0.01" value="0.5"> <output id="it-kl-pv"></output></label>
+      <label class="grow" for="it-kl-q">q(heads) <input type="range" id="it-kl-q" min="0" max="1" step="0.01" value="0.9"> <output id="it-kl-qv"></output></label>
+    </div>
+    <div class="readout" id="it-kl-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 1.2</span>Divergence is not symmetric. With \(p\) fixed, the solid curve is \(D(p\|q)\) and the dashed curve \(D(q\|p)\), both as functions of \(q\)'s heads probability. Both vanish only at \(q=p\). Push \(q\) to \(0\) or \(1\): \(D(p\|q)\) blows up, because \(q\) then declares impossible something \(p\) does, while \(D(q\|p)\) stays finite (Example 1.5).</figcaption>
+</figure>

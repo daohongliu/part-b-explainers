@@ -1,0 +1,13 @@
+<figure class="wide" id="fig0-2">
+  <div class="fig-body">
+    <svg id="it-guess-svg" class="pt" viewBox="0 0 720 300" role="img" aria-label="A tree of yes/no questions for guessing an outcome. Likely outcomes sit near the top and are found with few questions."></svg>
+    <div class="controls" role="group" aria-label="distribution">
+      <button type="button" data-itg="uni" aria-pressed="true">8 equally likely</button>
+      <button type="button" data-itg="skew" aria-pressed="false">one favourite</button>
+      <button type="button" data-itg="geo" aria-pressed="false">halving</button>
+      <button type="button" data-itg="rand" aria-pressed="false">random</button>
+    </div>
+    <div class="readout" id="it-guess-out" aria-live="polite"></div>
+  </div>
+  <figcaption><span class="figtag">Figure 0.2</span>Guessing with yes/no questions. Each leaf is an outcome, with its probability; each internal node is one question, splitting the remaining outcomes into two groups. The tree shown is the best possible one (it is a Huffman tree, Section 3.5). The average number of questions is close to the entropy \(H=-\sum p\log_2p\), and never below it.</figcaption>
+</figure>
