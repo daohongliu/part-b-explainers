@@ -492,9 +492,7 @@ details.pause summary::before { flex: none; }
 .tl-sec.done > a { color: color-mix(in srgb, var(--ink-soft) 75%, transparent); }
 .tl-sec.done > a .tl-n::after { content: " ✓"; color: var(--green); }
 .tl-sec.cur > a { color: var(--ink); border-left-color: var(--blue); }
-.tl-sub { display: none; margin: .05rem 0 .35rem; }
-.tl-sec.cur > .tl-sub { display: block; }
-.toc-side:hover .tl-sec:hover > .tl-sub { display: block; }
+.tl-sub { display: block; margin: .05rem 0 .35rem; }
 .tl-sub a { padding: .12rem .5rem .12rem 2.4rem; font-size: .76rem; }
 .tl-sub .tl-h3 a { font-family: var(--sc); letter-spacing: .03em; padding-left: 2.2rem; }
 .tl-k { font-family: var(--mono); font-variation-settings: "MONO" 1, "CASL" 1; font-size: .66rem; flex: none; }
@@ -756,6 +754,7 @@ body.has-toc .cmap-btn:not([hidden]) ~ .minimap, body:has(.cmap-btn:not([hidden]
 
 
 /* search */
+.search-box[hidden], .search-back[hidden] { display: none; }
 .search-back { position: fixed; inset: 0; z-index: 80; background: color-mix(in srgb, var(--ink) 18%, transparent); }
 .search-box { position: fixed; z-index: 81; left: 50%; top: 9vh; transform: translateX(-50%); width: min(44rem, calc(100vw - 24px)); max-height: 78vh; display: flex; flex-direction: column;
   background: var(--paper); border: 1.3px solid var(--ink-soft); border-radius: 3px 14px 4px 12px / 12px 4px 14px 3px; box-shadow: 5px 6px 0 var(--dot); }

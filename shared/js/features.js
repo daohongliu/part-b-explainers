@@ -177,6 +177,12 @@ function updateToc() {
     const items = [[s.hd, s.li.firstChild]].concat(s.subs.map(([x, sl]) => [x, sl]));
     let k = 0; items.forEach(([x], j) => { if (x.getBoundingClientRect().top < vh * .3) k = j; });
     s.subs.forEach(([, sl], j) => sl.classList.toggle('cur', j + 1 === k));
+    const key = cur + ':' + k;
+    if (TS.lastKey !== key && !tocSide.matches(':hover')) {
+      TS.lastKey = key;
+      const rowEl = items[k][1], box = tocSide.getBoundingClientRect(), rr = rowEl.getBoundingClientRect();
+      if (rr.top < box.top + 60 || rr.bottom > box.bottom - 30) tocSide.scrollTop += rr.top - box.top - box.height * .35;
+    }
     const elTop = items[k][0].getBoundingClientRect().top, elNext = items[k + 1] ? items[k + 1][0].getBoundingClientRect().top : nxTop;
     const f = clamp((vh * .3 - elTop) / Math.max(1, elNext - elTop), 0, 1);
     const ulTop = TS.ul.getBoundingClientRect().top, row = items[k][1].getBoundingClientRect();
